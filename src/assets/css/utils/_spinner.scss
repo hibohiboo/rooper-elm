@@ -1,0 +1,40 @@
+// http://spin.js.org/
+// https://materializecss.com/preloader.html
+// https://developer.cybozu.io/hc/ja/articles/204528874-spin-js-%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%A6-%E3%82%B9%E3%83%94%E3%83%8A%E3%83%BC-%E3%83%AD%E3%83%BC%E3%83%87%E3%82%A3%E3%83%B3%E3%82%B0%E3%82%A2%E3%82%A4%E3%82%B3%E3%83%B3-%E3%82%92%E8%A8%AD%E5%AE%9A%E3%81%97%E3%82%88%E3%81%86-
+// https://projects.lukehaas.me/css-loaders/
+// ... 統一感を出すためにMaterializeを使用がよいか。
+
+.spin-div {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 510;
+  background-color: #fff;
+  padding: 26px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  display: none;
+  .spinner {
+    position: relative;
+    margin: 0 auto;
+    width: 64px; // materialize の preloader-wrapper.bigの値
+  }
+}
+
+.spin-bg-div {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 500;
+  width: 100%;
+  height: 200%;
+  background-color: #000;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  display: none;
+}
+.spin-div.active,
+.spin-bg-div.active{
+  display: block;
+}

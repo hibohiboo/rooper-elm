@@ -1,0 +1,71 @@
+@charset "UTF-8";
+
+// 基本色
+:root {
+  --main-color: #5d9ab2;
+  --accent-color: #bf6a7a;
+  --dark-color: #2b5566;
+  --text-bright-color: #fff; // テキストの色
+  --icon-color: #fff; // アイコンの色
+  --icon-bk-color: #ddd; // 丸型ボックスの色
+  --gray-color: #ddd;
+  --large-width: 1000px; // 横幅の最大値
+  --middle-width: 800px;
+}
+
+// 基本設定：フォントサイズ
+// スマートフォン向け
+@media (max-width: 599px) {
+  :root {
+    font-size: 14px;
+  }
+}
+
+// タブレット向け
+@media (min-width: 600px) and (max-width: 799px) {
+  :root {
+    font-size: 16px;
+  }
+}
+
+// PC向け
+@media (min-width: 800px) {
+  :root {
+    font-size: 18px;
+  }
+}
+
+body {
+  font-family: "メイリオ", "Hiragino Kaku Gothic Pro", sans-serif;
+  margin: 0;
+  background-color: #212121;
+}
+
+// 基本設定
+header {
+  img {
+    vertical-align: bottom; // 余計な余白が入るのを防ぐ
+    width: 80px;
+  }
+}
+
+.hide {
+  display: none;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+.wrapper {
+  min-height: 100vh;
+  color: rgb(223, 225, 226);
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@import "utils/spinner";
+@import "utils/form";
