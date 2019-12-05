@@ -1,7 +1,7 @@
 //- 変数一覧
-- var title="チャットロビー"
-- var description="チャットツールを試すことができます。"
-- var keywords="TRPG,開発,ツール"
+- var title="惨劇RoopeRオンラインツール"
+- var description="BakaFire様製作の同人ボードゲーム惨劇RoopeRをブラウザ上で遊ぶCGIツールです。誰でも気軽に使用できます。このサイトは惨劇コモンズを使用しています。"
+- var keywords="惨劇RoopeR,惨劇ルーパー,オンラインセッション,ツール,支援"
 - var robots="index"
 
 doctype html
@@ -24,7 +24,7 @@ html
     //- 概要
     meta(name='og:description', content=description)
     //- 記事のURL
-    meta(name='og:url', content="https://wasureta-d6b34.firebaseapp.com/lobby/") 
+    meta(name='og:url', content="https://rooper-tool.firebaseapp.com/") 
     //- twitter
     meta(name="twitter:site" content="@hibohiboo")
     //- twittercard（申請必要
@@ -34,17 +34,17 @@ html
     meta(name="twitter:description" content=description)
     meta(name="twitter:image" content="")
     title=title
-    link(href='https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css', rel='stylesheet')
+    link(href='https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css', rel='stylesheet')
     link(href='https://fonts.googleapis.com/icon?family=Material+Icons', rel='stylesheet')
     link(href="https://fonts.googleapis.com/css?family=Anton&text=SKILL", rel="stylesheet")
     block css
     link(href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" rel="stylesheet")
-    script(src="https://www.gstatic.com/firebasejs/6.3.5/firebase-app.js")
-    script(src="https://www.gstatic.com/firebasejs/6.3.5/firebase-firestore.js")
-    script(src="https://www.gstatic.com/firebasejs/6.3.5/firebase-auth.js")
-    script(src="https://www.gstatic.com/firebasejs/6.3.5/firebase-storage.js")
+    script(src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js")
+    script(src="https://www.gstatic.com/firebasejs/7.5.0/firebase-firestore.js")
+    script(src="https://www.gstatic.com/firebasejs/7.5.0/firebase-auth.js")
+    script(src="https://www.gstatic.com/firebasejs/7.5.0/firebase-storage.js")
     script(src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js")
-    script(defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js")
+    script(defer src="https://use.fontawesome.com/releases/v5.11.2/js/all.js")
 
     .
       <!-- Google Tag Manager -->
