@@ -30,7 +30,7 @@ const common = {
   },
   plugins: [
     new HTMLWebpackPlugin({
-      template: 'src/index.pug',
+      template: 'src/rooper/index.pug',
       inject: 'body',
       chunks: ['index'],
     }),
@@ -128,7 +128,7 @@ if (MODE === 'development') {
             {
               loader: 'elm-webpack-loader',
               options: {
-                debug: false,
+                debug: true,
                 forceWatch: true,
               },
             },

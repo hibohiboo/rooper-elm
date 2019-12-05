@@ -12,7 +12,7 @@ const filename = MODE === "production" ? "[name]-[hash].js" : "index.js";
 // ソース・出力先の設定
 const opts = {
   src: path.join(__dirname, "separate/pre-dist"),
-  dest: path.join(__dirname, "separate/dist")
+  dest: path.join(__dirname, "separate/dist/rooper")
 };
 
 module.exports = {
@@ -21,12 +21,12 @@ module.exports = {
   output: {
     path: opts.dest,
     // spaの場合は、絶対パスにしないと、cssの読み込みやjsの読み込みがルート以外でおかしくなる
-    publicPath: "/",
+    publicPath: "/rooper",
     filename
   },
   plugins: [
     new HTMLWebpackPlugin({
-      template: path.join(opts.src, "index.html"),
+      template: path.join(opts.src, "rooper/index.html"),
       inject: "body"
     }),
     new CleanWebpackPlugin({

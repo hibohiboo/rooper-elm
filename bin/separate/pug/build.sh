@@ -7,3 +7,4 @@ dir_docker=$docker_dir
 name=${1:-rooper}
 
 cd $dir_docker && docker-compose run $name yarn pug /app/src -o /app/separate/pre-dist
+cd $dir_docker && docker-compose run $name yarn pug /app/src -o /app/separate/dist
