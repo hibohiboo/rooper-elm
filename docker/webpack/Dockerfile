@@ -99,3 +99,11 @@ RUN yarn add --dev @babel/core \
   @babel/preset-env
 
 RUN yarn add --dev @babel/cli
+
+# import * as vfileMessage from 'vfile-message'; 対策
+# https://github.com/vmware/clarity/issues/4012
+RUN sed -i -e "s/'vfile-message'/'vfile-message\/node_modules\/vfile-message'/" /app/node_modules/@types/vfile/index.d.ts
+
+# console.logを削除
+
+RUN yarn add --dev terser-webpack-plugin

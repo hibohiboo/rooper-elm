@@ -46,7 +46,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Test ->
-            ( model, Cmd.none )
+            ( model, "test" |> errorToJs )
 
 
 subscriptions : Model -> Sub Msg
