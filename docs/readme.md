@@ -16,6 +16,9 @@ npm install -g elm-test elm-format
 ```
 npm install
 ```
+## firebaseの初期設定
+
+[udonarium設定時](https://qiita.com/hibohiboo/items/8375c9cd075da1f94d58)の設定を参考に構築。
 
 ### 参考
 
@@ -26,3 +29,6 @@ npm install
 [VS CodeにESLintを設定する](https://qiita.com/Mount/items/5f8196b891444575b7db)
 [ import * as vfileMessage from 'vfile-message';のエラーが出ていた。。。](https://github.com/vmware/clarity/issues/4012)
 [Webpack 4 production モードで console.log を削除したい](https://chaika.hatenablog.com/entry/2019/02/01/083000)
+
+## 使いたい保留
+[swiper](https://swiperjs.com/api/)

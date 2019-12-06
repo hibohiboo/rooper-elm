@@ -10,4 +10,4 @@ bash $bin_dir/separate/build.sh
 
 # cp -r $parent_dir/separate/dist $parent_dir/app/public
 
-# bash $bin_dir/separate/copy.sh
+bash $bin_dir/separate/copy.sh
