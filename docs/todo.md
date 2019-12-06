@@ -1,8 +1,8 @@
 ## TODO
 
 - [x] firebaseへデプロイ
-- [ ] assetsフォルダが出力されていなかったものを修正
-- [ ] google analyticsの設定
+- [x] assetsフォルダが出力されていなかったものを修正
+- [x] google analyticsの設定
 - [ ] firebaseで認証
   - [ ] twitter認証
 - [ ] firestore作成

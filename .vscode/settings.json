@@ -10,5 +10,6 @@
   "eslint.autoFixOnSave": true,
   "typescript.validate.enable": false,
   "scss.validate": false,
-  "stylelint.autoFixOnSave": true
+  "stylelint.autoFixOnSave": true,
+  "editor.tabSize": 2
 }
