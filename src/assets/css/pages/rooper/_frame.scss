@@ -1,0 +1,38 @@
+.container {
+  display: grid;
+  grid-template-rows: 2rem auto;
+  height: 100vh;
+  overflow: hidden;
+  widows: 100vw;
+
+  .page-head {
+    display: flex;
+    overflow: hidden;
+
+    // 中央揃え
+    div {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+    }
+
+    // 最後の要素だけ右揃え
+    > :last-child {
+      margin-left: auto;
+      margin-right: 5px;
+    }
+
+    .right {
+      height: 2rem;
+      justify-self: flex-end;
+      margin-top: 5px;
+      overflow: hidden;
+
+      img {
+        height: 100%;
+        object-fit: cover;
+        width: 100%;
+      }
+    }
+  }
+}

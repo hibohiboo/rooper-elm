@@ -3,14 +3,14 @@ port module Main exposing (Model, Msg(..), init, main, subscriptions, update, vi
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Json.Decode exposing (Value)
+import Models.User as User exposing (User)
 import Task exposing (Task)
 
 
 port errorToJs : String -> Cmd msg
 
 
-main : Program Value Model Msg
+main : Program (Maybe User) Model Msg
 main =
     Browser.element
         { init = init
@@ -25,13 +25,17 @@ main =
 
 
 type alias Model =
-    { test : String
+    { loginUser : Maybe User
     }
 
 
-init : Value -> ( Model, Cmd Msg )
+init : Maybe User -> ( Model, Cmd Msg )
 init flags =
-    ( Model "test new", Cmd.batch [] )
+    let
+        _ =
+            Debug.log "flags" flags
+    in
+    ( Model flags, Cmd.batch [] )
 
 
 
@@ -56,6 +60,20 @@ subscriptions model =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ text model.test
+    div [ class "container" ]
+        [ nav [ class "page-head" ]
+            [ div [] [ text "Tragedy RoopeR online tool" ]
+            , headNavRight model.loginUser
+            ]
+        , main_ [] []
         ]
+
+
+headNavRight : Maybe User -> Html Msg
+headNavRight maybeUser =
+    case maybeUser of
+        Just user ->
+            div [ class "right" ] [ img [ src user.twitterProfileImageUrl ] [] ]
+
+        Nothing ->
+            text ""

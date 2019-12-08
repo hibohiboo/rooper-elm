@@ -15,20 +15,20 @@ const initApp = async () => {
   }
   console.log('ログインユーザ', user);
 
-  // サインアウトのイベントを作成
-  const singOut = document.getElementById('sign-out')!;
-  singOut.addEventListener('click', () => {
-    firebaseBackEnd.signOut();
-  });
-  const flags = {};
+  // // サインアウトのイベントを作成
+  // const singOut = document.getElementById('sign-out')!;
+  // singOut.addEventListener('click', () => {
+  //   firebaseBackEnd.signOut();
+  // });
+  const flags = JSON.stringify(user);
 
   // elmのＤＯＭを作成する元となるＤＯＭ要素
   const mountNode: HTMLElement = document.getElementById('app')!;
   console.log('mount', mountNode);
-
+  console.log('flags', flags);
   // 初期値を与える
-  const app = Elm.Main.init({ node: mountNode, flags });
-  app.ports.errorToJs.subscribe((data: string) => console.log(data));
+  const { ports } = Elm.Main.init({ node: mountNode, flags: user });
+  ports.errorToJs.subscribe((data: string) => console.log(data));
 
   hideLoader();
 };
