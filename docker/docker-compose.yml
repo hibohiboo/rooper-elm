@@ -9,8 +9,6 @@ services:
       - ../elm.json:/app/elm.json
       - ./config/webpack.config.js:/app/webpack.config.js
       - ./config/.babelrc:/app/.babelrc
-      - ./config/.eslintrc:/app/.eslintrc
-      - ./config/.eslintignore:/app/.eslintignore
       - ./config/.stylelintrc:/app/.stylelintrc
       - ./config/tsconfig.json:/app/tsconfig.json
       - ./config/.browserslistrc:/app/.browserslistrc

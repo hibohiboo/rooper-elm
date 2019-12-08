@@ -33,7 +33,7 @@ export async function getUser(db, uid) {
 
   const querySnapshot = await query.get(); // ユーザを取得
   if (querySnapshot.size === 0) {
-    return false;
+    return null;
   }
   const doc = querySnapshot.docs[0];
   const user = doc.data();
@@ -58,7 +58,7 @@ export async function createUser(db, {
     twitterScreenName,
     twitterProfileImageUrl,
   };
-  userRef.set(dbuser);
+  await userRef.set(dbuser);
 
   return new User(userRef.id, dbuser);
 }

@@ -1,14 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
-const elmMinify = require('elm-minify');
-
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-
-// to extract the css as a separate file
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 // // webpack-dev-server で使用
 // const fs = require('fs');
@@ -27,6 +20,7 @@ const common = {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: `${filename}`,
+    publicPath: "/rooper",
   },
   plugins: [
     new HTMLWebpackPlugin({

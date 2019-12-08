@@ -1,8 +1,12 @@
 extends ../_includes/layout
 //- _layout.pugをベースに作成
+block Variable
+  - var title="惨劇RoopeRオンラインツール"
+  - var sppinerActiveClass = "sppinerActiveClass"
 
 block main
   section.section
-    .container.white
+    .container
       #firebaseui-auth-container
+      #sign-out #[button サインアウト]
       #chatlog

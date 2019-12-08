@@ -1,6 +1,14 @@
 import * as firebase from 'firebase';
 import * as firebaseui from 'firebaseui';
-// import { createUser } from './User';
+import { createUser, getUser } from './User';
+
+export const hideLoader = () => {
+  const activeLoaderClassElement = document.querySelector('.active');
+  if (!activeLoaderClassElement) {
+    return;
+  }
+  activeLoaderClassElement.classList.remove('active');
+};
 
 export class FireBaseBackEnd {
   public auth;
@@ -43,16 +51,20 @@ export class FireBaseBackEnd {
    * サインインしている場合、ユーザを返す
    */
   public getSignedInUser() {
-    const { auth } = this;
+    const { auth, db } = this;
     return new Promise((resolve, reject) => {
       try {
         auth.onAuthStateChanged(
-          (user) => {
-            console.log(user);
-            if (user) {
-              resolve(user);
+          ({ uid }) => {
+            if (!uid) {
+              resolve(null);
+              return;
             }
-            resolve(null);
+            // DBからユーザ情報取得
+            (async () => {
+              const user = await getUser(db, uid);
+              resolve(user);
+            })();
           },
         );
       } catch (e) {
@@ -72,33 +84,42 @@ export class FireBaseBackEnd {
   }
 
   public createLoginUi() {
-    // const { db } = this;
+    const { db } = this;
     const uiConfig = {
       signInSuccessUrl: '/rooper', // ログイン成功時の遷移先
       signInOptions: [
         firebase.auth.TwitterAuthProvider.PROVIDER_ID,
       ],
+      signInFlow: 'redirect',
       callbacks: {
-        signInSuccessWithAuthResult(authResult, redirectUrl) {
-          console.log('認証成功', authResult);
-          console.log(redirectUrl);
-          // const { authUser } = authResult;
-          // const twitterUser = authResult.additionalUserInfo;
-          // const twitterScreenName = twitterUser.profile.screen_name;
-          // const twitterProfileImageUrl = twitterUser.profile.profile_image_url_https;
-          // createUser(db, {
-          //   uid: authUser.uid, displayName: '', twitterScreenName, twitterProfileImageUrl,
-          // });
+        signInSuccessWithAuthResult(authResult /* , redirectUrl = '/rooper/' */) {
+          const { user: { displayName, uid } } = authResult;
 
-          return true;
+          (async () => {
+            const user = await getUser(db, uid);
+            if (user !== null) {
+              console.log('ログイン後ユーザ取得', user);
+              // window.location.href = redirectUrl;
+              return;
+            }
+            const twitterUser = authResult.additionalUserInfo;
+            const twitterScreenName = twitterUser.profile.screen_name;
+            const twitterProfileImageUrl = twitterUser.profile.profile_image_url_https;
+            await createUser(db, {
+              uid, displayName, twitterScreenName, twitterProfileImageUrl,
+            });
+
+            // 手動でリダイレクト
+            console.log('ログイン後リダイレクト');
+            // window.location.href = redirectUrl;
+          })();
+
+          // 手動リダイレクトを待つ
+          return false;
         },
         uiShown() {
           // The widget is rendered. Hide the loader.
-          const activeLoaderClassElement = document.querySelector('.active');
-          if (!activeLoaderClassElement) {
-            return;
-          }
-          activeLoaderClassElement.classList.remove('active');
+          hideLoader();
         },
       },
       // Terms of service url. 利用規約。こことプライバシーポリシーのURLをhttps:// からのURLに変えると動かなくなることがある
