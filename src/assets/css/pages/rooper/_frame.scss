@@ -3,14 +3,15 @@
 
   display: grid;
   grid-template-rows: $header-height auto;
-  height: 100vh;
+  height: 100vh; // data-elm-hot が１つ上の要素であり、height:inheritとなっている
   overflow: hidden;
-  widows: 100vw;
+  width: 100%;
 
   // ヘッダ部分
   .page-head {
     display: flex;
     overflow: hidden;
+    width: 100%;
 
     // 中央揃え
     div {
@@ -76,9 +77,9 @@
 
     .center {
       background-color: #505050;
-      height: 80vh;
+      height: 80%;
       padding: 1rem;
-      width: 90vw;
+      width: 90%;
 
       .login-message {
         text-align: center;
