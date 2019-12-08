@@ -102,7 +102,16 @@ mainMessage : Model -> Html Msg
 mainMessage model =
     case model.loginUser of
         Just user ->
-            div [] [ text "myPage" ]
+            div []
+                [ p [ class "buttons" ]
+                    [ button [ class "button" ]
+                        [ span [ class "icon" ]
+                            [ i [ class "fas fa-plus" ] []
+                            ]
+                        , span [] [ text "新しいルームを作成" ]
+                        ]
+                    ]
+                ]
 
         Nothing ->
             div [ class "login-message" ]
