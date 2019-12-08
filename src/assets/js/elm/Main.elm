@@ -31,7 +31,16 @@ type alias Model =
 
 init : Maybe User -> ( Model, Cmd Msg )
 init flags =
-    ( initModel flags, Cmd.batch [] )
+    let
+        firstEvent =
+            case flags of
+                Nothing ->
+                    initLoginUI ()
+
+                _ ->
+                    Cmd.none
+    in
+    ( initModel flags, firstEvent )
 
 
 initModel : Maybe User -> Model
@@ -47,6 +56,7 @@ type Msg
     = Error String
     | OpenMenu
     | CloseMenu
+    | SignOut
 
 
 type MenuState
@@ -66,6 +76,9 @@ update msg model =
         CloseMenu ->
             ( { model | menuState = MenuClose }, Cmd.none )
 
+        SignOut ->
+            ( model, signOut () )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -79,8 +92,27 @@ view model =
             [ div [ class "left" ] [ text "惨劇  RoopeR online tool" ]
             , headNavRight model
             ]
-        , main_ [] []
+        , main_ []
+            [ div [ class "center" ] [ mainMessage model ]
+            ]
         ]
+
+
+mainMessage model =
+    case model.loginUser of
+        Just user ->
+            div [] [ text "myPage" ]
+
+        Nothing ->
+            div [ class "login-message" ]
+                [ p []
+                    [ text "ようこそ惨劇オンラインへ。" ]
+                , p []
+                    [ text "まずはログインしてください。" ]
+                , div
+                    [ id "firebaseui-auth-container" ]
+                    []
+                ]
 
 
 headNavRight : Model -> Html Msg
@@ -107,7 +139,7 @@ headNavRight model =
             div [ class "right", onClick clickEvent ]
                 [ div [ class menuClass ]
                     [ ul []
-                        [ li [] [ text "サインアウト" ]
+                        [ li [ onClick SignOut ] [ text "サインアウト" ]
                         ]
                     ]
                 , img [ src user.twitterProfileImageUrl ] []

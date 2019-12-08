@@ -55,7 +55,12 @@ export class FireBaseBackEnd {
     return new Promise((resolve, reject) => {
       try {
         auth.onAuthStateChanged(
-          ({ uid }) => {
+          (payload) => {
+            if (!payload) {
+              resolve(null);
+              return;
+            }
+            const { uid } = payload;
             if (!uid) {
               resolve(null);
               return;
@@ -76,6 +81,7 @@ export class FireBaseBackEnd {
   public async signOut() {
     try {
       await this.auth.signOut();
+      window.location.reload();
       return true;
     } catch (e) {
       console.log(`ログアウト時にエラー発生 (${e.message})`);
@@ -92,14 +98,14 @@ export class FireBaseBackEnd {
       ],
       signInFlow: 'redirect',
       callbacks: {
-        signInSuccessWithAuthResult(authResult /* , redirectUrl = '/rooper/' */) {
+        signInSuccessWithAuthResult(authResult, redirectUrl = '/rooper/') {
           const { user: { displayName, uid } } = authResult;
 
           (async () => {
             const user = await getUser(db, uid);
             if (user !== null) {
               console.log('ログイン後ユーザ取得', user);
-              // window.location.href = redirectUrl;
+              window.location.href = redirectUrl;
               return;
             }
             const twitterUser = authResult.additionalUserInfo;
@@ -111,7 +117,7 @@ export class FireBaseBackEnd {
 
             // 手動でリダイレクト
             console.log('ログイン後リダイレクト');
-            // window.location.href = redirectUrl;
+            window.location.href = redirectUrl;
           })();
 
           // 手動リダイレクトを待つ
