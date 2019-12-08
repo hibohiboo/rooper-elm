@@ -99,6 +99,7 @@ const common = {
     , firebaseui: 'firebaseui'
     //, M: 'M' // materialize
     , moment: 'moment'
+    , swiper: 'Swiper'
   },
 };
 
@@ -136,7 +137,12 @@ if (MODE === 'development') {
       inline: true,
       stats: 'errors-only',
       contentBase: path.join(__dirname, 'src'),
-      historyApiFallback: true,
+      historyApiFallback: {
+        rewrites: [
+          { from: /^\/$/, to: '/rooper/index.html' },
+          { from: /^\/rooper/, to: '/rooper/index.html' },
+        ]
+      },
       before(app) {
         app.get('/test', (req, res) => {
           res.json({ result: 'OK' });

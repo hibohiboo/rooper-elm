@@ -8,3 +8,6 @@ port signOut : () -> Cmd msg
 
 
 port initLoginUI : () -> Cmd msg
+
+
+port initSwiper : () -> Cmd msg

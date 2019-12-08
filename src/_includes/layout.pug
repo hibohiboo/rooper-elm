@@ -37,8 +37,6 @@ html
     meta(name="twitter:image" content="")
     title=title
     link(href='https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css', rel='stylesheet')
-    link(href='https://fonts.googleapis.com/icon?family=Material+Icons', rel='stylesheet')
-    link(href="https://fonts.googleapis.com/css?family=Anton&text=SKILL", rel="stylesheet")
     block css
     //- link(href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" rel="stylesheet")
     link(href="https://www.gstatic.com/firebasejs/ui/3.5.2/firebase-ui-auth.css", rel="stylesheet")
@@ -48,6 +46,7 @@ html
     //- script(src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js")
     script(src="https://www.gstatic.com/firebasejs/ui/3.5.2/firebase-ui-auth__ja.js")
     script(defer src="https://use.fontawesome.com/releases/v5.11.2/js/all.js")
+    block headerJS
     .
       <!-- Google Tag Manager -->
       <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -65,7 +64,6 @@ html
       <!-- End Google Tag Manager (noscript) -->
     block main
     include spinner
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js")
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js" type="text/javascript")
     block footerJs

@@ -34,3 +34,5 @@ npm install
 [swiper](https://swiperjs.com/api/)
 [ionic-slide](https://ionicframework.com/jp/docs/api/slides)
 [elm-ionic](https://github.com/calmery/elm-ionic-example/blob/master/src/index.html)
+[swiper](https://qiita.com/SatoshiAoki0419/items/a5ebcb68d82411ccb3ce)
+

@@ -6,3 +6,4 @@ declare module 'firebase';
 declare module 'firebaseui';
 declare module 'M'; // materialize
 declare module 'moment';
+declare module 'swiper';

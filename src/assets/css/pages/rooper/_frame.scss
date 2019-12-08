@@ -74,6 +74,7 @@
     align-items: center;
     display: flex;
     justify-content: center;
+    width: 100%;
 
     .center {
       background-color: #505050;
@@ -83,6 +84,11 @@
 
       .login-message {
         text-align: center;
+      }
+
+      .my-sw-container {
+        height: 100%;
+        width: 80vw; // % 指定だとうまく動かない
       }
     }
   }

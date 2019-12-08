@@ -38,7 +38,7 @@ init flags =
                     initLoginUI ()
 
                 _ ->
-                    Cmd.none
+                    initSwiper ()
     in
     ( initModel flags, firstEvent )
 
@@ -102,27 +102,58 @@ mainMessage : Model -> Html Msg
 mainMessage model =
     case model.loginUser of
         Just user ->
-            div []
-                [ p [ class "buttons" ]
-                    [ button [ class "button" ]
-                        [ span [ class "icon" ]
-                            [ i [ class "fas fa-plus" ] []
-                            ]
-                        , span [] [ text "新しいルームを作成" ]
-                        ]
-                    ]
-                ]
+            mainContent
 
         Nothing ->
-            div [ class "login-message" ]
-                [ p []
-                    [ text "ようこそ惨劇オンラインへ。" ]
-                , p [ id "login-message-text" ]
-                    [ text "まずはログインしてください。" ]
-                , div
-                    [ id "firebaseui-auth-container" ]
-                    []
+            loginMessage
+
+
+mainContent : Html Msg
+mainContent =
+    div [ class "swiper-container my-sw-container" ]
+        [ div [ class "swiper-wrapper" ]
+            [ div [ class "swiper-slide", attribute "data-history" "main" ] [ mainContentFirst ]
+            , div [ class "swiper-slide", attribute "data-history" "create-room" ] [ createRoomView ]
+            ]
+        ]
+
+
+mainContentFirst =
+    div []
+        [ p [ class "buttons" ]
+            [ button [ class "button" ]
+                [ span [ class "icon" ]
+                    [ i [ class "fas fa-plus" ] []
+                    ]
+                , span [] [ text "新しいルームを作成" ]
                 ]
+            ]
+        ]
+
+
+createRoomView =
+    div []
+        [ h2 [] [ text "ルーム作成" ]
+        , div []
+            [ label []
+                [ text "ルーム名"
+                , input [] []
+                ]
+            ]
+        ]
+
+
+loginMessage : Html msg
+loginMessage =
+    div [ class "login-message" ]
+        [ p []
+            [ text "ようこそ惨劇オンラインへ。" ]
+        , p [ id "login-message-text" ]
+            [ text "まずはログインしてください。" ]
+        , div
+            [ id "firebaseui-auth-container" ]
+            []
+        ]
 
 
 headNavRight : Model -> Html Msg
