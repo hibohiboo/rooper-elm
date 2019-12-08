@@ -3,6 +3,7 @@
 - [x] firebaseへデプロイ
 - [x] assetsフォルダが出力されていなかったものを修正
 - [x] google analyticsの設定
+- [x] async を使ったときのエラーを直す
 - [ ] firebaseで認証
   - [ ] twitter認証
 - [ ] firestore作成

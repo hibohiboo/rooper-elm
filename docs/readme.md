@@ -32,3 +32,5 @@ npm install
 
 ## 使いたい保留
 [swiper](https://swiperjs.com/api/)
+[ionic-slide](https://ionicframework.com/jp/docs/api/slides)
+[elm-ionic](https://github.com/calmery/elm-ionic-example/blob/master/src/index.html)
