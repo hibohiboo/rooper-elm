@@ -34,7 +34,9 @@
   z-index: 500;
 }
 
-.spin-div.active,
-.spin-bg-div.active {
-  display: block;
+.active {
+  .spin-div,
+  .spin-bg-div {
+    display: block;
+  }
 }

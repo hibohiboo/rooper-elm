@@ -9,3 +9,7 @@
 
 ### 参考
 [async/awaitを使用して、"regeneratorRuntime is not defined "エラーが出た時の対処](https://qiita.com/nbstsh/items/44a63b724214a9f920e2)
+
+## firebaseで認証
+### 参考
+[Laravel6.0 の認証を Firebase のTwitter Oauth認証で行ったメモ](https://qiita.com/hibohiboo/items/11768cb10bf1e7025090)

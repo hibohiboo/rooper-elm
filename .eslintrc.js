@@ -19,6 +19,8 @@ module.exports = {
     '@typescript-eslint',
   ],
   rules: {
-    "no-console": process.env.NODE_ENV === 'production' ? 'error' : "off"
+    "no-console": process.env.NODE_ENV === 'production' ? 'error' : "off",
+    "import/prefer-default-export": "off",
+    "import/no-unresolved": "off"
   },
 };
