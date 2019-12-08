@@ -1,13 +1,12 @@
-port module Main exposing (Model, Msg(..), init, main, subscriptions, update, view)
+module Main exposing (Model, Msg(..), init, main, subscriptions, update, view)
 
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Models.User as User exposing (User)
+import Html.Events exposing (onClick)
+import Models.User exposing (User)
+import Ports exposing (..)
 import Task exposing (Task)
-
-
-port errorToJs : String -> Cmd msg
 
 
 main : Program (Maybe User) Model Msg
@@ -26,16 +25,18 @@ main =
 
 type alias Model =
     { loginUser : Maybe User
+    , menuState : MenuState
     }
 
 
 init : Maybe User -> ( Model, Cmd Msg )
 init flags =
-    let
-        _ =
-            Debug.log "flags" flags
-    in
-    ( Model flags, Cmd.batch [] )
+    ( initModel flags, Cmd.batch [] )
+
+
+initModel : Maybe User -> Model
+initModel flags =
+    Model flags MenuClose
 
 
 
@@ -43,14 +44,27 @@ init flags =
 
 
 type Msg
-    = Test
+    = Error String
+    | OpenMenu
+    | CloseMenu
+
+
+type MenuState
+    = MenuClose
+    | MenuOpen
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Test ->
-            ( model, "test" |> errorToJs )
+        Error errorMessage ->
+            ( model, errorMessage |> errorToJs )
+
+        OpenMenu ->
+            ( { model | menuState = MenuOpen }, Cmd.none )
+
+        CloseMenu ->
+            ( { model | menuState = MenuClose }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -63,17 +77,41 @@ view model =
     div [ class "container" ]
         [ nav [ class "page-head" ]
             [ div [] [ text "Tragedy RoopeR online tool" ]
-            , headNavRight model.loginUser
+            , headNavRight model
             ]
         , main_ [] []
         ]
 
 
-headNavRight : Maybe User -> Html Msg
-headNavRight maybeUser =
-    case maybeUser of
+headNavRight : Model -> Html Msg
+headNavRight model =
+    case model.loginUser of
         Just user ->
-            div [ class "right" ] [ img [ src user.twitterProfileImageUrl ] [] ]
+            let
+                menuClass =
+                    case model.menuState of
+                        MenuClose ->
+                            "menu"
+
+                        MenuOpen ->
+                            "menu open"
+
+                clickEvent =
+                    case model.menuState of
+                        MenuClose ->
+                            OpenMenu
+
+                        MenuOpen ->
+                            CloseMenu
+            in
+            div [ class "right", onClick clickEvent ]
+                [ div [ class menuClass ]
+                    [ ul []
+                        [ li [] [ text "サインアウト" ]
+                        ]
+                    ]
+                , img [ src user.twitterProfileImageUrl ] []
+                ]
 
         Nothing ->
             text ""

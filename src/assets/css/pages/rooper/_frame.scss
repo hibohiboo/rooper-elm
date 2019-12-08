@@ -1,6 +1,10 @@
+
+
 .container {
+  $header-height: 2rem;
+
   display: grid;
-  grid-template-rows: 2rem auto;
+  grid-template-rows: $header-height auto;
   height: 100vh;
   overflow: hidden;
   widows: 100vw;
@@ -23,10 +27,34 @@
     }
 
     .right {
-      height: 2rem;
+      height: $header-height;
       justify-self: flex-end;
       margin-top: 5px;
       overflow: hidden;
+
+      .menu {
+        display: none;
+        padding-top: $header-height + 2rem;
+        position: absolute;
+
+        &.open {
+          display: block;
+        }
+
+        ul {
+          background-color: rgba(50, 50, 50, 0.6);
+          margin-left: -4rem;
+          padding: 0.5rem;
+
+          li {
+            cursor: pointer;
+
+            &:hover {
+              background-color: #505050;
+            }
+          }
+        }
+      }
 
       img {
         height: 100%;
