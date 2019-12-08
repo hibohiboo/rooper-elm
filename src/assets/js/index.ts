@@ -1,7 +1,7 @@
 // import * as M from 'M'; //  tslint-disable-line
 import firebaseBackEnd, { hideLoader } from './firebase/FireBaseBackEnd';
 
-import { Elm } from './Main'; //  eslint-disable-line import/no-unresolved
+import { Elm } from './elm/Main'; //  eslint-disable-line import/no-unresolved
 
 require('../css/styles.scss'); // tslint:disable-line no-var-requires
 
@@ -23,7 +23,7 @@ const initApp = async () => {
   const flags = {};
 
   // elmのＤＯＭを作成する元となるＤＯＭ要素
-  const mountNode: HTMLElement = document.getElementById('chatlog')!;
+  const mountNode: HTMLElement = document.getElementById('app')!;
   console.log('mount', mountNode);
 
   // 初期値を与える
