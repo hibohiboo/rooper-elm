@@ -99,6 +99,7 @@ export class FireBaseBackEnd {
       signInFlow: 'redirect',
       callbacks: {
         signInSuccessWithAuthResult(authResult, redirectUrl = '/rooper/') {
+          // 認証ユーザ取得
           const { user: { displayName, uid } } = authResult;
 
           (async () => {
@@ -137,6 +138,10 @@ export class FireBaseBackEnd {
     };
     try {
       const ui = new firebaseui.auth.AuthUI(this.auth);
+      if (ui.isPendingRedirect()) {
+        // ログインを促すメッセージを修正
+        document.getElementById('login-message-text')!.innerText = '認証中。もうしばらくお待ちください。';
+      }
       ui.start('#firebaseui-auth-container', uiConfig);
     } catch (e) {
       // 2回目に読み込んだ時に、elmと競合してfirebaseui-auth-containerの要素が取得できなくなるので、再読み込み

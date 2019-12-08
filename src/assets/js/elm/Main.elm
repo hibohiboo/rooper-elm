@@ -98,6 +98,7 @@ view model =
         ]
 
 
+mainMessage : Model -> Html Msg
 mainMessage model =
     case model.loginUser of
         Just user ->
@@ -107,7 +108,7 @@ mainMessage model =
             div [ class "login-message" ]
                 [ p []
                     [ text "ようこそ惨劇オンラインへ。" ]
-                , p []
+                , p [ id "login-message-text" ]
                     [ text "まずはログインしてください。" ]
                 , div
                     [ id "firebaseui-auth-container" ]

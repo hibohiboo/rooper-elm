@@ -16,19 +16,15 @@ type alias User =
 
 decodeUserFromString : String -> Maybe User
 decodeUserFromString json =
-    let
-        _ =
-            Debug.log "json" json
-    in
     decodeUserFromJson (E.string json)
 
 
 decodeUserFromJson : Value -> Maybe User
 decodeUserFromJson json =
-    let
-        _ =
-            Debug.log "decodeUser" json
-    in
+    -- let
+    --     _ =
+    --         Debug.log "decodeUser" json
+    -- in
     json
         |> Decode.decodeValue decoder
         |> Result.toMaybe
