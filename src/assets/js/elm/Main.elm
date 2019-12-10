@@ -111,34 +111,29 @@ mainMessage model =
 
 mainContent : Html Msg
 mainContent =
-    Swiper.wrapper
-        [ div [ class "swiper-slide", attribute "data-history" "main" ] [ mainContentFirst ]
-        , div [ class "swiper-slide", attribute "data-history" "create-room" ] [ createRoomView ]
-        ]
-
-
-mainContentFirst : Html Msg
-mainContentFirst =
-    div []
-        [ p [ class "buttons" ]
-            [ button [ class "button" ]
-                [ span [ class "icon" ]
-                    [ i [ class "fas fa-plus" ] []
-                    ]
-                , span [] [ text "新しいルームを作成" ]
-                ]
-            ]
-        ]
+    createRoomView
 
 
 createRoomView : Html Msg
 createRoomView =
     div []
         [ h2 [] [ text "ルーム作成" ]
-        , div []
-            [ label []
+        , div [ class "field" ]
+            [ label [ class "label has-text-white" ]
                 [ text "ルーム名"
-                , input [] []
+                ]
+            , div [ class "control" ]
+                [ input [ class "input" ] []
+                ]
+            ]
+        , div []
+            [ p [ class "buttons" ]
+                [ button [ class "button" ]
+                    [ span [ class "icon" ]
+                        [ i [ class "fas fa-plus" ] []
+                        ]
+                    , span [] [ text "新しいルームを作成" ]
+                    ]
                 ]
             ]
         ]

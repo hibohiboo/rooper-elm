@@ -29,6 +29,7 @@ npm install
 [VS CodeにESLintを設定する](https://qiita.com/Mount/items/5f8196b891444575b7db)
 [ import * as vfileMessage from 'vfile-message';のエラーが出ていた。。。](https://github.com/vmware/clarity/issues/4012)
 [Webpack 4 production モードで console.log を削除したい](https://chaika.hatenablog.com/entry/2019/02/01/083000)
+[devserver histroy apii](https://webpack.js.org/configuration/dev-server/#devserverhistoryapifallback)
 
 ## 使いたい保留
 [swiper](https://swiperjs.com/api/)
