@@ -139,7 +139,7 @@ if (MODE === 'development') {
       contentBase: path.join(__dirname, 'src'),
       historyApiFallback: {
         rewrites: [
-          { from: /^\/$/, to: '/rooper/index.html' },
+          // { from: /^\/$/, to: '/rooper/index.html' },
           { from: /^\/rooper/, to: '/rooper/index.html' },
         ]
       },
