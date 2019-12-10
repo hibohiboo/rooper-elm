@@ -7,6 +7,7 @@ import Html.Events exposing (onClick)
 import Models.User exposing (User)
 import Ports exposing (..)
 import Task exposing (Task)
+import Views.Swiper as Swiper
 
 
 main : Program (Maybe User) Model Msg
@@ -110,14 +111,13 @@ mainMessage model =
 
 mainContent : Html Msg
 mainContent =
-    div [ class "swiper-container my-sw-container" ]
-        [ div [ class "swiper-wrapper" ]
-            [ div [ class "swiper-slide", attribute "data-history" "main" ] [ mainContentFirst ]
-            , div [ class "swiper-slide", attribute "data-history" "create-room" ] [ createRoomView ]
-            ]
+    Swiper.wrapper
+        [ div [ class "swiper-slide", attribute "data-history" "main" ] [ mainContentFirst ]
+        , div [ class "swiper-slide", attribute "data-history" "create-room" ] [ createRoomView ]
         ]
 
 
+mainContentFirst : Html Msg
 mainContentFirst =
     div []
         [ p [ class "buttons" ]
@@ -131,6 +131,7 @@ mainContentFirst =
         ]
 
 
+createRoomView : Html Msg
 createRoomView =
     div []
         [ h2 [] [ text "ルーム作成" ]

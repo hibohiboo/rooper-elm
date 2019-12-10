@@ -30,8 +30,9 @@ const initApp = async () => {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev',
       },
+      // ヒストリapi
       history: {
-        replaceState: true,
+        replaceState: false,
       },
     });
   });
