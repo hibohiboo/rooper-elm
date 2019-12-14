@@ -1,13 +1,15 @@
 module Main exposing (Model, Msg(..), init, main, subscriptions, update, view)
 
 import Browser
+import Component.Form as Form
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, onInput)
+import Html.Events.Extra exposing (onChange)
+import Models.Room as Room exposing (Room)
 import Models.User exposing (User)
 import Ports exposing (..)
 import Task exposing (Task)
-import Views.Swiper as Swiper
 
 
 main : Program (Maybe User) Model Msg
@@ -27,6 +29,8 @@ main =
 type alias Model =
     { loginUser : Maybe User
     , menuState : MenuState
+    , roomForm : Room.RegisterForm
+    , room : Maybe Room
     }
 
 
@@ -46,7 +50,7 @@ init flags =
 
 initModel : Maybe User -> Model
 initModel flags =
-    Model flags MenuClose
+    Model flags MenuClose Room.init Nothing
 
 
 
@@ -58,6 +62,8 @@ type Msg
     | OpenMenu
     | CloseMenu
     | SignOut
+    | ChangeRoomName String
+    | ChangeRoomId String
 
 
 type MenuState
@@ -79,6 +85,12 @@ update msg model =
 
         SignOut ->
             ( model, signOut () )
+
+        ChangeRoomName name ->
+            ( { model | roomForm = Room.setName name model.roomForm }, Cmd.none )
+
+        ChangeRoomId id ->
+            ( { model | roomForm = Room.setId id model.roomForm }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -103,40 +115,44 @@ mainMessage : Model -> Html Msg
 mainMessage model =
     case model.loginUser of
         Just user ->
-            mainContent
+            mainContent model
 
         Nothing ->
             loginMessage
 
 
-mainContent : Html Msg
-mainContent =
-    createRoomView
+mainContent : Model -> Html Msg
+mainContent model =
+    createRoomView model
 
 
-createRoomView : Html Msg
-createRoomView =
-    div []
-        [ h2 [] [ text "ルーム作成" ]
-        , div [ class "field" ]
+createRoomView : Model -> Html Msg
+createRoomView { roomForm } =
+    Room.registerForm
+        [ Form.field
             [ label [ class "label has-text-white" ]
                 [ text "ルーム名"
                 ]
-            , div [ class "control" ]
-                [ input [ class "input" ] []
+            , Form.control
+                [ input [ class "input", required True, onInput ChangeRoomName ] []
                 ]
-            ]
-        , div []
-            [ p [ class "buttons" ]
-                [ button [ class "button" ]
-                    [ span [ class "icon" ]
-                        [ i [ class "fas fa-plus" ] []
-                        ]
-                    , span [] [ text "新しいルームを作成" ]
-                    ]
-                ]
+            , Form.errors (Room.getNameError roomForm)
             ]
         ]
+
+
+
+-- , div []
+--     [ p [ class "buttons" ]
+--         [ button [ class "button" ]
+--             [ span [ class "icon" ]
+--                 [ i [ class "fas fa-plus" ] []
+--                 ]
+--             , span [] [ text "新しいルームを作成" ]
+--             ]
+--         ]
+--     ]
+-- ]
 
 
 loginMessage : Html msg
