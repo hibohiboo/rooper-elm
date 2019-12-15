@@ -5,6 +5,7 @@ import Html exposing (..)
 import Html.Attributes as Attributes exposing (..)
 import Html.Keyed as Keyed
 import Html.Lazy as Html
+import Json.Encode as E
 import Models.Room.Id as Id exposing (Id)
 import Models.Room.Name as Name exposing (Name)
 
@@ -59,6 +60,20 @@ init =
     { id = ""
     , name = ""
     }
+
+
+
+-- Convert
+
+
+convert : RegisterForm -> Maybe Room
+convert f =
+    case Decoder.run form f of
+        Ok result ->
+            Just result
+
+        Err _ ->
+            Nothing
 
 
 
@@ -153,4 +168,18 @@ registerForm children =
         [ h2 [] [ text "ルーム作成" ]
         , div []
             children
+        ]
+
+
+
+-- ==============================================================================================
+-- エンコーダ
+-- ==============================================================================================
+
+
+encode : Room -> E.Value
+encode room =
+    E.object
+        [ ( "id", E.string <| Id.toString room.id )
+        , ( "name", E.string <| Name.toString room.name )
         ]

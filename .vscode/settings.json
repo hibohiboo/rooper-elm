@@ -11,5 +11,5 @@
   "typescript.validate.enable": false,
   "scss.validate": false,
   "stylelint.autoFixOnSave": true,
-  "editor.tabSize": 2
+  "editor.tabSize": 2,
 }

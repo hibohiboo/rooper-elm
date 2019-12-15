@@ -1,6 +1,6 @@
 import * as firebase from 'firebase';
 import * as firebaseui from 'firebaseui';
-import { createUser, getUser } from './User';
+import User, { createUser, getUser } from './User';
 
 export const hideLoader = () => {
   const activeLoaderClassElement = document.querySelector('.active');
@@ -50,7 +50,7 @@ export class FireBaseBackEnd {
   /**
    * サインインしている場合、ユーザを返す
    */
-  public getSignedInUser() {
+  public getSignedInUser(): Promise<User | null> {
     const { auth, db } = this;
     return new Promise((resolve, reject) => {
       try {

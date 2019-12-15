@@ -64,6 +64,7 @@ type Msg
     | SignOut
     | ChangeRoomName String
     | ChangeRoomId String
+    | UpdateRoom
 
 
 type MenuState
@@ -91,6 +92,21 @@ update msg model =
 
         ChangeRoomId id ->
             ( { model | roomForm = Room.setId id model.roomForm }, Cmd.none )
+
+        UpdateRoom ->
+            let
+                room =
+                    Room.convert model.roomForm
+
+                cmd =
+                    case room of
+                        Nothing ->
+                            Cmd.none
+
+                        Just r ->
+                            updateRoom <| Room.encode r
+            in
+            ( { model | room = room }, cmd )
 
 
 subscriptions : Model -> Sub Msg
@@ -137,6 +153,9 @@ createRoomView { roomForm } =
                 [ input [ class "input", required True, onInput ChangeRoomName ] []
                 ]
             , Form.errors (Room.getNameError roomForm)
+            ]
+        , div [ class "control" ]
+            [ button [ class "button is-primary", onClick UpdateRoom ] [ text "作成" ]
             ]
         ]
 
