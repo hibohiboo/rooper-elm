@@ -58,6 +58,20 @@ const initApp = async () => {
   // });
 
   hideLoader();
+
+  // histroy api 設定
+  [...document.querySelectorAll('a')].forEach((element) => element.addEventListener('click', (event) => {
+    console.log('beforeunload 2', element.href);
+    console.log('domain', document.domain);
+    if (element.href.indexOf(document.domain) !== -1) {
+      event.preventDefault();
+    }
+    // Cancel the event as stated by the standard.
+
+    // Chrome requires returnValue to be set.
+    event.returnValue = false; // eslint-disable-line
+    return false;
+  }));
 };
 
 // 初期設定実行
