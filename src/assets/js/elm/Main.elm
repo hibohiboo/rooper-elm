@@ -35,6 +35,7 @@ type alias Model =
     , roomForm : Room.RegisterForm
     , room : Maybe Room
     , rooms : Maybe (List RoomName)
+    , mainAreaState : MainAreaState
     }
 
 
@@ -54,7 +55,7 @@ init flags =
 
 initModel : Maybe User -> Model
 initModel flags =
-    Model flags MenuClose Room.init Nothing Nothing
+    Model flags MenuClose Room.init Nothing Nothing MainTab
 
 
 
@@ -75,6 +76,11 @@ type Msg
 type MenuState
     = MenuClose
     | MenuOpen
+
+
+type MainAreaState
+    = MainTab
+    | ScenarioTab
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -131,14 +137,39 @@ view model =
             ]
         , main_ []
             [ div [ class "center box" ]
-                [ div [ class "tabs" ]
-                    [ ul []
-                        [ li [ class "is-active" ] [ a [] [ text "メイン" ] ]
-                        , li [] [ a [] [ text "シナリオ" ] ]
-                        ]
-                    ]
+                [ mainTabs model
                 , mainMessage model
                 ]
+            ]
+        ]
+
+
+mainTabs : Model -> Html msg
+mainTabs model =
+    let
+        { mainAreaState } =
+            model
+
+        mainTabClass =
+            case mainAreaState of
+                MainTab ->
+                    class "is-active"
+
+                _ ->
+                    class ""
+
+        scenarioTabClass =
+            case mainAreaState of
+                ScenarioTab ->
+                    class "is-active"
+
+                _ ->
+                    class ""
+    in
+    div [ class "tabs" ]
+        [ ul []
+            [ li [ mainTabClass ] [ a [ href "/rooper" ] [ text "メイン" ] ]
+            , li [ scenarioTabClass ] [ a [ href "/rooper/scenario" ] [ text "シナリオ" ] ]
             ]
         ]
 
