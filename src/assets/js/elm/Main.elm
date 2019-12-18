@@ -6,7 +6,9 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Html.Events.Extra exposing (onChange)
+import Json.Encode exposing (Value)
 import Models.Room as Room exposing (Room)
+import Models.RoomName as RoomName exposing (RoomName)
 import Models.User exposing (User)
 import Ports exposing (..)
 import Task exposing (Task)
@@ -31,6 +33,7 @@ type alias Model =
     , menuState : MenuState
     , roomForm : Room.RegisterForm
     , room : Maybe Room
+    , rooms : Maybe (List RoomName)
     }
 
 
@@ -50,7 +53,7 @@ init flags =
 
 initModel : Maybe User -> Model
 initModel flags =
-    Model flags MenuClose Room.init Nothing
+    Model flags MenuClose Room.init Nothing Nothing
 
 
 
@@ -65,6 +68,7 @@ type Msg
     | ChangeRoomName String
     | ChangeRoomId String
     | UpdateRoom
+    | ReadRooms Value
 
 
 type MenuState
@@ -108,10 +112,13 @@ update msg model =
             in
             ( { model | room = room }, cmd )
 
+        ReadRooms val ->
+            ( { model | rooms = RoomName.decodeRoomNameListFromJson val }, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch []
+    Sub.batch [ readRooms ReadRooms ]
 
 
 view : Model -> Html Msg
@@ -122,7 +129,7 @@ view model =
             , headNavRight model
             ]
         , main_ []
-            [ div [ class "center" ] [ mainMessage model ]
+            [ div [ class "center box" ] [ mainMessage model ]
             ]
         ]
 
@@ -139,39 +146,31 @@ mainMessage model =
 
 mainContent : Model -> Html Msg
 mainContent model =
-    createRoomView model
-
-
-createRoomView : Model -> Html Msg
-createRoomView { roomForm } =
-    Room.registerForm
-        [ Form.field
-            [ label [ class "label has-text-white" ]
-                [ text "ルーム名"
-                ]
-            , Form.control
-                [ input [ class "input", required True, onInput ChangeRoomName ] []
-                ]
-            , Form.errors (Room.getNameError roomForm)
-            ]
-        , div [ class "control" ]
-            [ button [ class "button is-primary", onClick UpdateRoom ] [ text "作成" ]
+    div [ class "panel" ]
+        [ a [ class "panel-block", href "#test" ]
+            [ span []
+                [ text "テスト" ]
             ]
         ]
 
 
 
--- , div []
---     [ p [ class "buttons" ]
---         [ button [ class "button" ]
---             [ span [ class "icon" ]
---                 [ i [ class "fas fa-plus" ] []
+-- createRoomView : Model -> Html Msg
+-- createRoomView { roomForm } =
+--     Room.registerForm
+--         [ Form.field
+--             [ label [ class "label has-text-white" ]
+--                 [ text "ルーム名"
 --                 ]
---             , span [] [ text "新しいルームを作成" ]
+--             , Form.control
+--                 [ input [ class "input", required True, onInput ChangeRoomName ] []
+--                 ]
+--             , Form.errors (Room.getNameError roomForm)
+--             ]
+--         , div [ class "control" ]
+--             [ button [ class "button is-primary", onClick UpdateRoom ] [ text "作成" ]
 --             ]
 --         ]
---     ]
--- ]
 
 
 loginMessage : Html msg

@@ -2,9 +2,6 @@ module Models.Room exposing (..)
 
 import Form.Decoder as Decoder exposing (Decoder)
 import Html exposing (..)
-import Html.Attributes as Attributes exposing (..)
-import Html.Keyed as Keyed
-import Html.Lazy as Html
 import Json.Encode as E
 import Models.Room.Id as Id exposing (Id)
 import Models.Room.Name as Name exposing (Name)
