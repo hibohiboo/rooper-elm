@@ -18,13 +18,17 @@ const initApp = async () => {
   if (user === null) {
     return;
   }
-  const rooms = await readRooms(firebaseBackEnd.db, user.storeUserId);
-  if (rooms === []) {
+  let rooms = await readRooms(firebaseBackEnd.db, user.storeUserId);
+  if (rooms.length === 0) {
     const room = new Room({
       createUserId: user.storeUserId, id: '', name: `room-${user.twitterScreenName}`, uid: user.uid,
     });
     addRoom(room, firebaseBackEnd.db, firebaseBackEnd.getTimestamp(), user.uid, user.storeUserId);
+
+    // 再取得
+    rooms = await readRooms(firebaseBackEnd.db, user.storeUserId);
   }
+  ports.readRooms.send(rooms);
   // ports.updateRoom.subscribe(({ id, name }) => {
   //   const room = new Room({
   //     createUserId: user.storeUserId, id, name, uid: user.uid,

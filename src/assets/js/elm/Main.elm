@@ -12,6 +12,7 @@ import Models.RoomName as RoomName exposing (RoomName)
 import Models.User exposing (User)
 import Ports exposing (..)
 import Task exposing (Task)
+import Views.RoomName as RoomNameView
 
 
 main : Program (Maybe User) Model Msg
@@ -146,12 +147,16 @@ mainMessage model =
 
 mainContent : Model -> Html Msg
 mainContent model =
-    div [ class "panel" ]
-        [ a [ class "panel-block", href "#test" ]
-            [ span []
-                [ text "テスト" ]
-            ]
-        ]
+    let
+        { rooms } =
+            model
+    in
+    case rooms of
+        Just r ->
+            RoomNameView.rooms r
+
+        Nothing ->
+            text ""
 
 
 
