@@ -9,13 +9,11 @@ import Models.RoomName as RoomName exposing (RoomName)
 
 rooms : List RoomName -> Html msg
 rooms rs =
-    div [ class "panel" ]
-        [ p [ class "panel-heading" ] [ text "プレイルーム" ]
-        , Keyed.node "div"
-            []
-          <|
-            List.map keyedRoom rs
-        ]
+    Keyed.node "div"
+        [ class "panel" ]
+    <|
+        ( "rooms-title", p [ class "panel-heading" ] [ text "プレイルーム" ] )
+            :: List.map keyedRoom rs
 
 
 keyedRoom : RoomName -> ( String, Html msg )
@@ -29,8 +27,5 @@ room r =
         [ class "panel-block"
         , href ("/rooper/room/" ++ r.id)
         ]
-        [ span
-            []
-            [ text r.name
-            ]
+        [ text r.name
         ]
