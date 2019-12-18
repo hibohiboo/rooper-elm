@@ -130,7 +130,15 @@ view model =
             , headNavRight model
             ]
         , main_ []
-            [ div [ class "center box" ] [ mainMessage model ]
+            [ div [ class "center box" ]
+                [ div [ class "tabs" ]
+                    [ ul []
+                        [ li [ class "is-active" ] [ a [] [ text "メイン" ] ]
+                        , li [] [ a [] [ text "シナリオ" ] ]
+                        ]
+                    ]
+                , mainMessage model
+                ]
             ]
         ]
 
