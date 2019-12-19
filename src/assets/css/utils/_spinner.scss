@@ -5,7 +5,7 @@
 // ... 統一感を出すためにMaterializeを使用がよいか。
 
 .spin-div {
-  background-color: #fff;
+  // background-color: #fff;
   border-radius: 1rem;
   display: none;
   left: calc(50% - 2.5rem);
@@ -23,17 +23,28 @@
   }
 }
 
-.spin-bg-div {
-  background-color: #000;
-  display: none;
-  filter: alpha(opacity=50);
-  height: 200%;
-  left: 0;
-  opacity: 0.5;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 500;
+// from font awesome
+// 読み込みが遅いので、ローディングのスピナーのみ移植
+.svg-inline--fa {
+  overflow: visible;
+}
+
+.svg-inline--fa.fa-w-16 {
+  width: 1em;
+}
+
+.fa-spin {
+  animation: fa-spin 2s infinite linear;
+}
+
+@keyframes fa-spin {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .active {
