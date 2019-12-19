@@ -1,14 +1,7 @@
 import * as firebase from 'firebase';
 import * as firebaseui from 'firebaseui';
 import User, { createUser, getUser } from './User';
-
-export const hideLoader = () => {
-  const activeLoaderClassElement = document.querySelector('.active');
-  if (!activeLoaderClassElement) {
-    return;
-  }
-  activeLoaderClassElement.classList.remove('active');
-};
+import { hideLoader } from '../utils/spinner';
 
 export class FireBaseBackEnd {
   public auth;

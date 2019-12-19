@@ -57,17 +57,15 @@ h1 {
   font-size: 2em;
 }
 
-.wrapper {
-  // color: rgb(223, 225, 226);
-  margin: 0 auto;
-  max-width: 640px;
-  min-height: 100vh;
+.rooper {
+  &-wrapper {
+    // color: rgb(223, 225, 226);
+    margin: 0 auto;
+    max-width: 640px;
+    min-height: 100vh;
+  }
 }
 
-.header {
-  display: flex;
-  flex-wrap: wrap;
-}
 
 @import 'utils/spinner';
 @import 'utils/form';

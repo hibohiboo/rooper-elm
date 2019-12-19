@@ -1,8 +1,9 @@
 // import * as M from 'M'; //  tslint-disable-line
 import * as Swiper from 'swiper';
-import firebaseBackEnd, { hideLoader } from './firebase/FireBaseBackEnd';
+import firebaseBackEnd from './firebase/FireBaseBackEnd';
 import Room, { addRoom, readRooms } from './firebase/Room';
 import { Elm } from './elm/Main'; //  eslint-disable-line import/no-unresolved
+import { hideLoader } from './utils/spinner';
 
 require('../css/styles.scss'); // tslint:disable-line no-var-requires
 
@@ -78,6 +79,7 @@ const initApp = async () => {
     event.returnValue = false; // eslint-disable-line
     return false;
   }));
+  document.querySelector('rooper-wrapper');
   // elm に ページ遷移時の URLを伝える
   ports.changeUrl.send(window.location.href);
 };
