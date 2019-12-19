@@ -61,22 +61,24 @@ const initApp = async () => {
 
   // histroy api 設定.遷移 を防ぐ
   [...document.querySelectorAll('a')].forEach((element) => element.addEventListener('click', (event) => {
-    console.log('href', element.href);
-    console.log('domain', document.domain);
+    // console.log('href', element.href);
+    // console.log('domain', document.domain);
     if (element.href.indexOf(document.domain) !== -1) {
+      // ページ遷移キャンセル
       event.preventDefault();
-      event.stopImmediatePropagation();
+      // event.stopPropagation(); // 親にイベントを伝播させない
+      // event.stopImmediatePropagation(); // 他のリスナを実行しない
 
       // elm に URLの変更を伝える
       ports.changeUrl.send(element.href);
     }
     // Cancel the event as stated by the standard.
-
     // Chrome requires returnValue to be set.
     event.returnValue = false; // eslint-disable-line
     return false;
   }));
-  window.addEventListener('hashchange', (e) => console.log('change', e));
+  // elm に ページ遷移時の URLを伝える
+  ports.changeUrl.send(window.location.href);
 };
 
 // 初期設定実行
