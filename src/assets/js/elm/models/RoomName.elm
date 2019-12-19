@@ -14,6 +14,11 @@ type alias RoomName =
     }
 
 
+initRoomNames : Maybe (List RoomName)
+initRoomNames =
+    Nothing
+
+
 decodeRoomNameListFromJson : Value -> Maybe (List RoomName)
 decodeRoomNameListFromJson json =
     -- let

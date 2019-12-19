@@ -9,6 +9,7 @@ import Html.Events.Extra exposing (onChange)
 import Json.Encode exposing (Value)
 import Models.Room as Room exposing (Room)
 import Models.RoomName as RoomName exposing (RoomName)
+import Models.Scenario as Scenario exposing (Scenario)
 import Models.User exposing (User)
 import Ports exposing (..)
 import Route
@@ -35,6 +36,8 @@ type alias Model =
     , roomForm : Room.RegisterForm
     , room : Maybe Room
     , rooms : Maybe (List RoomName)
+    , scenario : Maybe Scenario
+    , scenarios : Maybe (List Scenario)
     , mainAreaState : MainAreaState
     , modalState : ModalState
     , modalMessage : String
@@ -57,7 +60,7 @@ init flags =
 
 initModel : Maybe User -> Model
 initModel flags =
-    Model flags MenuClose Room.init Nothing Nothing MainTab CloseModalState ""
+    Model flags MenuClose Room.init Room.initRoom RoomName.initRoomNames Scenario.initScenario Scenario.initScenarios MainTab CloseModalState ""
 
 
 
@@ -86,6 +89,7 @@ type MenuState
 type MainAreaState
     = MainTab
     | ScenarioTab
+    | NothingTab
 
 
 type ModalState
@@ -141,7 +145,7 @@ update msg model =
                     ( { model | mainAreaState = ScenarioTab }, Cmd.none )
 
                 Route.NotFound ->
-                    update (OpenModal "指定されたURLが見つかりません。\nご確認お願いします。") model
+                    update (OpenModal "指定されたURLが見つかりません。\nご確認お願いします。") { model | mainAreaState = NothingTab }
 
         OpenModal message ->
             ( { model | modalState = OpenModalState, modalMessage = message }, Cmd.none )
@@ -197,7 +201,7 @@ modal model =
 mainTabs : Model -> Html msg
 mainTabs model =
     let
-        { mainAreaState } =
+        { mainAreaState, loginUser } =
             model
 
         mainTabClass =
@@ -216,26 +220,49 @@ mainTabs model =
                 _ ->
                     class ""
     in
-    div [ class "tabs" ]
-        [ ul []
-            [ li [ mainTabClass ] [ a [ href "/rooper" ] [ text "メイン" ] ]
-            , li [ scenarioTabClass ] [ a [ href "/rooper/scenario" ] [ text "シナリオ" ] ]
-            ]
-        ]
+    case loginUser of
+        Nothing ->
+            text ""
+
+        Just _ ->
+            div [ class "tabs" ]
+                [ ul []
+                    [ li [ mainTabClass ] [ a [ href "/rooper" ] [ text "メイン" ] ]
+                    , li [ scenarioTabClass ] [ a [ href "/rooper/scenario" ] [ text "シナリオ" ] ]
+                    ]
+                ]
 
 
 mainMessage : Model -> Html Msg
 mainMessage model =
     case model.loginUser of
-        Just user ->
-            mainContent model
+        Just _ ->
+            logginedMainArea model
 
         Nothing ->
             loginMessage
 
 
-mainContent : Model -> Html Msg
-mainContent model =
+logginedMainArea : Model -> Html Msg
+logginedMainArea model =
+    case model.mainAreaState of
+        MainTab ->
+            mainTopContent model
+
+        NothingTab ->
+            text ""
+
+        ScenarioTab ->
+            mainScenarioContent model
+
+
+mainScenarioContent : Model -> Html Msg
+mainScenarioContent model =
+    text "scenario"
+
+
+mainTopContent : Model -> Html Msg
+mainTopContent model =
     let
         { rooms } =
             model

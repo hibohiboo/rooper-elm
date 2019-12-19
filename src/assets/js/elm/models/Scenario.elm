@@ -14,6 +14,16 @@ type alias Scenario =
     }
 
 
+initScenario : Maybe Scenario
+initScenario =
+    Nothing
+
+
+initScenarios : Maybe (List Scenario)
+initScenarios =
+    Nothing
+
+
 decodeScenarioListFromJson : Value -> Maybe (List Scenario)
 decodeScenarioListFromJson json =
     json

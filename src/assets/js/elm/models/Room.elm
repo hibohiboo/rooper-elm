@@ -17,6 +17,11 @@ type alias Room =
     }
 
 
+initRoom : Maybe Room
+initRoom =
+    Nothing
+
+
 
 -- Decoder
 
