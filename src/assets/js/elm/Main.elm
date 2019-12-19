@@ -157,7 +157,7 @@ subscriptions model =
 
 view : Model -> Html Msg
 view model =
-    div [ class "container" ]
+    div [ class "rooper-container" ]
         [ nav [ class "page-head" ]
             [ div [ class "left" ] [ text "惨劇RoopeR online tool" ]
             , headNavRight model
