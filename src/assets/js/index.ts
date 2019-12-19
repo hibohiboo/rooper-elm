@@ -59,12 +59,16 @@ const initApp = async () => {
 
   hideLoader();
 
-  // histroy api 設定
+  // histroy api 設定.遷移 を防ぐ
   [...document.querySelectorAll('a')].forEach((element) => element.addEventListener('click', (event) => {
-    console.log('beforeunload 2', element.href);
+    console.log('href', element.href);
     console.log('domain', document.domain);
     if (element.href.indexOf(document.domain) !== -1) {
       event.preventDefault();
+      event.stopImmediatePropagation();
+
+      // elm に URLの変更を伝える
+      ports.changeUrl.send(element.href);
     }
     // Cancel the event as stated by the standard.
 
@@ -72,6 +76,7 @@ const initApp = async () => {
     event.returnValue = false; // eslint-disable-line
     return false;
   }));
+  window.addEventListener('hashchange', (e) => console.log('change', e));
 };
 
 // 初期設定実行

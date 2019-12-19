@@ -11,8 +11,8 @@ import Models.Room as Room exposing (Room)
 import Models.RoomName as RoomName exposing (RoomName)
 import Models.User exposing (User)
 import Ports exposing (..)
+import Route
 import Task exposing (Task)
-import Views.RoomName as RoomNameView
 
 
 main : Program (Maybe User) Model Msg
@@ -71,6 +71,7 @@ type Msg
     | ChangeRoomId String
     | UpdateRoom
     | ReadRooms Value
+    | ChangeUrl String
 
 
 type MenuState
@@ -122,10 +123,21 @@ update msg model =
         ReadRooms val ->
             ( { model | rooms = RoomName.decodeRoomNameListFromJson val }, Cmd.none )
 
+        ChangeUrl url ->
+            case Route.toRoute url of
+                Route.Top ->
+                    ( { model | mainAreaState = MainTab }, Cmd.none )
+
+                Route.Scenario ->
+                    ( { model | mainAreaState = ScenarioTab }, Cmd.none )
+
+                Route.NotFound ->
+                    ( { model | mainAreaState = MainTab }, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [ readRooms ReadRooms ]
+    Sub.batch [ readRooms ReadRooms, changeUrl ChangeUrl ]
 
 
 view : Model -> Html Msg
@@ -192,7 +204,7 @@ mainContent model =
     in
     case rooms of
         Just r ->
-            RoomNameView.rooms r
+            RoomName.rooms r
 
         Nothing ->
             text ""
