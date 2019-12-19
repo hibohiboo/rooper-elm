@@ -36,6 +36,8 @@ type alias Model =
     , room : Maybe Room
     , rooms : Maybe (List RoomName)
     , mainAreaState : MainAreaState
+    , modalState : ModalState
+    , modalMessage : String
     }
 
 
@@ -55,7 +57,7 @@ init flags =
 
 initModel : Maybe User -> Model
 initModel flags =
-    Model flags MenuClose Room.init Nothing Nothing MainTab
+    Model flags MenuClose Room.init Nothing Nothing MainTab CloseModalState ""
 
 
 
@@ -72,6 +74,8 @@ type Msg
     | UpdateRoom
     | ReadRooms Value
     | ChangeUrl String
+    | OpenModal String
+    | CloseModal
 
 
 type MenuState
@@ -82,6 +86,11 @@ type MenuState
 type MainAreaState
     = MainTab
     | ScenarioTab
+
+
+type ModalState
+    = OpenModalState
+    | CloseModalState
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -132,7 +141,13 @@ update msg model =
                     ( { model | mainAreaState = ScenarioTab }, Cmd.none )
 
                 Route.NotFound ->
-                    ( { model | mainAreaState = MainTab }, Cmd.none )
+                    update (OpenModal "指定されたURLが見つかりません。\nご確認お願いします。") model
+
+        OpenModal message ->
+            ( { model | modalState = OpenModalState, modalMessage = message }, Cmd.none )
+
+        CloseModal ->
+            ( { model | modalState = CloseModalState }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -152,6 +167,29 @@ view model =
                 [ mainTabs model
                 , mainMessage model
                 ]
+            ]
+        , modal model
+        ]
+
+
+modal : Model -> Html Msg
+modal model =
+    let
+        { modalMessage, modalState } =
+            model
+
+        isActive =
+            case modalState of
+                CloseModalState ->
+                    ""
+
+                _ ->
+                    "is-active"
+    in
+    div [ class "modal", class isActive ]
+        [ div [ class "modal-background", onClick CloseModal ] []
+        , div [ class "modal-content" ]
+            [ div [ class "box rooper-modal-message" ] [ text modalMessage ]
             ]
         ]
 

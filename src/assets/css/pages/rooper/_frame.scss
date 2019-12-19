@@ -1,3 +1,9 @@
+.rooper {
+  &-modal-message {
+    white-space: pre-wrap;
+  }
+}
+
 .container {
   $header-height: 2rem;
 
