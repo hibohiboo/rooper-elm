@@ -159,7 +159,7 @@ view : Model -> Html Msg
 view model =
     div [ class "container" ]
         [ nav [ class "page-head" ]
-            [ div [ class "left" ] [ text "惨劇  RoopeR online tool" ]
+            [ div [ class "left" ] [ text "惨劇RoopeR online tool" ]
             , headNavRight model
             ]
         , main_ []

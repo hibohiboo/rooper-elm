@@ -71,6 +71,8 @@ const initApp = async () => {
       // event.stopPropagation(); // 親にイベントを伝播させない
       // event.stopImmediatePropagation(); // 他のリスナを実行しない
 
+      // history api に push
+      window.history.pushState({}, '惨劇RoopeR online tool', element.href);
       // elm に URLの変更を伝える
       ports.changeUrl.send(element.href);
     }
@@ -79,6 +81,8 @@ const initApp = async () => {
     event.returnValue = false; // eslint-disable-line
     return false;
   }));
+  // ブラウザの戻るボタンを押したときの挙動
+  window.addEventListener('popstate', (event) => { console.log(event); ports.changeUrl.send(window.location.href); });
   document.querySelector('rooper-wrapper');
   // elm に ページ遷移時の URLを伝える
   ports.changeUrl.send(window.location.href);
