@@ -21,6 +21,7 @@ module.exports = {
   rules: {
     "no-console": process.env.NODE_ENV === 'production' ? 'error' : "off",
     "import/prefer-default-export": "off",
-    "import/no-unresolved": "off"
+    "import/no-unresolved": "off",
+    "max-len": ["error", { "code": 150, ignoreComments: true }]
   },
 };

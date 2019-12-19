@@ -7,9 +7,12 @@
       "autoFix": true
     },
   ],
-  "eslint.autoFixOnSave": true,
   "typescript.validate.enable": false,
   "scss.validate": false,
   "stylelint.autoFixOnSave": true,
   "editor.tabSize": 2,
+  "editor.fontFamily": "UbuntuMonospace",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
 }
