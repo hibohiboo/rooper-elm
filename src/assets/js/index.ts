@@ -61,30 +61,30 @@ const initApp = async () => {
   // spinnerを消す
   hideLoader();
 
-  // histroy api 設定.遷移 を防ぐ
-  [...document.querySelectorAll('a')].forEach((element) => element.addEventListener('click', (event) => {
-    // console.log('href', element.href);
-    // console.log('domain', document.domain);
-    if (element.href.indexOf(document.domain) !== -1) {
-      // ページ遷移キャンセル
-      event.preventDefault();
-      // event.stopPropagation(); // 親にイベントを伝播させない
-      // event.stopImmediatePropagation(); // 他のリスナを実行しない
-
-      // history api に push
-      window.history.pushState({}, '惨劇RoopeR online tool', element.href);
-      // elm に URLの変更を伝える
-      ports.changeUrl.send(element.href);
+  // histroy api 設定.遷移 を防ぐ。aタグは増減するので、親でバブリングしたイベントを受ける。
+  //  eslint-disable-next-line no-unused-expressions
+  document.querySelector('.rooper-container')?.addEventListener('click', (event) => {
+    // aタグ以外は処理をしない
+    const { target }: { target: any } = event;
+    if (target && target.tagName && target.tagName.toUpperCase !== 'A') {
+      return;
     }
-    // Cancel the event as stated by the standard.
-    // Chrome requires returnValue to be set.
-    event.returnValue = false; // eslint-disable-line
-    return false;
-  }));
-  // ブラウザの戻るボタンを押したときの挙動
+    // ドメイン外への遷移は制御しない
+    const element = target as HTMLAnchorElement;
+    if (element.href.indexOf(document.domain) === -1) {
+      return;
+    }
+
+    event.preventDefault();
+    window.history.pushState({}, '惨劇RoopeR online tool', element.href);
+    // elm に URLの変更を伝える
+    ports.changeUrl.send(element.href);
+  });
+
+  // ブラウザの戻るボタンを押したときの挙動を設定
   window.addEventListener('popstate', (event) => { console.log(event); ports.changeUrl.send(window.location.href); });
-  document.querySelector('rooper-wrapper');
-  // elm に ページ遷移時の URLを伝える
+
+  // elm に 表示時のページURLを伝える
   ports.changeUrl.send(window.location.href);
 };
 
