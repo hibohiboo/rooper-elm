@@ -1,38 +1,34 @@
-module Models.RoomName exposing (..)
+module Models.Scenario exposing (..)
 
 import Html exposing (..)
-import Html.Attributes as Attributes exposing (class, href)
+import Html.Attributes exposing (class, href)
 import Html.Keyed as Keyed
 import Html.Lazy as Html
 import Json.Decode as D exposing (Decoder, Value)
 import Json.Decode.Pipeline exposing (required)
 
 
-type alias RoomName =
+type alias Scenario =
     { id : String
     , name : String
     }
 
 
-decodeRoomNameListFromJson : Value -> Maybe (List RoomName)
-decodeRoomNameListFromJson json =
-    -- let
-    --     _ =
-    --         Debug.log "decodeRoomName" json
-    -- in
+decodeScenarioListFromJson : Value -> Maybe (List Scenario)
+decodeScenarioListFromJson json =
     json
         |> D.decodeValue (D.list decoder)
         |> Result.toMaybe
 
 
-decoder : Decoder RoomName
+decoder : Decoder Scenario
 decoder =
-    D.succeed RoomName
+    D.succeed Scenario
         |> required "id" D.string
         |> required "name" D.string
 
 
-rooms : List RoomName -> Html msg
+rooms : List Scenario -> Html msg
 rooms rs =
     Keyed.node "div"
         [ class "panel" ]
@@ -43,15 +39,15 @@ rooms rs =
 
 roomsTitle : ( String, Html msg )
 roomsTitle =
-    ( "rooms-title", p [ class "panel-heading" ] [ text "プレイルーム" ] )
+    ( "rooms-title", p [ class "panel-heading" ] [ text "シナリオ一覧" ] )
 
 
-keyedRoom : RoomName -> ( String, Html msg )
+keyedRoom : Scenario -> ( String, Html msg )
 keyedRoom r =
     ( r.id, Html.lazy room r )
 
 
-room : RoomName -> Html msg
+room : Scenario -> Html msg
 room r =
     a
         [ class "panel-block"

@@ -26,10 +26,10 @@ parser =
 
 toRoute : String -> Route
 toRoute string =
-    let
-        _ =
-            Debug.log "route" string
-    in
+    -- let
+    --     _ =
+    --         Debug.log "route" string
+    -- in
     case Url.fromString string of
         Nothing ->
             NotFound

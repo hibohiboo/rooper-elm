@@ -57,7 +57,7 @@ const initApp = async () => {
   //   });
   // });
 
-  hideLoader();
+  // hideLoader();
 
   // histroy api 設定.遷移 を防ぐ
   [...document.querySelectorAll('a')].forEach((element) => element.addEventListener('click', (event) => {
