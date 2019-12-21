@@ -1,16 +1,19 @@
 module Models.Scenario exposing (..)
 
+import Form.Decoder as Decoder exposing (Decoder)
 import Html exposing (..)
-import Html.Attributes exposing (class, href)
-import Html.Keyed as Keyed
-import Html.Lazy as Html
-import Json.Decode as D exposing (Decoder, Value)
-import Json.Decode.Pipeline exposing (required)
+import Json.Encode as E
+import Models.Scenario.Id as Id exposing (Id)
+import Models.Scenario.Name as Name exposing (Name)
+
+
+
+-- Core
 
 
 type alias Scenario =
-    { id : String
-    , name : String
+    { id : Id
+    , name : Name
     }
 
 
@@ -19,49 +22,118 @@ initScenario =
     Nothing
 
 
-initScenarios : Maybe (List Scenario)
-initScenarios =
-    Nothing
+
+-- Decoder
 
 
-decodeScenarioListFromJson : Value -> Maybe (List Scenario)
-decodeScenarioListFromJson json =
-    json
-        |> D.decodeValue (D.list decoder)
-        |> Result.toMaybe
+form : Decoder RegisterForm Error Scenario
+form =
+    Decoder.top Scenario
+        |> Decoder.field decoderId
+        |> Decoder.field decoderName
 
 
-decoder : Decoder Scenario
-decoder =
-    D.succeed Scenario
-        |> required "id" D.string
-        |> required "name" D.string
+decoderName : Decoder RegisterForm Error Name
+decoderName =
+    Name.decoder
+        |> Decoder.mapError NameError
+        |> Decoder.lift .name
 
 
-rooms : List Scenario -> Html msg
-rooms rs =
-    Keyed.node "div"
-        [ class "panel" ]
-    <|
-        roomsTitle
-            :: List.map keyedRoom rs
+decoderId : Decoder RegisterForm Error Id
+decoderId =
+    Id.decoder
+        |> Decoder.mapError IdError
+        |> Decoder.lift .id
 
 
-roomsTitle : ( String, Html msg )
-roomsTitle =
-    ( "rooms-title", p [ class "panel-heading" ] [ text "シナリオ一覧" ] )
+
+-- Form
 
 
-keyedRoom : Scenario -> ( String, Html msg )
-keyedRoom r =
-    ( r.id, Html.lazy room r )
+type alias RegisterForm =
+    { id : String
+    , name : String
+    }
 
 
-room : Scenario -> Html msg
-room r =
-    a
-        [ class "panel-block"
-        , href ("/rooper/room/" ++ r.id)
+initForm : RegisterForm
+initForm =
+    { id = ""
+    , name = ""
+    }
+
+
+
+-- Convert
+
+
+convert : RegisterForm -> Maybe Scenario
+convert f =
+    case Decoder.run form f of
+        Ok result ->
+            Just result
+
+        Err _ ->
+            Nothing
+
+
+
+-- Error
+
+
+type Error
+    = NameError Name.Error
+    | IdError Id.Error
+
+
+errors : RegisterForm -> List Error
+errors f =
+    Decoder.errors form f
+
+
+getNameError : RegisterForm -> List ( String, Bool )
+getNameError f =
+    List.map
+        (\err ->
+            case err of
+                NameError e ->
+                    ( Name.errorField e, True )
+
+                _ ->
+                    ( "", False )
+        )
+        (errors f)
+
+
+setName : String -> RegisterForm -> RegisterForm
+setName s f =
+    { f | name = s }
+
+
+setId : String -> RegisterForm -> RegisterForm
+setId s f =
+    { f | id = s }
+
+
+registerForm : List (Html msg) -> Html msg
+registerForm children =
+    div []
+        [ h2 [] [ text "ルーム作成" ]
+        , div []
+            children
         ]
-        [ text r.name
+
+
+
+-- ==============================================================================================
+-- エンコーダ
+-- ==============================================================================================
+
+
+encode : Scenario -> E.Value
+encode scenario =
+    E.object
+        [ ( "id", E.string <| Id.toString scenario.id )
+        , ( "name", E.string <| Name.toString scenario.name )
         ]

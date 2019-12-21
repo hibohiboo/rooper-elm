@@ -21,4 +21,7 @@ port updateRoom : Value -> Cmd msg
 port readRooms : (Value -> msg) -> Sub msg
 
 
+port updateScenario : Value -> Cmd msg
+
+
 port changeUrl : (String -> msg) -> Sub msg

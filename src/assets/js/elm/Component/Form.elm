@@ -2,6 +2,7 @@ module Component.Form exposing (..)
 
 import Html exposing (..)
 import Html.Attributes as Attributes exposing (..)
+import Html.Events exposing (onClick)
 
 
 
@@ -30,3 +31,13 @@ errors messages =
                     text ""
             )
             messages
+
+
+createButton : Html msg
+createButton =
+    button [ class "button is-primary" ]
+        [ span [ class "icon" ]
+            [ i [ class "fas fa-plus" ] []
+            ]
+        , span [] [ text "create" ]
+        ]

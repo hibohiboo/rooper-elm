@@ -7,6 +7,7 @@ import Url.Parser as Parser exposing ((</>), Parser, fragment, int, map, oneOf, 
 type Route
     = Top
     | Scenario
+    | ScenarioCreate
     | NotFound
 
 
@@ -21,6 +22,7 @@ parser =
         [ map Top top
         , map Top (s "rooper")
         , map Scenario (s "rooper" </> s "scenario")
+        , map ScenarioCreate (s "rooper" </> s "scenario" </> s "create")
         ]
 
 

@@ -10,6 +10,7 @@ import Json.Encode exposing (Value)
 import Models.Room as Room exposing (Room)
 import Models.RoomName as RoomName exposing (RoomName)
 import Models.Scenario as Scenario exposing (Scenario)
+import Models.ScenarioName as ScenarioName exposing (ScenarioName)
 import Models.User exposing (User)
 import Ports exposing (..)
 import Route
@@ -36,8 +37,9 @@ type alias Model =
     , roomForm : Room.RegisterForm
     , room : Maybe Room
     , rooms : Maybe (List RoomName)
+    , scenarioForm : Scenario.RegisterForm
     , scenario : Maybe Scenario
-    , scenarios : Maybe (List Scenario)
+    , scenarios : Maybe (List ScenarioName)
     , mainAreaState : MainAreaState
     , modalState : ModalState
     , modalMessage : String
@@ -60,7 +62,7 @@ init flags =
 
 initModel : Maybe User -> Model
 initModel flags =
-    Model flags MenuClose Room.init Room.initRoom RoomName.initRoomNames Scenario.initScenario Scenario.initScenarios MainTab CloseModalState ""
+    Model flags MenuClose Room.init Room.initRoom RoomName.initRoomNames Scenario.initForm Scenario.initScenario ScenarioName.initScenarioNames MainTab CloseModalState ""
 
 
 
@@ -79,6 +81,8 @@ type Msg
     | ChangeUrl String
     | OpenModal String
     | CloseModal
+    | ChangeScenarioName String
+    | UpdateScenario
 
 
 type MenuState
@@ -90,6 +94,7 @@ type MainAreaState
     = MainTab
     | ScenarioTab
     | NothingTab
+    | ScenarioCreateTab
 
 
 type ModalState
@@ -136,6 +141,24 @@ update msg model =
         ReadRooms val ->
             ( { model | rooms = RoomName.decodeRoomNameListFromJson val }, Cmd.none )
 
+        ChangeScenarioName name ->
+            ( { model | scenarioForm = Scenario.setName name model.scenarioForm }, Cmd.none )
+
+        UpdateScenario ->
+            let
+                scenario =
+                    Scenario.convert model.scenarioForm
+
+                cmd =
+                    case scenario of
+                        Nothing ->
+                            Cmd.none
+
+                        Just s ->
+                            updateScenario <| Scenario.encode s
+            in
+            ( { model | scenario = scenario }, cmd )
+
         ChangeUrl url ->
             case Route.toRoute url of
                 Route.Top ->
@@ -143,6 +166,9 @@ update msg model =
 
                 Route.Scenario ->
                     ( { model | mainAreaState = ScenarioTab }, Cmd.none )
+
+                Route.ScenarioCreate ->
+                    ( { model | mainAreaState = ScenarioCreateTab }, Cmd.none )
 
                 Route.NotFound ->
                     update (OpenModal "指定されたURLが見つかりません。\nご確認お願いします。") { model | mainAreaState = NothingTab }
@@ -217,6 +243,9 @@ mainTabs model =
                 ScenarioTab ->
                     class "is-active"
 
+                ScenarioCreateTab ->
+                    class "is-active"
+
                 _ ->
                     class ""
     in
@@ -255,10 +284,17 @@ logginedMainArea model =
         ScenarioTab ->
             mainScenarioContent model
 
+        ScenarioCreateTab ->
+            createScenarioView model
+
 
 mainScenarioContent : Model -> Html Msg
 mainScenarioContent model =
-    text "scenario"
+    div [ class "columns is-mobile" ]
+        [ div [ class "column is-5 is-offset-7" ]
+            [ a [ href "/rooper/scenario/create" ] [ Form.createButton ]
+            ]
+        ]
 
 
 mainTopContent : Model -> Html Msg
@@ -339,3 +375,21 @@ headNavRight model =
 
         Nothing ->
             text ""
+
+
+createScenarioView : Model -> Html Msg
+createScenarioView { scenarioForm } =
+    Scenario.registerForm
+        [ Form.field
+            [ label [ class "label has-text-white" ]
+                [ text "シナリオ名"
+                ]
+            , Form.control
+                [ input [ class "input", required True, onInput ChangeScenarioName ] []
+                ]
+            , Form.errors (Scenario.getNameError scenarioForm)
+            ]
+        , div [ class "control" ]
+            [ button [ class "button is-primary", onClick UpdateScenario ] [ text "作成" ]
+            ]
+        ]
