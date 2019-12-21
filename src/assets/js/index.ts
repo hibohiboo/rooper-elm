@@ -5,6 +5,8 @@ import Room, { addRoom, readRooms } from './firebase/Room';
 import { Elm } from './elm/Main'; //  eslint-disable-line import/no-unresolved
 import { hideLoader } from './utils/spinner';
 import { historyInit } from './utils/history';
+import { addScenario } from './firebase/Scenario';
+
 require('../css/styles.scss'); // tslint:disable-line no-var-requires
 
 
@@ -30,6 +32,13 @@ const initApp = async () => {
     rooms = await readRooms(firebaseBackEnd.db, user.storeUserId);
   }
   ports.readRooms.send(rooms);
+
+  ports.updateScenario.subscribe(scenario => {
+    if (!scenario.id) {
+      addScenario(scenario, firebaseBackEnd.db, firebaseBackEnd.getTimestamp(), user.uid, user.storeUserId);
+    }
+  });
+
   // ports.updateRoom.subscribe(({ id, name }) => {
   //   const room = new Room({
   //     createUserId: user.storeUserId, id, name, uid: user.uid,

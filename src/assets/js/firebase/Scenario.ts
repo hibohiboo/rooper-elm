@@ -6,16 +6,16 @@
  * @param timestamp
  * @param uid
  */
-export async function addScenario(scenario, db, timestamp, uid, storeUserId) {
+export async function addScenario(obj, db, timestamp, uid, storeUserId) {
   const userRef = db.collection('users').doc(storeUserId);
   const ref = await userRef.collection('scenarios').doc();
   const { id } = ref;
   const userScenario = {
-    name: scenario.name, uid, id, createdAt: timestamp, updatedAt: timestamp,
+    name: obj.name, uid, id, createdAt: timestamp, updatedAt: timestamp,
   };
 
   const scenario = {
-    ...scenario, uid, createUserId: storeUserId, createdAt: timestamp, updatedAt: timestamp,
+    ...obj, uid, createUserId: storeUserId, createdAt: timestamp, updatedAt: timestamp,
   };
 
   return Promise.all([

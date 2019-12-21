@@ -148,16 +148,13 @@ update msg model =
             let
                 scenario =
                     Scenario.convert model.scenarioForm
-
-                cmd =
-                    case scenario of
-                        Nothing ->
-                            Cmd.none
-
-                        Just s ->
-                            updateScenario <| Scenario.encode s
             in
-            ( { model | scenario = scenario }, cmd )
+            case scenario of
+                Nothing ->
+                    update (OpenModal "保存に失敗しました。項目を再確認してください") { model | scenario = scenario }
+
+                Just s ->
+                    ( { model | scenario = scenario }, updateScenario <| Scenario.encode s )
 
         ChangeUrl url ->
             case Route.toRoute url of
