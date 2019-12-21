@@ -1,3 +1,10 @@
+export const pushHistory = (ports, url) => {
+  window.history.pushState({}, '惨劇RoopeR online tool', url);
+  // elm に URLの変更を伝える
+  ports.changedUrl.send(url);
+}
+
+
 export const historyInit = (ports) => {
   console.log('history init')
   // histroy api 設定.遷移 を防ぐ。aタグは増減するので、親でバブリングしたイベントを受ける。
@@ -5,7 +12,8 @@ export const historyInit = (ports) => {
   document.querySelector('.rooper-container')?.addEventListener('click', (event) => {
     // aタグ以外は処理をしない
     const { target }: { target: any } = event;
-
+    event.preventDefault();
+    console.log(target);
     if (target && target.tagName && target.tagName.toUpperCase() !== 'A') {
       return;
     }
@@ -16,14 +24,18 @@ export const historyInit = (ports) => {
     }
 
     event.preventDefault();
-    window.history.pushState({}, '惨劇RoopeR online tool', element.href);
-    // elm に URLの変更を伝える
-    ports.changeUrl.send(element.href);
+    pushHistory(ports, element.href)
   });
 
   // ブラウザの戻るボタンを押したときの挙動を設定
   window.addEventListener('popstate', (event) => { console.log(event); ports.changeUrl.send(window.location.href); });
 
   // elm に 表示時のページURLを伝える
-  ports.changeUrl.send(window.location.href);
+  ports.changedUrl.send(window.location.href);
+
+  // elmからのURL移動を受け取る
+  ports.changeUrl.subscribe((url) => {
+    pushHistory(ports, `${document.location.protocol}//${document.location.hostname}:${document.location.port}${url}`);
+  });
 };
+

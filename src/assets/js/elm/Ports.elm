@@ -24,4 +24,7 @@ port readRooms : (Value -> msg) -> Sub msg
 port updateScenario : Value -> Cmd msg
 
 
-port changeUrl : (String -> msg) -> Sub msg
+port changeUrl : String -> Cmd msg
+
+
+port changedUrl : (String -> msg) -> Sub msg

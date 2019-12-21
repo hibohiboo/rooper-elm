@@ -33,9 +33,9 @@ errors messages =
             messages
 
 
-createButton : Html msg
-createButton =
-    button [ class "button is-primary" ]
+createButton : msg -> Html msg
+createButton message =
+    button [ class "button is-primary", onClick message ]
         [ span [ class "icon" ]
             [ i [ class "fas fa-plus" ] []
             ]

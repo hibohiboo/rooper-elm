@@ -78,6 +78,7 @@ type Msg
     | ChangeRoomId String
     | UpdateRoom
     | ReadRooms Value
+    | ChangedUrl String
     | ChangeUrl String
     | OpenModal String
     | CloseModal
@@ -157,6 +158,9 @@ update msg model =
                     ( { model | scenario = scenario, scenarioForm = Scenario.initForm }, updateScenario <| Scenario.encode s )
 
         ChangeUrl url ->
+            ( model, changeUrl url )
+
+        ChangedUrl url ->
             case Route.toRoute url of
                 Route.Top ->
                     ( { model | mainAreaState = MainTab }, Cmd.none )
@@ -179,7 +183,7 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [ readRooms ReadRooms, changeUrl ChangeUrl ]
+    Sub.batch [ readRooms ReadRooms, changedUrl ChangedUrl ]
 
 
 view : Model -> Html Msg
@@ -289,7 +293,7 @@ mainScenarioContent : Model -> Html Msg
 mainScenarioContent model =
     div [ class "columns is-mobile" ]
         [ div [ class "column is-5 is-offset-7" ]
-            [ a [ href "/rooper/scenario/create" ] [ Form.createButton ]
+            [ Form.createButton (ChangeUrl "/rooper/scenario/create")
             ]
         ]
 
