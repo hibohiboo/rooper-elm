@@ -154,7 +154,7 @@ update msg model =
                     update (OpenModal "保存に失敗しました。項目を再確認してください") { model | scenario = scenario }
 
                 Just s ->
-                    ( { model | scenario = scenario }, updateScenario <| Scenario.encode s )
+                    ( { model | scenario = scenario, scenarioForm = Scenario.initForm }, updateScenario <| Scenario.encode s )
 
         ChangeUrl url ->
             case Route.toRoute url of
@@ -382,7 +382,7 @@ createScenarioView { scenarioForm } =
                 [ text "シナリオ名"
                 ]
             , Form.control
-                [ input [ class "input", required True, onInput ChangeScenarioName ] []
+                [ input [ class "input", required True, value scenarioForm.name, onInput ChangeScenarioName ] []
                 ]
             , Form.errors (Scenario.getNameError scenarioForm)
             ]

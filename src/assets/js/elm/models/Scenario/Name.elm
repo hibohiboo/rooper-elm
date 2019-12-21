@@ -28,7 +28,7 @@ errorField : Error -> String
 errorField err =
     case err of
         Required ->
-            "シナリオ名は必須です"
+            "シナリオ名を入力してください"
 
 
 decoder : Decoder String Error Name
