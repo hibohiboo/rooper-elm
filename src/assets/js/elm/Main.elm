@@ -87,6 +87,8 @@ type Msg
     | UpdateScenario
     | ReadedScenarioNames Value
     | ReadedScenario Value
+    | OpenModalConfirmScenarioDelete
+    | ScenarioDelete
 
 
 type MenuState
@@ -104,6 +106,7 @@ type MainAreaState
 type ModalState
     = OpenModalState
     | CloseModalState
+    | ConfirmModalState Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -126,6 +129,9 @@ update msg model =
 
         CloseModal ->
             ( { model | modalState = CloseModalState }, Cmd.none )
+
+        OpenModalConfirmScenarioDelete ->
+            ( { model | modalState = ConfirmModalState ScenarioDelete }, Cmd.none )
 
         ChangeRoomName name ->
             ( { model | roomForm = Room.setName name model.roomForm }, Cmd.none )
@@ -201,6 +207,10 @@ update msg model =
                 Nothing ->
                     update (OpenModal "読み込みに失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
 
+        ScenarioDelete ->
+            -- TODO
+            ( model, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -239,7 +249,26 @@ modal model =
                     True
     in
     Bulma.modal isActive CloseModal <|
-        div [ class "box rooper-modal-message" ] [ text modalMessage ]
+        div [ class "box rooper-modal-message" ]
+            [ case modalState of
+                ConfirmModalState message ->
+                    div []
+                        [ div [ class "columns is-mobile" ]
+                            [ text "削除します。よろしいですか？"
+                            ]
+                        , div [ class "columns is-mobile" ]
+                            [ div [ class "column  is-4  is-offset-1 control" ]
+                                [ button [ class "button is-info", onClick CloseModal ] [ text "キャンセル" ]
+                                ]
+                            , div [ class "column  is-4 is-offset-3 control" ]
+                                [ button [ class "button is-danger", onClick UpdateScenario ] [ text "削除" ]
+                                ]
+                            ]
+                        ]
+
+                _ ->
+                    text modalMessage
+            ]
 
 
 mainTabs : Model -> Html msg
@@ -435,5 +464,10 @@ createScenarioView { scenarioForm } =
             ]
         , div [ class "control" ]
             [ button [ class "button is-primary", onClick UpdateScenario ] [ text mode ]
+            ]
+        , div [ class "columns is-mobile" ]
+            [ div [ class "column  is-4 is-offset-8 control" ]
+                [ button [ class "button is-danger", onClick OpenModalConfirmScenarioDelete ] [ text "削除" ]
+                ]
             ]
         ]
