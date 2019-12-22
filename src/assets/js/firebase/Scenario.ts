@@ -47,6 +47,7 @@ export async function readScenarioNames(db, storeUserId) {
  * @param storeUserId
  */
 export async function readScenario(db, scenarioId) {
+
   const doc = await db.collection('scenarios').doc(scenarioId).get();
   console.log(doc)
   return doc.data();

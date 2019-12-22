@@ -199,7 +199,7 @@ update msg model =
                     ( { model | scenarioForm = f }, Cmd.none )
 
                 Nothing ->
-                    update (OpenModal "読み込みに失敗しました") { model | mainAreaState = ScenarioTab }
+                    update (OpenModal "読み込みに失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
 
 
 subscriptions : Model -> Sub Msg
