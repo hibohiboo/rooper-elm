@@ -466,14 +466,7 @@ createScenarioView { scenarioForm } =
     in
     Scenario.registerForm title
         [ Form.field
-            [ label [ class "label has-text-white" ]
-                [ text "シナリオ名"
-                ]
-            , Form.control
-                [ input [ class "input", required True, value scenarioForm.name, onInput ChangeScenarioName ] []
-                ]
-            , Form.errors (Scenario.getNameError scenarioForm)
-            ]
+            (scenarioFormView scenarioForm)
         , div [ class "control" ]
             [ button [ class "button is-primary", onClick UpdateScenario ] [ text mode ]
             ]
@@ -483,3 +476,23 @@ createScenarioView { scenarioForm } =
                 ]
             ]
         ]
+
+
+scenarioFormView : Scenario.RegisterForm -> List (Html Msg)
+scenarioFormView scenarioForm =
+    [ label [ class "label has-text-white" ] [ text "シナリオ名" ]
+    , Form.control
+        [ input [ class "input", required True, value scenarioForm.name, onInput ChangeScenarioName ] []
+        ]
+    , Form.errors (Scenario.getNameError scenarioForm)
+    , label
+        [ class "label has-text-white" ]
+        [ text "使用セット" ]
+    , Form.control
+        [ div [ class "select" ]
+            [ select []
+                [ option [] [ text "Basic Tragedy X" ]
+                ]
+            ]
+        ]
+    ]

@@ -7,6 +7,7 @@ import Json.Decode.Pipeline exposing (hardcoded, optional, required)
 import Json.Encode as E
 import Models.Scenario.Id as Id exposing (Id)
 import Models.Scenario.Name as Name exposing (Name)
+import Models.Scenario.TragedySet as TragedySet exposing (TragedySet)
 
 
 
@@ -16,6 +17,7 @@ import Models.Scenario.Name as Name exposing (Name)
 type alias Scenario =
     { id : Id
     , name : Name
+    , set : TragedySet
     }
 
 
@@ -33,6 +35,7 @@ form =
     Decoder.top Scenario
         |> Decoder.field decoderId
         |> Decoder.field decoderName
+        |> Decoder.field decoderTragedySet
 
 
 decoderName : Decoder RegisterForm Error Name
@@ -47,6 +50,13 @@ decoderId =
     Id.decoder
         |> Decoder.mapError IdError
         |> Decoder.lift .id
+
+
+decoderTragedySet : Decoder RegisterForm Error TragedySet
+decoderTragedySet =
+    TragedySet.decoder
+        |> Decoder.mapError TragedySetError
+        |> Decoder.lift .set
 
 
 
@@ -65,6 +75,7 @@ formDecoder =
     D.succeed RegisterForm
         |> required "id" D.string
         |> required "name" D.string
+        |> hardcoded "Basic Tragedy X"
 
 
 
@@ -74,6 +85,7 @@ formDecoder =
 type alias RegisterForm =
     { id : String
     , name : String
+    , set : String
     }
 
 
@@ -81,6 +93,7 @@ initForm : RegisterForm
 initForm =
     { id = ""
     , name = ""
+    , set = "Basic Tragedy X"
     }
 
 
@@ -105,6 +118,7 @@ convert f =
 type Error
     = NameError Name.Error
     | IdError Id.Error
+    | TragedySetError TragedySet.Error
 
 
 errors : RegisterForm -> List Error
@@ -156,4 +170,5 @@ encode scenario =
     E.object
         [ ( "id", E.string <| Id.toString scenario.id )
         , ( "name", E.string <| Name.toString scenario.name )
+        , ( "set", E.string <| TragedySet.toString scenario.set )
         ]

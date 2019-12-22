@@ -137,6 +137,7 @@ if (MODE === 'development') {
       inline: true,
       stats: 'errors-only',
       contentBase: path.join(__dirname, 'src'),
+      // publicPath: '/assets/',
       historyApiFallback: {
         rewrites: [
           // { from: /^\/$/, to: '/rooper/index.html' },
