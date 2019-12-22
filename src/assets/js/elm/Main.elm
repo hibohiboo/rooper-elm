@@ -198,7 +198,7 @@ view model =
             [ div [ class "left" ] [ text "惨劇RoopeR online tool" ]
             , headNavRight model
             ]
-        , main_ []
+        , main_ [ class "rooper-main" ]
             [ div [ class "center box" ]
                 [ mainTabs model
                 , mainMessage model

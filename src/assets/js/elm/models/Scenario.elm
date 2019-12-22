@@ -119,7 +119,7 @@ setId s f =
 registerForm : List (Html msg) -> Html msg
 registerForm children =
     div []
-        [ h2 [] [ text "ルーム作成" ]
+        [ h2 [] [ text "シナリオ作成" ]
         , div []
             children
         ]

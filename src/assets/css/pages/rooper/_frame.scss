@@ -2,6 +2,12 @@
   &-modal-message {
     white-space: pre-wrap;
   }
+
+  // main直下の領域がはみ出さないように調整
+  &-main > div {
+    overflow: hidden;
+    overflow-y: scroll;
+  }
 }
 
 .rooper-container {
