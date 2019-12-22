@@ -85,6 +85,7 @@ type Msg
     | CloseModal
     | ChangeScenarioName String
     | UpdateScenario
+    | ReadedScenarioNames Value
 
 
 type MenuState
@@ -167,7 +168,7 @@ update msg model =
                     ( { model | mainAreaState = MainTab }, Cmd.none )
 
                 Route.Scenario ->
-                    ( { model | mainAreaState = ScenarioTab }, Cmd.none )
+                    ( { model | mainAreaState = ScenarioTab }, readScenarioNames () )
 
                 Route.ScenarioCreate ->
                     ( { model | mainAreaState = ScenarioCreateTab }, Cmd.none )
@@ -181,10 +182,13 @@ update msg model =
         CloseModal ->
             ( { model | modalState = CloseModalState }, Cmd.none )
 
+        ReadedScenarioNames val ->
+            ( { model | scenarios = ScenarioName.decodeScenarioNameListFromJson val }, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [ readedRooms ReadedRooms, changedUrl ChangedUrl ]
+    Sub.batch [ readedRooms ReadedRooms, changedUrl ChangedUrl, readedScenarioNames ReadedScenarioNames ]
 
 
 view : Model -> Html Msg
@@ -288,10 +292,22 @@ logginedMainArea model =
 
 mainScenarioContent : Model -> Html Msg
 mainScenarioContent model =
-    div [ class "columns is-mobile" ]
-        [ div [ class "column is-5 is-offset-7" ]
-            [ Form.createButton (ChangeUrl "/rooper/scenario/create")
+    let
+        { scenarios } =
+            model
+    in
+    div []
+        [ div [ class "columns is-mobile" ]
+            [ div [ class "column is-5 is-offset-7" ]
+                [ Form.createButton (ChangeUrl "/rooper/scenario/create")
+                ]
             ]
+        , case scenarios of
+            Just s ->
+                ScenarioName.scenarios s
+
+            _ ->
+                text ""
         ]
 
 

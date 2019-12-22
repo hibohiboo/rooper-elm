@@ -5,7 +5,7 @@ import Room, { addRoom, readRooms } from './firebase/Room';
 import { Elm } from './elm/Main'; //  eslint-disable-line import/no-unresolved
 import { hideLoader } from './utils/spinner';
 import { historyInit, pushHistory } from './utils/history';
-import { addScenario } from './firebase/Scenario';
+import * as Scenario from './firebase/Scenario';
 
 require('../css/styles.scss'); // tslint:disable-line no-var-requires
 
@@ -31,13 +31,18 @@ const initApp = async () => {
     // 再取得
     rooms = await readRooms(firebaseBackEnd.db, user.storeUserId);
   }
-  ports.readRooms.send(rooms);
+  ports.readedRooms.send(rooms);
 
   ports.updateScenario.subscribe(scenario => {
     if (!scenario.id) {
-      addScenario(scenario, firebaseBackEnd.db, firebaseBackEnd.getTimestamp(), user.uid, user.storeUserId);
+      Scenario.addScenario(scenario, firebaseBackEnd.db, firebaseBackEnd.getTimestamp(), user.uid, user.storeUserId);
       pushHistory(ports, `${document.location.protocol}//${document.location.hostname}:${document.location.port}/rooper/scenario`);
     }
+  });
+
+  ports.readScenarioNames.subscribe(async () => {
+    const scenarioNames = await Scenario.readScenarioNames(firebaseBackEnd.db, user.storeUserId);
+    ports.readedScenarioNames.send(scenarioNames);
   });
 
   // ports.updateRoom.subscribe(({ id, name }) => {

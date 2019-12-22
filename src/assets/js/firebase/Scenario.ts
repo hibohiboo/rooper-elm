@@ -25,12 +25,12 @@ export async function addScenario(obj, db, timestamp, uid, storeUserId) {
 }
 
 /**
- * データベースから指定したユーザのシナリオ一覧を取得する
+ * データベースから指定したユーザのシナリオ名一覧を取得する
  *
  * @param db
  * @param storeUserId
  */
-export async function readScenarios(db, storeUserId) {
+export async function readScenarioNames(db, storeUserId) {
   const querySnapshot = await db.collection('users').doc(storeUserId).collection('scenarios').get();
   const scenarios: { id: string, name: string }[] = [];
   await querySnapshot.forEach((doc) => {

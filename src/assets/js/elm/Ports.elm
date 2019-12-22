@@ -28,3 +28,9 @@ port changeUrl : String -> Cmd msg
 
 
 port changedUrl : (String -> msg) -> Sub msg
+
+
+port readScenarioNames : () -> Cmd msg
+
+
+port readedScenarioNames : (Value -> msg) -> Sub msg
