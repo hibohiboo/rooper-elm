@@ -60,7 +60,9 @@ room : RoomName -> Html msg
 room r =
     a
         [ class "panel-block"
-        , href ("/rooper/room/" ++ r.id)
+
+        -- TODO
+        -- , href ("/rooper/room/" ++ r.id)
         ]
         [ text r.name
         ]
