@@ -78,7 +78,7 @@ type Msg
     | ChangeRoomName String
     | ChangeRoomId String
     | UpdateRoom
-    | ReadRooms Value
+    | ReadedRooms Value
     | ChangedUrl String
     | ChangeUrl String
     | OpenModal String
@@ -140,7 +140,7 @@ update msg model =
             in
             ( { model | room = room }, cmd )
 
-        ReadRooms val ->
+        ReadedRooms val ->
             ( { model | rooms = RoomName.decodeRoomNameListFromJson val }, Cmd.none )
 
         ChangeScenarioName name ->
@@ -184,7 +184,7 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [ readRooms ReadRooms, changedUrl ChangedUrl ]
+    Sub.batch [ readedRooms ReadedRooms, changedUrl ChangedUrl ]
 
 
 view : Model -> Html Msg
