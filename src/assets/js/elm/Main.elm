@@ -319,6 +319,9 @@ mainScenarioContent model =
                 ]
             ]
         , case scenarios of
+            Just [] ->
+                text "シナリオはまだ作られていません"
+
             Just s ->
                 ScenarioName.scenarios s
 
