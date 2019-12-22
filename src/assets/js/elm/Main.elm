@@ -409,7 +409,18 @@ headNavRight model =
 
 createScenarioView : Model -> Html Msg
 createScenarioView { scenarioForm } =
-    Scenario.registerForm
+    let
+        mode =
+            if scenarioForm.id == "" then
+                "作成"
+
+            else
+                "更新"
+
+        title =
+            "シナリオ" ++ mode
+    in
+    Scenario.registerForm title
         [ Form.field
             [ label [ class "label has-text-white" ]
                 [ text "シナリオ名"
@@ -420,6 +431,6 @@ createScenarioView { scenarioForm } =
             , Form.errors (Scenario.getNameError scenarioForm)
             ]
         , div [ class "control" ]
-            [ button [ class "button is-primary", onClick UpdateScenario ] [ text "作成" ]
+            [ button [ class "button is-primary", onClick UpdateScenario ] [ text mode ]
             ]
         ]

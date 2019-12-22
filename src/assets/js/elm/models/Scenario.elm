@@ -136,10 +136,10 @@ setId s f =
     { f | id = s }
 
 
-registerForm : List (Html msg) -> Html msg
-registerForm children =
+registerForm : String -> List (Html msg) -> Html msg
+registerForm title children =
     div []
-        [ h2 [] [ text "シナリオ作成" ]
+        [ h2 [] [ text title ]
         , div []
             children
         ]
