@@ -15,7 +15,7 @@ export async function addScenario(obj, db, timestamp, uid, storeUserId) {
   };
 
   const scenario = {
-    ...obj, uid, createUserId: storeUserId, createdAt: timestamp, updatedAt: timestamp,
+    ...obj, id, uid, createUserId: storeUserId, createdAt: timestamp, updatedAt: timestamp,
   };
 
   return Promise.all([
@@ -38,4 +38,16 @@ export async function readScenarioNames(db, storeUserId) {
     scenarios.push({ id, name });
   });
   return scenarios;
+}
+
+/**
+ * データベースから指定したユーザのシナリオを取得する
+ *
+ * @param db
+ * @param storeUserId
+ */
+export async function readScenario(db, scenarioId) {
+  const doc = await db.collection('scenarios').doc(scenarioId).get();
+  console.log(doc)
+  return doc.data();
 }

@@ -120,8 +120,34 @@ update msg model =
         SignOut ->
             ( model, signOut () )
 
+        OpenModal message ->
+            ( { model | modalState = OpenModalState, modalMessage = message }, Cmd.none )
+
+        CloseModal ->
+            ( { model | modalState = CloseModalState }, Cmd.none )
+
         ChangeRoomName name ->
             ( { model | roomForm = Room.setName name model.roomForm }, Cmd.none )
+
+        ChangeUrl url ->
+            ( model, changeUrl url )
+
+        ChangedUrl url ->
+            case Route.toRoute url of
+                Route.Top ->
+                    ( { model | mainAreaState = MainTab }, Cmd.none )
+
+                Route.Scenario ->
+                    ( { model | mainAreaState = ScenarioTab }, readScenarioNames () )
+
+                Route.ScenarioCreate ->
+                    ( { model | mainAreaState = ScenarioCreateTab, scenarioForm = Scenario.initForm }, Cmd.none )
+
+                Route.ScenarioEdit s ->
+                    ( { model | mainAreaState = ScenarioCreateTab }, readScenario s )
+
+                Route.NotFound ->
+                    update (OpenModal "指定されたURLが見つかりません。\nご確認お願いします。") { model | mainAreaState = NothingTab }
 
         ChangeRoomId id ->
             ( { model | roomForm = Room.setId id model.roomForm }, Cmd.none )
@@ -147,6 +173,9 @@ update msg model =
         ChangeScenarioName name ->
             ( { model | scenarioForm = Scenario.setName name model.scenarioForm }, Cmd.none )
 
+        ReadedScenarioNames val ->
+            ( { model | scenarios = ScenarioName.decodeScenarioNameListFromJson val }, Cmd.none )
+
         UpdateScenario ->
             let
                 scenario =
@@ -158,32 +187,6 @@ update msg model =
 
                 Just s ->
                     ( { model | scenario = scenario, scenarioForm = Scenario.initForm }, updateScenario <| Scenario.encode s )
-
-        ChangeUrl url ->
-            ( model, changeUrl url )
-
-        ChangedUrl url ->
-            case Route.toRoute url of
-                Route.Top ->
-                    ( { model | mainAreaState = MainTab }, Cmd.none )
-
-                Route.Scenario ->
-                    ( { model | mainAreaState = ScenarioTab }, readScenarioNames () )
-
-                Route.ScenarioCreate ->
-                    ( { model | mainAreaState = ScenarioCreateTab }, Cmd.none )
-
-                Route.NotFound ->
-                    update (OpenModal "指定されたURLが見つかりません。\nご確認お願いします。") { model | mainAreaState = NothingTab }
-
-        OpenModal message ->
-            ( { model | modalState = OpenModalState, modalMessage = message }, Cmd.none )
-
-        CloseModal ->
-            ( { model | modalState = CloseModalState }, Cmd.none )
-
-        ReadedScenarioNames val ->
-            ( { model | scenarios = ScenarioName.decodeScenarioNameListFromJson val }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg

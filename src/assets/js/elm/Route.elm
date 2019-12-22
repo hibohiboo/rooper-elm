@@ -8,6 +8,7 @@ type Route
     = Top
     | Scenario
     | ScenarioCreate
+    | ScenarioEdit String
     | NotFound
 
 
@@ -23,6 +24,7 @@ parser =
         , map Top (s "rooper")
         , map Scenario (s "rooper" </> s "scenario")
         , map ScenarioCreate (s "rooper" </> s "scenario" </> s "create")
+        , map ScenarioEdit (s "rooper" </> s "scenario" </> s "edit" </> string)
         ]
 
 

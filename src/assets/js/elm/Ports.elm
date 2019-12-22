@@ -34,3 +34,9 @@ port readScenarioNames : () -> Cmd msg
 
 
 port readedScenarioNames : (Value -> msg) -> Sub msg
+
+
+port readScenario : String -> Cmd msg
+
+
+port readedScenario : (Value -> msg) -> Sub msg

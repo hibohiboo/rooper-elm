@@ -56,7 +56,7 @@ scenario : ScenarioName -> Html msg
 scenario r =
     a
         [ class "panel-block"
-        , href ("/rooper/scenario/" ++ r.id)
+        , href ("/rooper/scenario/edit/" ++ r.id)
         ]
         [ text r.name
         ]

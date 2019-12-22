@@ -45,6 +45,13 @@ const initApp = async () => {
     ports.readedScenarioNames.send(scenarioNames);
   });
 
+  ports.readScenario.subscribe(async (scenarioId) => {
+    const scenario = await Scenario.readScenario(firebaseBackEnd.db, scenarioId);
+    console.log(scenarioId, scenario);
+    ports.readedScenario.send(scenario);
+  });
+
+
   // ports.updateRoom.subscribe(({ id, name }) => {
   //   const room = new Room({
   //     createUserId: user.storeUserId, id, name, uid: user.uid,
