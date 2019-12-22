@@ -3,7 +3,7 @@ import * as Swiper from 'swiper';
 import firebaseBackEnd from './firebase/FireBaseBackEnd';
 import Room, { addRoom, readRooms } from './firebase/Room';
 import { Elm } from './elm/Main'; //  eslint-disable-line import/no-unresolved
-import { hideLoader } from './utils/spinner';
+import { hideLoader, showLoader } from './utils/spinner';
 import { historyInit, pushHistory } from './utils/history';
 import * as Scenario from './firebase/Scenario';
 
@@ -46,9 +46,11 @@ const initApp = async () => {
   });
 
   ports.readScenario.subscribe(async (scenarioId) => {
+    showLoader();
     const scenario = await Scenario.readScenario(firebaseBackEnd.db, scenarioId);
     console.log(scenarioId, scenario);
     ports.readedScenario.send(scenario);
+    hideLoader();
   });
 
 

@@ -2,6 +2,8 @@ module Models.Scenario exposing (..)
 
 import Form.Decoder as Decoder exposing (Decoder)
 import Html exposing (..)
+import Json.Decode as D exposing (Value)
+import Json.Decode.Pipeline exposing (hardcoded, optional, required)
 import Json.Encode as E
 import Models.Scenario.Id as Id exposing (Id)
 import Models.Scenario.Name as Name exposing (Name)
@@ -45,6 +47,24 @@ decoderId =
     Id.decoder
         |> Decoder.mapError IdError
         |> Decoder.lift .id
+
+
+
+-- Decoder Register Form
+
+
+decodeScenarioRegisterFormFromJson : Value -> Maybe RegisterForm
+decodeScenarioRegisterFormFromJson json =
+    json
+        |> D.decodeValue formDecoder
+        |> Result.toMaybe
+
+
+formDecoder : D.Decoder RegisterForm
+formDecoder =
+    D.succeed RegisterForm
+        |> required "id" D.string
+        |> required "name" D.string
 
 
 

@@ -86,6 +86,7 @@ type Msg
     | ChangeScenarioName String
     | UpdateScenario
     | ReadedScenarioNames Value
+    | ReadedScenario Value
 
 
 type MenuState
@@ -188,10 +189,22 @@ update msg model =
                 Just s ->
                     ( { model | scenario = scenario, scenarioForm = Scenario.initForm }, updateScenario <| Scenario.encode s )
 
+        ReadedScenario val ->
+            let
+                registerForm =
+                    Scenario.decodeScenarioRegisterFormFromJson val
+            in
+            case registerForm of
+                Just f ->
+                    ( { model | scenarioForm = f }, Cmd.none )
+
+                Nothing ->
+                    update (OpenModal "読み込みに失敗しました") { model | mainAreaState = ScenarioTab }
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [ readedRooms ReadedRooms, changedUrl ChangedUrl, readedScenarioNames ReadedScenarioNames ]
+    Sub.batch [ readedRooms ReadedRooms, changedUrl ChangedUrl, readedScenarioNames ReadedScenarioNames, readedScenario ReadedScenario ]
 
 
 view : Model -> Html Msg
