@@ -1,6 +1,7 @@
 module Main exposing (Model, Msg(..), init, main, subscriptions, update, view)
 
 import Browser
+import Component.Bulma as Bulma
 import Component.Form as Form
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -212,17 +213,13 @@ modal model =
         isActive =
             case modalState of
                 CloseModalState ->
-                    ""
+                    False
 
                 _ ->
-                    "is-active"
+                    True
     in
-    div [ class "modal", class isActive ]
-        [ div [ class "modal-background", onClick CloseModal ] []
-        , div [ class "modal-content" ]
-            [ div [ class "box rooper-modal-message" ] [ text modalMessage ]
-            ]
-        ]
+    Bulma.modal isActive CloseModal <|
+        div [ class "box rooper-modal-message" ] [ text modalMessage ]
 
 
 mainTabs : Model -> Html msg
