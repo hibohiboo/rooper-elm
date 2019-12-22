@@ -52,3 +52,20 @@ export async function readScenario(db, scenarioId) {
   console.log(doc)
   return doc.data();
 }
+
+/**
+ * データベースから指定したユーザのシナリオを削除する
+ *
+ * @param db
+ * @param storeUserId
+ */
+export async function deleteScenario(db, storeUserId, scenarioId) {
+  try {
+    await db.collection('users').doc(storeUserId).collection('scenarios').doc(scenarioId).delete();
+    await db.collection('scenarios').doc(scenarioId).delete();
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}

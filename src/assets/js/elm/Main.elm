@@ -88,7 +88,8 @@ type Msg
     | ReadedScenarioNames Value
     | ReadedScenario Value
     | OpenModalConfirmScenarioDelete
-    | ScenarioDelete
+    | DeleteScenario
+    | DeletedScenario Bool
 
 
 type MenuState
@@ -131,7 +132,7 @@ update msg model =
             ( { model | modalState = CloseModalState }, Cmd.none )
 
         OpenModalConfirmScenarioDelete ->
-            ( { model | modalState = ConfirmModalState ScenarioDelete }, Cmd.none )
+            ( { model | modalState = ConfirmModalState DeleteScenario }, Cmd.none )
 
         ChangeRoomName name ->
             ( { model | roomForm = Room.setName name model.roomForm }, Cmd.none )
@@ -205,16 +206,28 @@ update msg model =
                     ( { model | scenarioForm = f }, Cmd.none )
 
                 Nothing ->
-                    update (OpenModal "読み込みに失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
+                    update (OpenModal "シナリオの読み込みに失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
 
-        ScenarioDelete ->
-            -- TODO
-            ( model, Cmd.none )
+        DeleteScenario ->
+            ( model, deleteScenario model.scenarioForm.id )
+
+        DeletedScenario result ->
+            if result then
+                ( { model | mainAreaState = ScenarioTab, modalState = CloseModalState }, readScenarioNames () )
+
+            else
+                update (OpenModal "シナリオの削除に失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [ readedRooms ReadedRooms, changedUrl ChangedUrl, readedScenarioNames ReadedScenarioNames, readedScenario ReadedScenario ]
+    Sub.batch
+        [ readedRooms ReadedRooms
+        , changedUrl ChangedUrl
+        , readedScenarioNames ReadedScenarioNames
+        , readedScenario ReadedScenario
+        , deletedScenario DeletedScenario
+        ]
 
 
 view : Model -> Html Msg
@@ -258,11 +271,10 @@ modal model =
                             ]
                         , div [ class "columns is-mobile" ]
                             [ div [ class "column  is-4  is-offset-1 control" ]
-                                [ button [ class "button is-info", onClick CloseModal ] [ text "キャンセル" ]
+                                [ button [ class "button is-danger", onClick message ] [ text "削除" ]
                                 ]
-                            , div [ class "column  is-4 is-offset-3 control" ]
-                                [ button [ class "button is-danger", onClick UpdateScenario ] [ text "削除" ]
-                                ]
+                            , div [ class "column  is-4 is-offset-2 control" ]
+                                [ button [ class "button is-info", onClick CloseModal ] [ text "キャンセル" ] ]
                             ]
                         ]
 

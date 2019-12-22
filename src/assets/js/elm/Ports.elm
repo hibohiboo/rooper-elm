@@ -40,3 +40,9 @@ port readScenario : String -> Cmd msg
 
 
 port readedScenario : (Value -> msg) -> Sub msg
+
+
+port deleteScenario : String -> Cmd msg
+
+
+port deletedScenario : (Bool -> msg) -> Sub msg

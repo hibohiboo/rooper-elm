@@ -53,7 +53,12 @@ const initApp = async () => {
     hideLoader();
   });
 
-
+  ports.deleteScenario.subscribe(async (scenarioId) => {
+    showLoader();
+    const result = await Scenario.deleteScenario(firebaseBackEnd.db, user.storeUserId, scenarioId);
+    ports.deletedScenario.send(result);
+    hideLoader();
+  });
   // ports.updateRoom.subscribe(({ id, name }) => {
   //   const room = new Room({
   //     createUserId: user.storeUserId, id, name, uid: user.uid,
