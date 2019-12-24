@@ -7,17 +7,6 @@ import Json.Decode.Pipeline exposing (hardcoded, optional, required)
 import Json.Encode as E
 
 
-initBasicTragedy : TragedySet
-initBasicTragedy =
-    TragedySet "Basic Tragedy X" 2
-
-
-type alias TragedySet =
-    { name : String
-    , subPlotNumber : Int
-    }
-
-
 initBasicTragedyRoles : List Role
 initBasicTragedyRoles =
     [ killer
@@ -33,6 +22,11 @@ initBasicTragedyRoles =
     , factor
     , conspiracyTheorist
     ]
+
+
+person : Role
+person =
+    Role "パーソン" Nothing
 
 
 killer : Role
@@ -93,6 +87,11 @@ factor =
 conspiracyTheorist : Role
 conspiracyTheorist =
     Role "ミスリーダー" (Just 1)
+
+
+curmudgeon : Role
+curmudgeon =
+    Role "マイナス" Nothing
 
 
 type alias Role =
@@ -173,6 +172,141 @@ giantTimeBomb =
     Plot "巨大時限爆弾Xの存在" MainPlot [ witch ] [ Effect LossCondition LoopEnd False "ウィッチの初期エリアに[暗躍カウンター]が２つ以上。" ]
 
 
+anUnsettlingRumour : Plot
+anUnsettlingRumour =
+    Plot "不穏な噂" SubPlot [ conspiracyTheorist ] [ Effect Optional MastermindAbility True "【脚本家能力フェイズ】任意のボード１つに[暗躍カウンター]を１つ置く。" ]
+
+
+aHideousScript : Plot
+aHideousScript =
+    Plot "最低の却本" SubPlot [ friend, curmudgeon, curmudgeon, conspiracyTheorist ] [ Effect Optional WritingScript False "マイナスを２人ではなく、１人や０人追加してもよい。" ]
+
+
+shadowOfTheRipper : Plot
+shadowOfTheRipper =
+    Plot "切り裂き魔の影" SubPlot [ serialKiller, conspiracyTheorist ] []
+
+
+circleOfFriends : Plot
+circleOfFriends =
+    Plot "友情サークル" SubPlot [ friend, friend, conspiracyTheorist ] []
+
+
+aLoveAffair : Plot
+aLoveAffair =
+    Plot "恋愛風景" SubPlot [ lovedOne, lover ] []
+
+
+theHiddenFreak : Plot
+theHiddenFreak =
+    Plot "潜む殺人鬼" SubPlot [ friend, serialKiller ] []
+
+
+paranoiaVirus : Plot
+paranoiaVirus =
+    Plot "妄想拡大ウイルス" SubPlot [ conspiracyTheorist ] [ Effect Mandatory Always False "パーソンは[不安カウンター]が３つ以上置かれている限り、役職がシリアルキラーに変更される。" ]
+
+
+threadsOfFate : Plot
+threadsOfFate =
+    Plot "因果の糸" SubPlot [] [ Effect Mandatory LoopStart False "ひとつ前のループ終了時に[友好カウンター]が置かれていた全キャラクターに[不安カウンター]を２つ置く。" ]
+
+
+unknownFactorX : Plot
+unknownFactorX =
+    Plot "不定因子χ" SubPlot [ factor ] []
+
+
 initBasicPlots : List Plot
 initBasicPlots =
-    [ murderPlan, theSealedItem, signWithMe, changeOfFuture, giantTimeBomb ]
+    [ murderPlan
+    , theSealedItem
+    , signWithMe
+    , changeOfFuture
+    , giantTimeBomb
+    , circleOfFriends
+    , aLoveAffair
+    , theHiddenFreak
+    , paranoiaVirus
+    , threadsOfFate
+    , unknownFactorX
+    ]
+
+
+type alias Incident =
+    { name : String
+    , effect : String
+    }
+
+
+murder : Incident
+murder =
+    Incident "殺人事件" "犯人と同一エリアにいる犯人以外の任意のキャラクター１人を死亡させる。"
+
+
+increasingUnease : Incident
+increasingUnease =
+    Incident "不安拡大" "任意のキャラクター１人に不安カウンターを２つ置き、任意の別のキャラクター１人に暗躍カウンターを１つ置く。"
+
+
+suicide : Incident
+suicide =
+    Incident "自殺" "犯人は死亡する。"
+
+
+hospitalIncident : Incident
+hospitalIncident =
+    Incident "病院の事件" "病院に[暗躍カウンター]が１つ以上→病院にいる全てのキャラクターを死亡させる。病院に[暗躍カウンター]が２つ以上→主人公を死亡させる。"
+
+
+farawayMurder : Incident
+farawayMurder =
+    Incident "遠隔殺人" "[暗躍カウンター]が２つ以上置かれたキャラクター１人を死亡させる"
+
+
+missingPerson : Incident
+missingPerson =
+    Incident "行方不明" "犯人を任意のボードに移動させる。その後、犯人のいるボードに[暗躍カウンター]を１つ置く"
+
+
+spreading : Incident
+spreading =
+    Incident "流布" "任意のキャラクター１人から[友好カウンター]を２つ取り除き、別のキャラクター１人に[友好カウンター]を２つ置く。"
+
+
+foulEvil : Incident
+foulEvil =
+    Incident "邪気の汚染" "神社に[暗躍カウンター]を２つ置く。"
+
+
+butterflyEffect : Incident
+butterflyEffect =
+    Incident "蝶の羽ばたき" "犯人と同一エリアにいるキャラクター1人にいずれかのカウンターを１つ置く。"
+
+
+initBasicTragedyIncidents : List Incident
+initBasicTragedyIncidents =
+    [ murder
+    , increasingUnease
+    , suicide
+    , hospitalIncident
+    , farawayMurder
+    , missingPerson
+    , spreading
+    , foulEvil
+    , butterflyEffect
+    ]
+
+
+type alias TragedySetDetail =
+    { name : String
+    , subPlotNumber : Int
+    , plots : List Plot
+    , roles : List Role
+    , incidents : List Incident
+    }
+
+
+initBasicTragedy : TragedySetDetail
+initBasicTragedy =
+    TragedySetDetail "Basic Tragedy X" 2 initBasicPlots initBasicTragedyRoles initBasicTragedyIncidents
