@@ -39,3 +39,7 @@ npm install
 
 ## css
 [bulma dark theme](https://jenil.github.io/bulmaswatch/darkly/)
+
+## 英訳参考
+
+[惨劇Rooper X](https://w.atwiki.jp/rooper/pages/92.html)
