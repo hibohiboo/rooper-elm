@@ -1,27 +1,10 @@
 module Models.TragedySet exposing (..)
 
-import Form.Decoder as Decoder exposing (Decoder)
+import Form.Decoder as Decoder exposing (Decoder, Validator)
 import Html exposing (..)
 import Json.Decode as D exposing (Value)
 import Json.Decode.Pipeline exposing (hardcoded, optional, required)
 import Json.Encode as E
-
-
-initBasicTragedyRoles : List Role
-initBasicTragedyRoles =
-    [ killer
-    , brain
-    , keyPerson
-    , cultist
-    , timeTraveler
-    , witch
-    , friend
-    , lovedOne
-    , lover
-    , serialKiller
-    , factor
-    , conspiracyTheorist
-    ]
 
 
 person : Role
@@ -94,6 +77,35 @@ curmudgeon =
     Role "マイナス" Nothing
 
 
+initFirstStepsRoles : List Role
+initFirstStepsRoles =
+    [ killer
+    , brain
+    , keyPerson
+    , cultist
+    , friend
+    , serialKiller
+    , conspiracyTheorist
+    ]
+
+
+initBasicTragedyRoles : List Role
+initBasicTragedyRoles =
+    [ killer
+    , brain
+    , keyPerson
+    , cultist
+    , timeTraveler
+    , witch
+    , friend
+    , lovedOne
+    , lover
+    , serialKiller
+    , factor
+    , conspiracyTheorist
+    ]
+
+
 type alias Role =
     { name : String
     , limit : Maybe Int
@@ -145,6 +157,16 @@ type Timing
 murderPlan : Plot
 murderPlan =
     Plot "殺人計画" MainPlot [ killer, brain, keyPerson ] []
+
+
+lightOfTheAvenger : Plot
+lightOfTheAvenger =
+    Plot "復讐者の灯火" MainPlot [ brain ] [ Effect LossCondition LoopEnd False "クロマクの初期エリアに[暗躍カウンター]が２つ以上ある" ]
+
+
+aPlaceToProtect : Plot
+aPlaceToProtect =
+    Plot "守るべき場所" MainPlot [ keyPerson, cultist ] [ Effect LossCondition LoopEnd False "学校に[暗躍カウンター]が２つ以上ある。" ]
 
 
 theSealedItem : Plot
@@ -233,6 +255,17 @@ initBasicPlots =
     ]
 
 
+initFirstStepsPlots : List Plot
+initFirstStepsPlots =
+    [ murderPlan
+    , lightOfTheAvenger
+    , aPlaceToProtect
+    , shadowOfTheRipper
+    , anUnsettlingRumour
+    , aHideousScript
+    ]
+
+
 type alias Incident =
     { name : String
     , effect : String
@@ -298,7 +331,19 @@ initBasicTragedyIncidents =
     ]
 
 
-type alias TragedySetDetail =
+initFirstStepsIncidents : List Incident
+initFirstStepsIncidents =
+    [ murder
+    , increasingUnease
+    , suicide
+    , hospitalIncident
+    , farawayMurder
+    , missingPerson
+    , spreading
+    ]
+
+
+type alias TragedySet =
     { name : String
     , subPlotNumber : Int
     , plots : List Plot
@@ -307,6 +352,53 @@ type alias TragedySetDetail =
     }
 
 
-initBasicTragedy : TragedySetDetail
+basicTragedyName =
+    "Basic Tragedy X"
+
+
+firstStepsName =
+    "First Steps"
+
+
+initBasicTragedy : TragedySet
 initBasicTragedy =
-    TragedySetDetail "Basic Tragedy X" 2 initBasicPlots initBasicTragedyRoles initBasicTragedyIncidents
+    TragedySet basicTragedyName 2 initBasicPlots initBasicTragedyRoles initBasicTragedyIncidents
+
+
+initFirstSteps : TragedySet
+initFirstSteps =
+    TragedySet firstStepsName 1 initFirstStepsPlots initFirstStepsRoles initFirstStepsIncidents
+
+
+type Error
+    = NoError
+
+
+decoderTragedySet : D.Decoder TragedySet
+decoderTragedySet =
+    D.succeed decodeTragedySetFromString
+        |> required "tragedySet" D.string
+
+
+decodeTragedySetFromString : String -> TragedySet
+decodeTragedySetFromString s =
+    if s == "BasicTragedy" then
+        initBasicTragedy
+
+    else
+        initFirstSteps
+
+
+decoder : Decoder String Error TragedySet
+decoder =
+    Decoder.identity
+        |> Decoder.map decodeTragedySetFromString
+
+
+toString : TragedySet -> String
+toString set =
+    if set.name == basicTragedyName then
+        "BasicTragedy"
+
+    else
+        "FirstSteps"

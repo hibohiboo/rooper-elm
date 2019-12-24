@@ -7,7 +7,7 @@ import Json.Decode.Pipeline exposing (hardcoded, optional, required)
 import Json.Encode as E
 import Models.Scenario.Id as Id exposing (Id)
 import Models.Scenario.Name as Name exposing (Name)
-import Models.Scenario.TragedySet as TragedySet exposing (TragedySet)
+import Models.TragedySet as TragedySet exposing (TragedySet)
 
 
 
