@@ -1,4 +1,4 @@
-module Models.Scenario.Name exposing
+module Models.Script.Name exposing
     ( Error(..)
     , Name
     , decoder

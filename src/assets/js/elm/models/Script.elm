@@ -1,12 +1,12 @@
-module Models.Scenario exposing (..)
+module Models.Script exposing (..)
 
 import Form.Decoder as Decoder exposing (Decoder)
 import Html exposing (..)
 import Json.Decode as D exposing (Value)
 import Json.Decode.Pipeline exposing (hardcoded, optional, required)
 import Json.Encode as E
-import Models.Scenario.Id as Id exposing (Id)
-import Models.Scenario.Name as Name exposing (Name)
+import Models.Script.Id as Id exposing (Id)
+import Models.Script.Name as Name exposing (Name)
 import Models.TragedySet as TragedySet exposing (TragedySet)
 
 
@@ -14,15 +14,15 @@ import Models.TragedySet as TragedySet exposing (TragedySet)
 -- Core
 
 
-type alias Scenario =
+type alias Script =
     { id : Id
     , name : Name
     , set : TragedySet
     }
 
 
-initScenario : Maybe Scenario
-initScenario =
+initScript : Maybe Script
+initScript =
     Nothing
 
 
@@ -30,9 +30,9 @@ initScenario =
 -- Decoder
 
 
-form : Decoder RegisterForm Error Scenario
+form : Decoder RegisterForm Error Script
 form =
-    Decoder.top Scenario
+    Decoder.top Script
         |> Decoder.field decoderId
         |> Decoder.field decoderName
         |> Decoder.field decoderTragedySet
@@ -63,8 +63,8 @@ decoderTragedySet =
 -- Decoder Register Form
 
 
-decodeScenarioRegisterFormFromJson : Value -> Maybe RegisterForm
-decodeScenarioRegisterFormFromJson json =
+decodeScriptRegisterFormFromJson : Value -> Maybe RegisterForm
+decodeScriptRegisterFormFromJson json =
     json
         |> D.decodeValue formDecoder
         |> Result.toMaybe
@@ -101,7 +101,7 @@ initForm =
 -- Convert
 
 
-convert : RegisterForm -> Maybe Scenario
+convert : RegisterForm -> Maybe Script
 convert f =
     case Decoder.run form f of
         Ok result ->
@@ -170,10 +170,10 @@ registerForm title children =
 -- ==============================================================================================
 
 
-encode : Scenario -> E.Value
-encode scenario =
+encode : Script -> E.Value
+encode script =
     E.object
-        [ ( "id", E.string <| Id.toString scenario.id )
-        , ( "name", E.string <| Name.toString scenario.name )
-        , ( "set", E.string <| TragedySet.toString scenario.set )
+        [ ( "id", E.string <| Id.toString script.id )
+        , ( "name", E.string <| Name.toString script.name )
+        , ( "set", E.string <| TragedySet.toString script.set )
         ]

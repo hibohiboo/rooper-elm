@@ -10,8 +10,8 @@ import Html.Events.Extra exposing (onChange)
 import Json.Encode exposing (Value)
 import Models.Room as Room exposing (Room)
 import Models.RoomName as RoomName exposing (RoomName)
-import Models.Scenario as Scenario exposing (Scenario)
-import Models.ScenarioName as ScenarioName exposing (ScenarioName)
+import Models.Script as Script exposing (Script)
+import Models.ScriptName as ScriptName exposing (ScriptName)
 import Models.User exposing (User)
 import Ports exposing (..)
 import Route
@@ -38,9 +38,9 @@ type alias Model =
     , roomForm : Room.RegisterForm
     , room : Maybe Room
     , rooms : Maybe (List RoomName)
-    , scenarioForm : Scenario.RegisterForm
-    , scenario : Maybe Scenario
-    , scenarios : Maybe (List ScenarioName)
+    , scriptForm : Script.RegisterForm
+    , script : Maybe Script
+    , scripts : Maybe (List ScriptName)
     , mainAreaState : MainAreaState
     , modalState : ModalState
     , modalMessage : String
@@ -63,7 +63,7 @@ init flags =
 
 initModel : Maybe User -> Model
 initModel flags =
-    Model flags MenuClose Room.init Room.initRoom RoomName.initRoomNames Scenario.initForm Scenario.initScenario ScenarioName.initScenarioNames MainTab CloseModalState ""
+    Model flags MenuClose Room.init Room.initRoom RoomName.initRoomNames Script.initForm Script.initScript ScriptName.initScriptNames MainTab CloseModalState ""
 
 
 
@@ -83,13 +83,13 @@ type Msg
     | ChangeUrl String
     | OpenModal String
     | CloseModal
-    | ChangeScenarioName String
-    | UpdateScenario
-    | ReadedScenarioNames Value
-    | ReadedScenario Value
-    | OpenModalConfirmScenarioDelete
-    | DeleteScenario
-    | DeletedScenario Bool
+    | ChangeScriptName String
+    | UpdateScript
+    | ReadedScriptNames Value
+    | ReadedScript Value
+    | OpenModalConfirmScriptDelete
+    | DeleteScript
+    | DeletedScript Bool
     | ChangeTragedySet String
 
 
@@ -100,9 +100,9 @@ type MenuState
 
 type MainAreaState
     = MainTab
-    | ScenarioTab
+    | ScriptTab
     | NothingTab
-    | ScenarioCreateTab
+    | ScriptCreateTab
 
 
 type ModalState
@@ -132,8 +132,8 @@ update msg model =
         CloseModal ->
             ( { model | modalState = CloseModalState }, Cmd.none )
 
-        OpenModalConfirmScenarioDelete ->
-            ( { model | modalState = ConfirmModalState DeleteScenario }, Cmd.none )
+        OpenModalConfirmScriptDelete ->
+            ( { model | modalState = ConfirmModalState DeleteScript }, Cmd.none )
 
         ChangeRoomName name ->
             ( { model | roomForm = Room.setName name model.roomForm }, Cmd.none )
@@ -146,14 +146,14 @@ update msg model =
                 Route.Top ->
                     ( { model | mainAreaState = MainTab }, Cmd.none )
 
-                Route.Scenario ->
-                    ( { model | mainAreaState = ScenarioTab }, readScenarioNames () )
+                Route.Script ->
+                    ( { model | mainAreaState = ScriptTab }, readScriptNames () )
 
-                Route.ScenarioCreate ->
-                    ( { model | mainAreaState = ScenarioCreateTab, scenarioForm = Scenario.initForm }, Cmd.none )
+                Route.ScriptCreate ->
+                    ( { model | mainAreaState = ScriptCreateTab, scriptForm = Script.initForm }, Cmd.none )
 
-                Route.ScenarioEdit s ->
-                    ( { model | mainAreaState = ScenarioCreateTab }, readScenario s )
+                Route.ScriptEdit s ->
+                    ( { model | mainAreaState = ScriptCreateTab }, readScript s )
 
                 Route.NotFound ->
                     update (OpenModal "指定されたURLが見つかりません。\nご確認お願いします。") { model | mainAreaState = NothingTab }
@@ -179,48 +179,48 @@ update msg model =
         ReadedRooms val ->
             ( { model | rooms = RoomName.decodeRoomNameListFromJson val }, Cmd.none )
 
-        ChangeScenarioName name ->
-            ( { model | scenarioForm = Scenario.setName name model.scenarioForm }, Cmd.none )
+        ChangeScriptName name ->
+            ( { model | scriptForm = Script.setName name model.scriptForm }, Cmd.none )
 
-        ReadedScenarioNames val ->
-            ( { model | scenarios = ScenarioName.decodeScenarioNameListFromJson val }, Cmd.none )
+        ReadedScriptNames val ->
+            ( { model | scripts = ScriptName.decodeScriptNameListFromJson val }, Cmd.none )
 
-        UpdateScenario ->
+        UpdateScript ->
             let
-                scenario =
-                    Scenario.convert model.scenarioForm
+                script =
+                    Script.convert model.scriptForm
             in
-            case scenario of
+            case script of
                 Nothing ->
-                    update (OpenModal "保存に失敗しました。項目を再確認してください") { model | scenario = scenario }
+                    update (OpenModal "保存に失敗しました。項目を再確認してください") { model | script = script }
 
                 Just s ->
-                    ( { model | scenario = scenario, scenarioForm = Scenario.initForm }, updateScenario <| Scenario.encode s )
+                    ( { model | script = script, scriptForm = Script.initForm }, updateScript <| Script.encode s )
 
-        ReadedScenario val ->
+        ReadedScript val ->
             let
                 registerForm =
-                    Scenario.decodeScenarioRegisterFormFromJson val
+                    Script.decodeScriptRegisterFormFromJson val
             in
             case registerForm of
                 Just f ->
-                    ( { model | scenarioForm = f }, Cmd.none )
+                    ( { model | scriptForm = f }, Cmd.none )
 
                 Nothing ->
-                    update (OpenModal "シナリオの読み込みに失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
+                    update (OpenModal "脚本の読み込みに失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
 
-        DeleteScenario ->
-            ( model, deleteScenario model.scenarioForm.id )
+        DeleteScript ->
+            ( model, deleteScript model.scriptForm.id )
 
-        DeletedScenario result ->
+        DeletedScript result ->
             if result then
-                ( { model | mainAreaState = ScenarioTab, modalState = CloseModalState }, readScenarioNames () )
+                ( { model | mainAreaState = ScriptTab, modalState = CloseModalState }, readScriptNames () )
 
             else
-                update (OpenModal "シナリオの削除に失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
+                update (OpenModal "脚本の削除に失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
 
         ChangeTragedySet val ->
-            ( { model | scenarioForm = Scenario.setTragedySet val model.scenarioForm }, Cmd.none )
+            ( { model | scriptForm = Script.setTragedySet val model.scriptForm }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -228,9 +228,9 @@ subscriptions model =
     Sub.batch
         [ readedRooms ReadedRooms
         , changedUrl ChangedUrl
-        , readedScenarioNames ReadedScenarioNames
-        , readedScenario ReadedScenario
-        , deletedScenario DeletedScenario
+        , readedScriptNames ReadedScriptNames
+        , readedScript ReadedScript
+        , deletedScript DeletedScript
         ]
 
 
@@ -301,12 +301,12 @@ mainTabs model =
                 _ ->
                     class ""
 
-        scenarioTabClass =
+        scriptTabClass =
             case mainAreaState of
-                ScenarioTab ->
+                ScriptTab ->
                     class "is-active"
 
-                ScenarioCreateTab ->
+                ScriptCreateTab ->
                     class "is-active"
 
                 _ ->
@@ -320,7 +320,7 @@ mainTabs model =
             div [ class "tabs" ]
                 [ ul []
                     [ li [ mainTabClass ] [ a [ href "/rooper" ] [ text "メイン" ] ]
-                    , li [ scenarioTabClass ] [ a [ href "/rooper/scenario" ] [ text "シナリオ" ] ]
+                    , li [ scriptTabClass ] [ a [ href "/rooper/script" ] [ text "脚本" ] ]
                     ]
                 ]
 
@@ -344,31 +344,31 @@ logginedMainArea model =
         NothingTab ->
             text ""
 
-        ScenarioTab ->
-            mainScenarioContent model
+        ScriptTab ->
+            mainScriptContent model
 
-        ScenarioCreateTab ->
-            createScenarioView model
+        ScriptCreateTab ->
+            createScriptView model
 
 
-mainScenarioContent : Model -> Html Msg
-mainScenarioContent model =
+mainScriptContent : Model -> Html Msg
+mainScriptContent model =
     let
-        { scenarios } =
+        { scripts } =
             model
     in
     div []
         [ div [ class "columns is-mobile" ]
             [ div [ class "column is-5 is-offset-7" ]
-                [ Form.createButton (ChangeUrl "/rooper/scenario/create")
+                [ Form.createButton (ChangeUrl "/rooper/script/create")
                 ]
             ]
-        , case scenarios of
+        , case scripts of
             Just [] ->
-                text "シナリオはまだ作られていません"
+                text "脚本はまだ作られていません"
 
             Just s ->
-                ScenarioName.scenarios s
+                ScriptName.scripts s
 
             _ ->
                 text ""
@@ -455,40 +455,40 @@ headNavRight model =
             text ""
 
 
-createScenarioView : Model -> Html Msg
-createScenarioView { scenarioForm } =
+createScriptView : Model -> Html Msg
+createScriptView { scriptForm } =
     let
         mode =
-            if scenarioForm.id == "" then
+            if scriptForm.id == "" then
                 "作成"
 
             else
                 "更新"
 
         title =
-            "シナリオ" ++ mode
+            "脚本" ++ mode
     in
-    Scenario.registerForm title
+    Script.registerForm title
         [ Form.field
-            (scenarioFormView scenarioForm)
+            (scriptFormView scriptForm)
         , div [ class "control" ]
-            [ button [ class "button is-primary", onClick UpdateScenario ] [ text mode ]
+            [ button [ class "button is-primary", onClick UpdateScript ] [ text mode ]
             ]
         , div [ class "columns is-mobile" ]
             [ div [ class "column  is-4 is-offset-8 control" ]
-                [ button [ class "button is-danger", onClick OpenModalConfirmScenarioDelete ] [ text "削除" ]
+                [ button [ class "button is-danger", onClick OpenModalConfirmScriptDelete ] [ text "削除" ]
                 ]
             ]
         ]
 
 
-scenarioFormView : Scenario.RegisterForm -> List (Html Msg)
-scenarioFormView scenarioForm =
-    [ label [ class "label has-text-white" ] [ text "シナリオ名" ]
+scriptFormView : Script.RegisterForm -> List (Html Msg)
+scriptFormView scriptForm =
+    [ label [ class "label has-text-white" ] [ text "脚本名" ]
     , Form.control
-        [ input [ class "input", required True, value scenarioForm.name, onInput ChangeScenarioName ] []
+        [ input [ class "input", required True, value scriptForm.name, onInput ChangeScriptName ] []
         ]
-    , Form.errors (Scenario.getNameError scenarioForm)
+    , Form.errors (Script.getNameError scriptForm)
     , label
         [ class "label has-text-white" ]
         [ text "使用セット" ]

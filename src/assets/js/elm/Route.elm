@@ -6,9 +6,9 @@ import Url.Parser as Parser exposing ((</>), Parser, fragment, int, map, oneOf, 
 
 type Route
     = Top
-    | Scenario
-    | ScenarioCreate
-    | ScenarioEdit String
+    | Script
+    | ScriptCreate
+    | ScriptEdit String
     | NotFound
 
 
@@ -22,9 +22,9 @@ parser =
     oneOf
         [ map Top top
         , map Top (s "rooper")
-        , map Scenario (s "rooper" </> s "scenario")
-        , map ScenarioCreate (s "rooper" </> s "scenario" </> s "create")
-        , map ScenarioEdit (s "rooper" </> s "scenario" </> s "edit" </> string)
+        , map Script (s "rooper" </> s "script")
+        , map ScriptCreate (s "rooper" </> s "script" </> s "create")
+        , map ScriptEdit (s "rooper" </> s "script" </> s "edit" </> string)
         ]
 
 

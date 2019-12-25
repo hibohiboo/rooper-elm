@@ -1,4 +1,4 @@
-module Models.Scenario.Id exposing
+module Models.Script.Id exposing
     ( Error(..)
     , Id
     , decoder

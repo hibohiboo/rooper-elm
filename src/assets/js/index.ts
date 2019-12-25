@@ -5,7 +5,7 @@ import Room, { addRoom, readRooms } from './firebase/Room';
 import { Elm } from './elm/Main'; //  eslint-disable-line import/no-unresolved
 import { hideLoader, showLoader } from './utils/spinner';
 import { historyInit, pushHistory } from './utils/history';
-import * as Scenario from './firebase/Scenario';
+import * as Script from './firebase/Script';
 
 require('../css/styles.scss'); // tslint:disable-line no-var-requires
 
@@ -33,30 +33,30 @@ const initApp = async () => {
   }
   ports.readedRooms.send(rooms);
 
-  ports.updateScenario.subscribe(scenario => {
-    if (!scenario.id) {
-      Scenario.addScenario(scenario, firebaseBackEnd.db, firebaseBackEnd.getTimestamp(), user.uid, user.storeUserId);
-      pushHistory(ports, `${document.location.protocol}//${document.location.hostname}:${document.location.port}/rooper/scenario`);
+  ports.updateScript.subscribe(script => {
+    if (!script.id) {
+      Script.addScript(script, firebaseBackEnd.db, firebaseBackEnd.getTimestamp(), user.uid, user.storeUserId);
+      pushHistory(ports, `${document.location.protocol}//${document.location.hostname}:${document.location.port}/rooper/script`);
     }
   });
 
-  ports.readScenarioNames.subscribe(async () => {
-    const scenarioNames = await Scenario.readScenarioNames(firebaseBackEnd.db, user.storeUserId);
-    ports.readedScenarioNames.send(scenarioNames);
+  ports.readScriptNames.subscribe(async () => {
+    const scriptNames = await Script.readScriptNames(firebaseBackEnd.db, user.storeUserId);
+    ports.readedScriptNames.send(scriptNames);
   });
 
-  ports.readScenario.subscribe(async (scenarioId) => {
+  ports.readScript.subscribe(async (scriptId) => {
     showLoader();
-    const scenario = await Scenario.readScenario(firebaseBackEnd.db, scenarioId);
-    console.log(scenarioId, scenario);
-    ports.readedScenario.send(scenario);
+    const script = await Script.readScript(firebaseBackEnd.db, scriptId);
+    console.log(scriptId, script);
+    ports.readedScript.send(script);
     hideLoader();
   });
 
-  ports.deleteScenario.subscribe(async (scenarioId) => {
+  ports.deleteScript.subscribe(async (scriptId) => {
     showLoader();
-    const result = await Scenario.deleteScenario(firebaseBackEnd.db, user.storeUserId, scenarioId);
-    ports.deletedScenario.send(result);
+    const result = await Script.deleteScript(firebaseBackEnd.db, user.storeUserId, scriptId);
+    ports.deletedScript.send(result);
     hideLoader();
   });
   // ports.updateRoom.subscribe(({ id, name }) => {

@@ -21,7 +21,7 @@ port updateRoom : Value -> Cmd msg
 port readedRooms : (Value -> msg) -> Sub msg
 
 
-port updateScenario : Value -> Cmd msg
+port updateScript : Value -> Cmd msg
 
 
 port changeUrl : String -> Cmd msg
@@ -30,19 +30,19 @@ port changeUrl : String -> Cmd msg
 port changedUrl : (String -> msg) -> Sub msg
 
 
-port readScenarioNames : () -> Cmd msg
+port readScriptNames : () -> Cmd msg
 
 
-port readedScenarioNames : (Value -> msg) -> Sub msg
+port readedScriptNames : (Value -> msg) -> Sub msg
 
 
-port readScenario : String -> Cmd msg
+port readScript : String -> Cmd msg
 
 
-port readedScenario : (Value -> msg) -> Sub msg
+port readedScript : (Value -> msg) -> Sub msg
 
 
-port deleteScenario : String -> Cmd msg
+port deleteScript : String -> Cmd msg
 
 
-port deletedScenario : (Bool -> msg) -> Sub msg
+port deletedScript : (Bool -> msg) -> Sub msg
