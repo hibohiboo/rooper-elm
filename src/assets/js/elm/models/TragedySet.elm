@@ -376,12 +376,12 @@ type Error
 
 decoderTragedySet : D.Decoder TragedySet
 decoderTragedySet =
-    D.succeed decodeTragedySetFromString
+    D.succeed getTragedySetFromString
         |> required "tragedySet" D.string
 
 
-decodeTragedySetFromString : String -> TragedySet
-decodeTragedySetFromString s =
+getTragedySetFromString : String -> TragedySet
+getTragedySetFromString s =
     if s == "BasicTragedy" then
         initBasicTragedy
 
@@ -389,10 +389,9 @@ decodeTragedySetFromString s =
         initFirstSteps
 
 
-decoder : Decoder String Error TragedySet
+decoder : Decoder TragedySet Error TragedySet
 decoder =
     Decoder.identity
-        |> Decoder.map decodeTragedySetFromString
 
 
 toString : TragedySet -> String

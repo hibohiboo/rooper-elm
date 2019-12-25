@@ -75,7 +75,7 @@ formDecoder =
     D.succeed RegisterForm
         |> required "id" D.string
         |> required "name" D.string
-        |> hardcoded "Basic Tragedy X"
+        |> required "set" TragedySet.decoderTragedySet
 
 
 
@@ -85,7 +85,7 @@ formDecoder =
 type alias RegisterForm =
     { id : String
     , name : String
-    , set : String
+    , set : TragedySet
     }
 
 
@@ -93,7 +93,7 @@ initForm : RegisterForm
 initForm =
     { id = ""
     , name = ""
-    , set = "Basic Tragedy X"
+    , set = TragedySet.initBasicTragedy
     }
 
 
@@ -143,6 +143,11 @@ getNameError f =
 setName : String -> RegisterForm -> RegisterForm
 setName s f =
     { f | name = s }
+
+
+setTragedySet : String -> RegisterForm -> RegisterForm
+setTragedySet s f =
+    { f | set = TragedySet.getTragedySetFromString s }
 
 
 setId : String -> RegisterForm -> RegisterForm

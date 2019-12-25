@@ -90,6 +90,7 @@ type Msg
     | OpenModalConfirmScenarioDelete
     | DeleteScenario
     | DeletedScenario Bool
+    | ChangeTragedySet String
 
 
 type MenuState
@@ -217,6 +218,9 @@ update msg model =
 
             else
                 update (OpenModal "シナリオの削除に失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
+
+        ChangeTragedySet val ->
+            ( { model | scenarioForm = Scenario.setTragedySet val model.scenarioForm }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -490,8 +494,9 @@ scenarioFormView scenarioForm =
         [ text "使用セット" ]
     , Form.control
         [ div [ class "select" ]
-            [ select []
-                [ option [] [ text "Basic Tragedy X" ]
+            [ select [ onChange ChangeTragedySet ]
+                [ option [ value "FistSteps" ] [ text "First Steps" ]
+                , option [ value "BasicTragedy" ] [ text "Basic Tragedy X" ]
                 ]
             ]
         ]
