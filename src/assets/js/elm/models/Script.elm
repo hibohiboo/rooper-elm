@@ -97,6 +97,26 @@ initForm =
     }
 
 
+isSetBasicTragedy : RegisterForm -> Bool
+isSetBasicTragedy f =
+    case f.set.setType of
+        TragedySet.BasicTragedy ->
+            True
+
+        _ ->
+            False
+
+
+isSetFirstSteps : RegisterForm -> Bool
+isSetFirstSteps f =
+    case f.set.setType of
+        TragedySet.FirstSteps ->
+            True
+
+        _ ->
+            False
+
+
 
 -- Convert
 

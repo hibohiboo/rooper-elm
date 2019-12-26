@@ -495,8 +495,8 @@ scriptFormView scriptForm =
     , Form.control
         [ div [ class "select" ]
             [ select [ onChange ChangeTragedySet ]
-                [ option [ value "FistSteps" ] [ text "First Steps" ]
-                , option [ value "BasicTragedy" ] [ text "Basic Tragedy X" ]
+                [ option [ value "FistSteps", selected (Script.isSetFirstSteps scriptForm) ] [ text "First Steps" ]
+                , option [ value "BasicTragedy", selected (Script.isSetBasicTragedy scriptForm) ] [ text "Basic Tragedy X" ]
                 ]
             ]
         ]

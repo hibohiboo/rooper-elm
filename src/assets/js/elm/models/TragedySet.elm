@@ -349,25 +349,18 @@ type alias TragedySet =
     , plots : List Plot
     , roles : List Role
     , incidents : List Incident
+    , setType : TragedySetType
     }
-
-
-basicTragedyName =
-    "Basic Tragedy X"
-
-
-firstStepsName =
-    "First Steps"
 
 
 initBasicTragedy : TragedySet
 initBasicTragedy =
-    TragedySet basicTragedyName 2 initBasicPlots initBasicTragedyRoles initBasicTragedyIncidents
+    TragedySet "Basic Tragedy X" 2 initBasicPlots initBasicTragedyRoles initBasicTragedyIncidents BasicTragedy
 
 
 initFirstSteps : TragedySet
 initFirstSteps =
-    TragedySet firstStepsName 1 initFirstStepsPlots initFirstStepsRoles initFirstStepsIncidents
+    TragedySet "First Steps" 1 initFirstStepsPlots initFirstStepsRoles initFirstStepsIncidents FirstSteps
 
 
 type Error
@@ -396,8 +389,14 @@ decoder =
 
 toString : TragedySet -> String
 toString set =
-    if set.name == basicTragedyName then
-        "BasicTragedy"
+    case set.setType of
+        BasicTragedy ->
+            "BasicTragedy"
 
-    else
-        "FirstSteps"
+        FirstSteps ->
+            "FirstSteps"
+
+
+type TragedySetType
+    = BasicTragedy
+    | FirstSteps
