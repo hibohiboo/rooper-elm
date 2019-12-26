@@ -2,6 +2,8 @@ module Models.Script exposing (..)
 
 import Form.Decoder as Decoder exposing (Decoder)
 import Html exposing (..)
+import Html.Keyed as Keyed
+import Html.Lazy as Html
 import Json.Decode as D exposing (Value)
 import Json.Decode.Pipeline exposing (hardcoded, optional, required)
 import Json.Encode as E
@@ -117,6 +119,11 @@ isSetFirstSteps f =
             False
 
 
+getMainPlots : RegisterForm -> List TragedySet.Plot
+getMainPlots f =
+    TragedySet.getMainPlot f.set.plots
+
+
 
 -- Convert
 
@@ -181,6 +188,27 @@ registerForm title children =
         [ h2 [] [ text title ]
         , div []
             children
+        ]
+
+
+mainPlots : List TragedySet.Plot -> Html msg
+mainPlots rs =
+    Keyed.node "select"
+        []
+    <|
+        List.map keyedPlot rs
+
+
+keyedPlot : TragedySet.Plot -> ( String, Html msg )
+keyedPlot p =
+    ( p.name ++ "-main-plot", Html.lazy plot p )
+
+
+plot : TragedySet.Plot -> Html msg
+plot p =
+    option
+        []
+        [ text p.name
         ]
 
 

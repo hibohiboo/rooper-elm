@@ -125,6 +125,11 @@ type PlotType
     | SubPlot
 
 
+getMainPlot : List Plot -> List Plot
+getMainPlot plots =
+    List.filter (\plot -> plot.plotType == MainPlot) plots
+
+
 type alias Effect =
     { effectType : EffectType
     , timing : Timing

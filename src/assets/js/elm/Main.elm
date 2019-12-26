@@ -501,4 +501,12 @@ scriptFormView scriptForm =
                 ]
             ]
         ]
+    , label
+        [ class "label has-text-white", style "padding-top" "10px" ]
+        [ text "ルールY" ]
+    , Form.control
+        [ div [ class "select" ]
+            [ Script.mainPlots (Script.getMainPlots scriptForm)
+            ]
+        ]
     ]
