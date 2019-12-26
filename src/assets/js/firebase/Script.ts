@@ -25,6 +25,32 @@ export async function addScript(obj, db, timestamp, uid, storeUserId) {
 }
 
 /**
+ * データベースにシナリオを登録する
+ *
+ * @param json
+ * @param db
+ * @param timestamp
+ * @param uid
+ */
+export async function updateScript(obj, db, timestamp, uid, storeUserId) {
+  const { id } = obj;
+  const srtiptNameRef = db.collection('users').doc(storeUserId).collection('scripts').doc(id);
+  const scriptName = {
+    name: obj.name, uid, id, updatedAt: timestamp,
+  };
+
+  const script = {
+    ...obj, id, uid, updatedAt: timestamp,
+  };
+
+  return Promise.all([
+    (await srtiptNameRef.set(scriptName)),
+    (await db.collection('scripts').doc(id).set(script)),
+  ]);
+}
+
+
+/**
  * データベースから指定したユーザのシナリオ名一覧を取得する
  *
  * @param db

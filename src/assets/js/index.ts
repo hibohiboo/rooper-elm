@@ -33,11 +33,13 @@ const initApp = async () => {
   }
   ports.readedRooms.send(rooms);
 
-  ports.updateScript.subscribe(script => {
+  ports.updateScript.subscribe(async script => {
     if (!script.id) {
-      Script.addScript(script, firebaseBackEnd.db, firebaseBackEnd.getTimestamp(), user.uid, user.storeUserId);
-      pushHistory(ports, `${document.location.protocol}//${document.location.hostname}:${document.location.port}/rooper/script`);
+      await Script.addScript(script, firebaseBackEnd.db, firebaseBackEnd.getTimestamp(), user.uid, user.storeUserId);
+    } else {
+      await Script.updateScript(script, firebaseBackEnd.db, firebaseBackEnd.getTimestamp(), user.uid, user.storeUserId);
     }
+    pushHistory(ports, `${document.location.protocol}//${document.location.hostname}:${document.location.port}/rooper/script`);
   });
 
   ports.readScriptNames.subscribe(async () => {
