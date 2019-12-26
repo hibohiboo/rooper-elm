@@ -183,7 +183,8 @@ update msg model =
             ( { model | scriptForm = Script.setName name model.scriptForm }, Cmd.none )
 
         ReadedScriptNames val ->
-            ( { model | scripts = ScriptName.decodeScriptNameListFromJson val }, Cmd.none )
+            -- 脚本更新後にここに飛ぶため、入力欄を初期化
+            ( { model | scripts = ScriptName.decodeScriptNameListFromJson val, scriptForm = Script.initForm }, Cmd.none )
 
         UpdateScript ->
             let
@@ -195,7 +196,7 @@ update msg model =
                     update (OpenModal "保存に失敗しました。項目を再確認してください") { model | script = script }
 
                 Just s ->
-                    ( { model | script = script, scriptForm = Script.initForm }, updateScript <| Script.encode s )
+                    ( { model | script = script }, updateScript <| Script.encode s )
 
         ReadedScript val ->
             let
