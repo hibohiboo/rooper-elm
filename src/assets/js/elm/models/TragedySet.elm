@@ -369,13 +369,12 @@ type Error
 
 decoderTragedySet : D.Decoder TragedySet
 decoderTragedySet =
-    D.succeed getTragedySetFromString
-        |> required "tragedySet" D.string
+    D.map getTragedySetFromString D.string
 
 
 getTragedySetFromString : String -> TragedySet
 getTragedySetFromString s =
-    if s == "BasicTragedy" then
+    if s == typeToString BasicTragedy then
         initBasicTragedy
 
     else
@@ -389,7 +388,12 @@ decoder =
 
 toString : TragedySet -> String
 toString set =
-    case set.setType of
+    typeToString set.setType
+
+
+typeToString : TragedySetType -> String
+typeToString t =
+    case t of
         BasicTragedy ->
             "BasicTragedy"
 

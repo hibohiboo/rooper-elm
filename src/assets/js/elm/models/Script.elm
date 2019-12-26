@@ -75,7 +75,7 @@ formDecoder =
     D.succeed RegisterForm
         |> required "id" D.string
         |> required "name" D.string
-        |> required "set" TragedySet.decoderTragedySet
+        |> optional "set" TragedySet.decoderTragedySet TragedySet.initBasicTragedy
 
 
 
