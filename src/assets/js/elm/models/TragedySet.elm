@@ -114,6 +114,7 @@ type alias Role =
 
 type alias Plot =
     { name : String
+    , isMain : Bool
     , plotType : PlotType
     , roles : List Role
     , effects : List Effect
@@ -121,13 +122,27 @@ type alias Plot =
 
 
 type PlotType
-    = MainPlot
-    | SubPlot
+    = MurderPlan
+    | LightOfTheAvenger
+    | APlaceToProtect
+    | TheSealedItem
+    | SignWithMe
+    | ChangeOfFuture
+    | GiantTimeBomb
+    | AnUnsettlingRumour
+    | AHideousScript
+    | ShadowOfTheRipper
+    | CircleOfFriends
+    | ALoveAffair
+    | TheHiddenFreak
+    | ParanoiaVirus
+    | ThreadsOfFate
+    | UnknownFactorX
 
 
 getMainPlot : List Plot -> List Plot
 getMainPlot plots =
-    List.filter (\plot -> plot.plotType == MainPlot) plots
+    List.filter (\plot -> plot.isMain) plots
 
 
 type alias Effect =
@@ -161,28 +176,29 @@ type Timing
 
 murderPlan : Plot
 murderPlan =
-    Plot "殺人計画" MainPlot [ killer, brain, keyPerson ] []
+    Plot "殺人計画" True MurderPlan [ killer, brain, keyPerson ] []
 
 
 lightOfTheAvenger : Plot
 lightOfTheAvenger =
-    Plot "復讐者の灯火" MainPlot [ brain ] [ Effect LossCondition LoopEnd False "クロマクの初期エリアに[暗躍カウンター]が２つ以上ある" ]
+    Plot "復讐者の灯火" True LightOfTheAvenger [ brain ] [ Effect LossCondition LoopEnd False "クロマクの初期エリアに[暗躍カウンター]が２つ以上ある" ]
 
 
 aPlaceToProtect : Plot
 aPlaceToProtect =
-    Plot "守るべき場所" MainPlot [ keyPerson, cultist ] [ Effect LossCondition LoopEnd False "学校に[暗躍カウンター]が２つ以上ある。" ]
+    Plot "守るべき場所" True APlaceToProtect [ keyPerson, cultist ] [ Effect LossCondition LoopEnd False "学校に[暗躍カウンター]が２つ以上ある。" ]
 
 
 theSealedItem : Plot
 theSealedItem =
-    Plot "封印されしモノ" MainPlot [ brain, cultist ] [ Effect LossCondition LoopEnd False "神社に[暗躍カウンター]が２つ以上ある。" ]
+    Plot "封印されしモノ" True TheSealedItem [ brain, cultist ] [ Effect LossCondition LoopEnd False "神社に[暗躍カウンター]が２つ以上ある。" ]
 
 
 signWithMe : Plot
 signWithMe =
     Plot "僕と契約しようよ！"
-        MainPlot
+        True
+        SignWithMe
         [ keyPerson ]
         [ Effect LossCondition LoopEnd False "キーパーソンに[暗躍カウンター]が２個以上。"
         , Effect Mandatory WritingScript False "キーパーソンは少女にしなくてはならない"
@@ -191,57 +207,57 @@ signWithMe =
 
 changeOfFuture : Plot
 changeOfFuture =
-    Plot "未来改変プラン" MainPlot [ timeTraveler, cultist ] [ Effect LossCondition LoopEnd False "このループ中に「事件：蝶の羽ばたき」が発生している。" ]
+    Plot "未来改変プラン" True ChangeOfFuture [ timeTraveler, cultist ] [ Effect LossCondition LoopEnd False "このループ中に「事件：蝶の羽ばたき」が発生している。" ]
 
 
 giantTimeBomb : Plot
 giantTimeBomb =
-    Plot "巨大時限爆弾Xの存在" MainPlot [ witch ] [ Effect LossCondition LoopEnd False "ウィッチの初期エリアに[暗躍カウンター]が２つ以上。" ]
+    Plot "巨大時限爆弾Xの存在" True GiantTimeBomb [ witch ] [ Effect LossCondition LoopEnd False "ウィッチの初期エリアに[暗躍カウンター]が２つ以上。" ]
 
 
 anUnsettlingRumour : Plot
 anUnsettlingRumour =
-    Plot "不穏な噂" SubPlot [ conspiracyTheorist ] [ Effect Optional MastermindAbility True "【脚本家能力フェイズ】任意のボード１つに[暗躍カウンター]を１つ置く。" ]
+    Plot "不穏な噂" False AnUnsettlingRumour [ conspiracyTheorist ] [ Effect Optional MastermindAbility True "【脚本家能力フェイズ】任意のボード１つに[暗躍カウンター]を１つ置く。" ]
 
 
 aHideousScript : Plot
 aHideousScript =
-    Plot "最低の却本" SubPlot [ friend, curmudgeon, curmudgeon, conspiracyTheorist ] [ Effect Optional WritingScript False "マイナスを２人ではなく、１人や０人追加してもよい。" ]
+    Plot "最低の却本" False AHideousScript [ friend, curmudgeon, curmudgeon, conspiracyTheorist ] [ Effect Optional WritingScript False "マイナスを２人ではなく、１人や０人追加してもよい。" ]
 
 
 shadowOfTheRipper : Plot
 shadowOfTheRipper =
-    Plot "切り裂き魔の影" SubPlot [ serialKiller, conspiracyTheorist ] []
+    Plot "切り裂き魔の影" False ShadowOfTheRipper [ serialKiller, conspiracyTheorist ] []
 
 
 circleOfFriends : Plot
 circleOfFriends =
-    Plot "友情サークル" SubPlot [ friend, friend, conspiracyTheorist ] []
+    Plot "友情サークル" False CircleOfFriends [ friend, friend, conspiracyTheorist ] []
 
 
 aLoveAffair : Plot
 aLoveAffair =
-    Plot "恋愛風景" SubPlot [ lovedOne, lover ] []
+    Plot "恋愛風景" False ALoveAffair [ lovedOne, lover ] []
 
 
 theHiddenFreak : Plot
 theHiddenFreak =
-    Plot "潜む殺人鬼" SubPlot [ friend, serialKiller ] []
+    Plot "潜む殺人鬼" False TheHiddenFreak [ friend, serialKiller ] []
 
 
 paranoiaVirus : Plot
 paranoiaVirus =
-    Plot "妄想拡大ウイルス" SubPlot [ conspiracyTheorist ] [ Effect Mandatory Always False "パーソンは[不安カウンター]が３つ以上置かれている限り、役職がシリアルキラーに変更される。" ]
+    Plot "妄想拡大ウイルス" False ParanoiaVirus [ conspiracyTheorist ] [ Effect Mandatory Always False "パーソンは[不安カウンター]が３つ以上置かれている限り、役職がシリアルキラーに変更される。" ]
 
 
 threadsOfFate : Plot
 threadsOfFate =
-    Plot "因果の糸" SubPlot [] [ Effect Mandatory LoopStart False "ひとつ前のループ終了時に[友好カウンター]が置かれていた全キャラクターに[不安カウンター]を２つ置く。" ]
+    Plot "因果の糸" False ThreadsOfFate [] [ Effect Mandatory LoopStart False "ひとつ前のループ終了時に[友好カウンター]が置かれていた全キャラクターに[不安カウンター]を２つ置く。" ]
 
 
 unknownFactorX : Plot
 unknownFactorX =
-    Plot "不定因子χ" SubPlot [ factor ] []
+    Plot "不定因子χ" False UnknownFactorX [ factor ] []
 
 
 initBasicPlots : List Plot

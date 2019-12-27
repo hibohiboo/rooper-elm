@@ -2,6 +2,7 @@ module Models.Script exposing (..)
 
 import Form.Decoder as Decoder exposing (Decoder)
 import Html exposing (..)
+import Html.Events.Extra exposing (onChange)
 import Html.Keyed as Keyed
 import Html.Lazy as Html
 import Json.Decode as D exposing (Value)
