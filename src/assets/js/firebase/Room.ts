@@ -7,7 +7,7 @@ export default class Room {
 
   public id: string;
 
-  public scenario?;
+  public script?;
 
   public createdAt?;
 
