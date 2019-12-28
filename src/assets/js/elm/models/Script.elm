@@ -213,23 +213,23 @@ registerForm title children =
         ]
 
 
-mainPlots : (String -> msg) -> List TragedySet.Plot -> Html msg
-mainPlots chgMsg rs =
+mainPlots : (String -> msg) -> TragedySet.Plot -> List TragedySet.Plot -> Html msg
+mainPlots chgMsg selectedPlot rs =
     Keyed.node "select"
         [ onChange chgMsg ]
     <|
-        List.map keyedPlot rs
+        List.map (\r -> keyedPlot r selectedPlot) rs
 
 
-keyedPlot : TragedySet.Plot -> ( String, Html msg )
-keyedPlot p =
-    ( p.name ++ "-main-plot", Html.lazy plot p )
+keyedPlot : TragedySet.Plot -> TragedySet.Plot -> ( String, Html msg )
+keyedPlot p selectedPlot =
+    ( p.name ++ "-main-plot", Html.lazy (plot p) (p == selectedPlot) )
 
 
-plot : TragedySet.Plot -> Html msg
-plot p =
+plot : TragedySet.Plot -> Bool -> Html msg
+plot p isSelected =
     option
-        [ value (TragedySet.plotToString p) ]
+        [ value (TragedySet.plotToString p), selected isSelected ]
         [ text p.name
         ]
 

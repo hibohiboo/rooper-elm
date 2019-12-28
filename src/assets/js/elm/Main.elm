@@ -522,7 +522,7 @@ scriptFormView scriptForm =
         [ text "ルールY" ]
     , Form.control
         [ div [ class "select" ]
-            [ Script.mainPlots ChangeMainPlot (Script.getMainPlots scriptForm)
+            [ Script.mainPlots ChangeMainPlot scriptForm.mainPlot (Script.getMainPlots scriptForm)
             ]
         ]
     ]
