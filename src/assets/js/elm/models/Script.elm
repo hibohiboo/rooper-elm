@@ -22,6 +22,7 @@ type alias Script =
     { id : Id
     , name : Name
     , set : TragedySet
+    , mainPlot : TragedySet.Plot
     }
 
 
@@ -40,6 +41,11 @@ form =
         |> Decoder.field decoderId
         |> Decoder.field decoderName
         |> Decoder.field decoderTragedySet
+        |> Decoder.field decoderMainPlot
+
+
+
+-- ルールYはそのまま入れる
 
 
 decoderName : Decoder RegisterForm Error Name
@@ -61,6 +67,12 @@ decoderTragedySet =
     TragedySet.decoder
         |> Decoder.mapError TragedySetError
         |> Decoder.lift .set
+
+
+decoderMainPlot : Decoder RegisterForm Error TragedySet.Plot
+decoderMainPlot =
+    Decoder.identity
+        |> Decoder.lift .mainPlot
 
 
 
@@ -234,4 +246,5 @@ encode script =
         [ ( "id", E.string <| Id.toString script.id )
         , ( "name", E.string <| Name.toString script.name )
         , ( "set", E.string <| TragedySet.toString script.set )
+        , ( "mainPlot", E.string <| TragedySet.plotToString script.mainPlot )
         ]
