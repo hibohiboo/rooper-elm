@@ -92,6 +92,7 @@ type Msg
     | DeletedScript Bool
     | ChangeTragedySet String
     | ChangeMainPlot String
+    | ChangedScript
 
 
 type MenuState
@@ -181,7 +182,7 @@ update msg model =
             ( { model | rooms = RoomName.decodeRoomNameListFromJson val }, Cmd.none )
 
         ChangeScriptName name ->
-            ( { model | scriptForm = Script.setName name model.scriptForm }, Cmd.none )
+            update ChangedScript { model | scriptForm = Script.setName name model.scriptForm }
 
         ReadedScriptNames val ->
             -- 脚本更新後にここに飛ぶため、入力欄を初期化
@@ -226,6 +227,18 @@ update msg model =
 
         ChangeMainPlot val ->
             ( { model | scriptForm = Script.setMainPlot val model.scriptForm }, Cmd.none )
+
+        ChangedScript ->
+            let
+                script =
+                    Script.convert model.scriptForm
+            in
+            case script of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just s ->
+                    ( { model | script = script }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -461,7 +474,7 @@ headNavRight model =
 
 
 createScriptView : Model -> Html Msg
-createScriptView { scriptForm } =
+createScriptView { scriptForm, script } =
     let
         mode =
             if scriptForm.id == "" then
@@ -472,12 +485,20 @@ createScriptView { scriptForm } =
 
         title =
             "脚本" ++ mode
+
+        isScriptInvalid =
+            case script of
+                Just _ ->
+                    False
+
+                Nothing ->
+                    True
     in
     Script.registerForm title
         [ Form.field
             (scriptFormView scriptForm)
         , div [ class "control" ]
-            [ button [ class "button is-primary", onClick UpdateScript ] [ text mode ]
+            [ button [ class "button is-primary", disabled isScriptInvalid, onClick UpdateScript ] [ text mode ]
             ]
         , div [ class "columns is-mobile" ]
             [ div [ class "column  is-4 is-offset-8 control" ]
