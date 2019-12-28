@@ -207,7 +207,7 @@ update msg model =
             in
             case registerForm of
                 Just f ->
-                    ( { model | scriptForm = f }, Cmd.none )
+                    ( { model | scriptForm = f, script = Script.convert f }, Cmd.none )
 
                 Nothing ->
                     update (OpenModal "脚本の読み込みに失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
@@ -229,16 +229,7 @@ update msg model =
             ( { model | scriptForm = Script.setMainPlot val model.scriptForm }, Cmd.none )
 
         ChangedScript ->
-            let
-                script =
-                    Script.convert model.scriptForm
-            in
-            case script of
-                Nothing ->
-                    ( model, Cmd.none )
-
-                Just s ->
-                    ( { model | script = script }, Cmd.none )
+            ( { model | script = Script.convert model.scriptForm }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
