@@ -112,6 +112,10 @@ type alias Role =
     }
 
 
+
+-- ルール
+
+
 type alias Plot =
     { name : String
     , isMain : Bool
@@ -138,11 +142,6 @@ type PlotType
     | ParanoiaVirus
     | ThreadsOfFate
     | UnknownFactorX
-
-
-getMainPlot : List Plot -> List Plot
-getMainPlot plots =
-    List.filter (\plot -> plot.isMain) plots
 
 
 type alias Effect =
@@ -172,6 +171,140 @@ type Timing
     | Always -- 常時
     | DayEnd -- ターン終了フェイズ
     | WritingScript -- 脚本作成時
+
+
+
+-- ルール > メソッド
+
+
+getMainPlot : List Plot -> List Plot
+getMainPlot plots =
+    List.filter (\plot -> plot.isMain) plots
+
+
+plotToString : Plot -> String
+plotToString p =
+    case p.plotType of
+        MurderPlan ->
+            "MurderPlan"
+
+        LightOfTheAvenger ->
+            "LightOfTheAvenger"
+
+        APlaceToProtect ->
+            "APlaceToProtect"
+
+        TheSealedItem ->
+            "TheSealedItem"
+
+        SignWithMe ->
+            "SignWithMe"
+
+        ChangeOfFuture ->
+            "ChangeOfFuture"
+
+        GiantTimeBomb ->
+            "GiantTimeBomb"
+
+        AnUnsettlingRumour ->
+            "AnUnsettlingRumour"
+
+        AHideousScript ->
+            "AHideousScript"
+
+        ShadowOfTheRipper ->
+            "ShadowOfTheRipper"
+
+        CircleOfFriends ->
+            "CircleOfFriends"
+
+        ALoveAffair ->
+            "ALoveAffair"
+
+        TheHiddenFreak ->
+            "TheHiddenFreak"
+
+        ParanoiaVirus ->
+            "ParanoiaVirus"
+
+        ThreadsOfFate ->
+            "ThreadsOfFate"
+
+        UnknownFactorX ->
+            "UnknownFactorX"
+
+
+plotFromString : String -> Maybe Plot
+plotFromString s =
+    case s of
+        "MurderPlan" ->
+            Just murderPlan
+
+        "LightOfTheAvenger" ->
+            Just lightOfTheAvenger
+
+        "APlaceToProtect" ->
+            Just aPlaceToProtect
+
+        "TheSealedItem" ->
+            Just theSealedItem
+
+        "SignWithMe" ->
+            Just signWithMe
+
+        "ChangeOfFuture" ->
+            Just changeOfFuture
+
+        "GiantTimeBomb" ->
+            Just giantTimeBomb
+
+        "AnUnsettlingRumour" ->
+            Just anUnsettlingRumour
+
+        "AHideousScript" ->
+            Just aHideousScript
+
+        "ShadowOfTheRipper" ->
+            Just shadowOfTheRipper
+
+        "CircleOfFriends" ->
+            Just circleOfFriends
+
+        "ALoveAffair" ->
+            Just aLoveAffair
+
+        "TheHiddenFreak" ->
+            Just theHiddenFreak
+
+        "ParanoiaVirus" ->
+            Just paranoiaVirus
+
+        "ThreadsOfFate" ->
+            Just threadsOfFate
+
+        "UnknownFactorX" ->
+            Just unknownFactorX
+
+        _ ->
+            Nothing
+
+
+
+-- システムを通じて入れたfirebaseからの値のデコードを想定しているため失敗しない前提でとりあえず殺人計画をデフォルトにしておく
+
+
+plotFromStringWithDefault : String -> Plot
+plotFromStringWithDefault =
+    plotFromString >> Maybe.withDefault murderPlan
+
+
+decoderPlot : D.Decoder Plot
+decoderPlot =
+    D.map plotFromStringWithDefault D.string
+
+
+
+-- ルール ＞ データ
 
 
 murderPlan : Plot
@@ -285,6 +418,10 @@ initFirstStepsPlots =
     , anUnsettlingRumour
     , aHideousScript
     ]
+
+
+
+-- 事件
 
 
 type alias Incident =

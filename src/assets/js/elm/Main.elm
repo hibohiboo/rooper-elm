@@ -91,6 +91,7 @@ type Msg
     | DeleteScript
     | DeletedScript Bool
     | ChangeTragedySet String
+    | ChangeMainPlot String
 
 
 type MenuState
@@ -222,6 +223,9 @@ update msg model =
 
         ChangeTragedySet val ->
             ( { model | scriptForm = Script.setTragedySet val model.scriptForm }, Cmd.none )
+
+        ChangeMainPlot val ->
+            ( { model | scriptForm = Script.setMainPlot val model.scriptForm }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -506,7 +510,7 @@ scriptFormView scriptForm =
         [ text "ルールY" ]
     , Form.control
         [ div [ class "select" ]
-            [ Script.mainPlots (Script.getMainPlots scriptForm)
+            [ Script.mainPlots ChangeMainPlot (Script.getMainPlots scriptForm)
             ]
         ]
     ]

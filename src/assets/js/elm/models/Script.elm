@@ -2,11 +2,12 @@ module Models.Script exposing (..)
 
 import Form.Decoder as Decoder exposing (Decoder)
 import Html exposing (..)
+import Html.Attributes exposing (..)
 import Html.Events.Extra exposing (onChange)
 import Html.Keyed as Keyed
 import Html.Lazy as Html
 import Json.Decode as D exposing (Value)
-import Json.Decode.Pipeline exposing (hardcoded, optional, required)
+import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
 import Models.Script.Id as Id exposing (Id)
 import Models.Script.Name as Name exposing (Name)
@@ -76,9 +77,10 @@ decodeScriptRegisterFormFromJson json =
 formDecoder : D.Decoder RegisterForm
 formDecoder =
     D.succeed RegisterForm
-        |> required "id" D.string
-        |> required "name" D.string
-        |> optional "set" TragedySet.decoderTragedySet TragedySet.initBasicTragedy
+        |> Pipeline.required "id" D.string
+        |> Pipeline.required "name" D.string
+        |> Pipeline.optional "set" TragedySet.decoderTragedySet TragedySet.initBasicTragedy
+        |> Pipeline.optional "mainPlot" TragedySet.decoderPlot TragedySet.murderPlan
 
 
 
@@ -89,6 +91,7 @@ type alias RegisterForm =
     { id : String
     , name : String
     , set : TragedySet
+    , mainPlot : TragedySet.Plot
     }
 
 
@@ -97,6 +100,7 @@ initForm =
     { id = ""
     , name = ""
     , set = TragedySet.initBasicTragedy
+    , mainPlot = TragedySet.murderPlan
     }
 
 
@@ -178,6 +182,11 @@ setTragedySet s f =
     { f | set = TragedySet.getTragedySetFromString s }
 
 
+setMainPlot : String -> RegisterForm -> RegisterForm
+setMainPlot s f =
+    { f | mainPlot = TragedySet.plotFromStringWithDefault s }
+
+
 setId : String -> RegisterForm -> RegisterForm
 setId s f =
     { f | id = s }
@@ -192,10 +201,10 @@ registerForm title children =
         ]
 
 
-mainPlots : List TragedySet.Plot -> Html msg
-mainPlots rs =
+mainPlots : (String -> msg) -> List TragedySet.Plot -> Html msg
+mainPlots chgMsg rs =
     Keyed.node "select"
-        []
+        [ onChange chgMsg ]
     <|
         List.map keyedPlot rs
 
@@ -208,7 +217,7 @@ keyedPlot p =
 plot : TragedySet.Plot -> Html msg
 plot p =
     option
-        []
+        [ value (TragedySet.plotToString p) ]
         [ text p.name
         ]
 
