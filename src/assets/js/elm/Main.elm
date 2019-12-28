@@ -324,8 +324,8 @@ mainTabs model =
         Just _ ->
             div [ class "tabs" ]
                 [ ul []
-                    [ li [ mainTabClass ] [ a [ href "/rooper" ] [ text "メイン" ] ]
-                    , li [ scriptTabClass ] [ a [ href "/rooper/script" ] [ text "脚本" ] ]
+                    [ li [ mainTabClass ] [ a [ href "/rooper/" ] [ text "メイン" ] ]
+                    , li [ scriptTabClass ] [ a [ href "/rooper/script/" ] [ text "脚本" ] ]
                     ]
                 ]
 
@@ -365,7 +365,7 @@ mainScriptContent model =
     div []
         [ div [ class "columns is-mobile" ]
             [ div [ class "column is-5 is-offset-7" ]
-                [ Form.createButton (ChangeUrl "/rooper/script/create")
+                [ Form.createButton (ChangeUrl "/rooper/script/create/")
                 ]
             ]
         , case scripts of
