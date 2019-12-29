@@ -8,7 +8,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Html.Events.Extra exposing (onChange)
 import Json.Encode exposing (Value)
-import Models.Character as Character
+import Models.Character as Character exposing(Character)
 import Models.Room as Room exposing (Room)
 import Models.RoomName as RoomName exposing (RoomName)
 import Models.Script as Script exposing (Script)
@@ -95,6 +95,8 @@ type Msg
     | ChangeMainPlot String
     | ChangeSubPlot1 String
     | ChangeSubPlot2 String
+    | AddCharacter Character
+    | DeleteCharacter Character
     | OpenCaracterSelectModal
     | ChangedScript
 
@@ -246,6 +248,12 @@ update msg model =
         OpenCaracterSelectModal ->
             ( { model | modalState = CharactertSelectModalState }, Cmd.none )
 
+        AddCharacter c ->
+           update ChangedScript { model | scriptForm = Script.setCharacter c model.scriptForm }
+
+        DeleteCharacter c ->
+           update ChangedScript { model | scriptForm = Script.deleteCharacter c model.scriptForm }
+
         ChangedScript ->
             ( { model | script = Script.convert model.scriptForm }, Cmd.none )
 
@@ -341,13 +349,21 @@ modal model =
 
                 CharactertSelectModalState ->
                     div [ style "display" "flex", style "flex-wrap" "wrap" ]
-                        (List.map (\c -> characterNameCard c) Character.characters)
+                        (List.map (\c -> characterNameCard c model) Character.characters)
             ]
 
 
-characterNameCard : Character.Character -> Html Msg
-characterNameCard c =
-    Character.characterNameCard c False
+characterNameCard : Character.Character -> Model -> Html Msg
+characterNameCard c model =
+    let
+      isSelected = Script.containCharacter c model.scriptForm
+      clickMessage =
+          if isSelected then
+              DeleteCharacter c
+          else
+              AddCharacter c
+    in
+    Character.characterNameCard clickMessage c isSelected
 
 
 mainTabs : Model -> Html msg

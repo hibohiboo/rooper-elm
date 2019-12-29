@@ -11,6 +11,7 @@ import Json.Decode as D exposing (Value)
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
 import Json.Encode.Extra as ExEncode
+import Models.Character as Character
 import Models.Script.Id as Id exposing (Id)
 import Models.Script.Name as Name exposing (Name)
 import Models.TragedySet as TragedySet exposing (TragedySet)
@@ -113,6 +114,7 @@ formDecoder =
         |> Pipeline.optional "mainPlot" TragedySet.decoderPlot TragedySet.murderPlan
         |> Pipeline.optional "subPlot1" TragedySet.decoderPlot TragedySet.circleOfFriends
         |> Pipeline.optional "subPlot2" TragedySet.decoderMaybePlot Nothing
+        |> Pipeline.optional "characters" (D.list Character.decoderCharacter) []
 
 
 
@@ -126,6 +128,7 @@ type alias RegisterForm =
     , mainPlot : TragedySet.Plot
     , subPlot1 : TragedySet.Plot
     , subPlot2 : Maybe TragedySet.Plot
+    , characters : List Character.Character
     }
 
 
@@ -137,6 +140,7 @@ initForm =
     , mainPlot = TragedySet.murderPlan
     , subPlot1 = TragedySet.circleOfFriends
     , subPlot2 = Just TragedySet.theHiddenFreak
+    , characters = []
     }
 
 
@@ -255,6 +259,21 @@ setSubPlot2 s f =
 setId : String -> RegisterForm -> RegisterForm
 setId s f =
     { f | id = s }
+
+
+setCharacter : Character.Character -> RegisterForm -> RegisterForm
+setCharacter c f =
+    { f | characters = c :: f.characters }
+
+
+deleteCharacter : Character.Character -> RegisterForm -> RegisterForm
+deleteCharacter c f =
+    { f | characters = List.filter (\char -> char /= c) f.characters }
+
+
+containCharacter : Character.Character -> RegisterForm -> Bool
+containCharacter c f =
+    List.member c f.characters
 
 
 registerForm : String -> List (Html msg) -> Html msg

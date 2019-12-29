@@ -2,9 +2,12 @@ module Models.Character exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Json.Decode as D
+import Json.Encode as E
 import Models.Board as Board exposing (BoardType(..))
 import Models.TragedySet exposing (Role)
-
+import Html.Events.Extra exposing (onChange)
+import Html.Events exposing (onClick)
 
 type CharacterType
     = BoyStudent -- 男子学生
@@ -271,6 +274,21 @@ characters =
 
 
 
+-- Method
+-- システムを通じて入れたfirebaseからの値のデコードを想定しているため失敗しない前提でとりあえず殺人計画をデフォルトにしておく
+
+
+characterFromStringWithDefault : String -> Character
+characterFromStringWithDefault =
+    characterFromString >> Maybe.withDefault boyStudent
+
+
+decoderCharacter : D.Decoder Character
+decoderCharacter =
+    D.map characterFromStringWithDefault D.string
+
+
+
 -- データ
 
 
@@ -506,8 +524,8 @@ characterToCardUrl c =
 -- View
 
 
-characterNameCard : Character -> Bool -> Html msg
-characterNameCard c isSelected =
+characterNameCard : msg -> Character -> Bool -> Html msg
+characterNameCard clickMsg c isSelected =
     let
         borderAttr =
             if isSelected then
@@ -516,7 +534,7 @@ characterNameCard c isSelected =
             else
                 [ style "border" "solid #fff 1px", style "opacity" "0.5" ]
     in
-    div (List.append [ style "width" "90px", style "margin-left" "5px", style "margin-bottom" "10px" ] borderAttr)
+    div (List.append [ style "width" "90px", style "margin-left" "5px", style "margin-bottom" "10px", onClick clickMsg ] borderAttr)
         [ figure [ class "image", style "width" "35px", style "height" "50px", style "margin" "0 auto" ]
             [ img [ src (characterToCardUrl c) ] []
             ]
