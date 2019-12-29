@@ -10,6 +10,7 @@ import Html.Lazy as Html
 import Json.Decode as D exposing (Value)
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
+import Json.Encode.Extra as ExEncode
 import Models.Script.Id as Id exposing (Id)
 import Models.Script.Name as Name exposing (Name)
 import Models.TragedySet as TragedySet exposing (TragedySet)
@@ -24,6 +25,8 @@ type alias Script =
     , name : Name
     , set : TragedySet
     , mainPlot : TragedySet.Plot
+    , subPlot1 : TragedySet.Plot
+    , subPlot2 : Maybe TragedySet.Plot
     }
 
 
@@ -43,6 +46,8 @@ form =
         |> Decoder.field decoderName
         |> Decoder.field decoderTragedySet
         |> Decoder.field decoderMainPlot
+        |> Decoder.field decoderSubPlot1
+        |> Decoder.field decoderSubPlot2
 
 
 
@@ -74,6 +79,18 @@ decoderMainPlot : Decoder RegisterForm Error TragedySet.Plot
 decoderMainPlot =
     Decoder.identity
         |> Decoder.lift .mainPlot
+
+
+decoderSubPlot1 : Decoder RegisterForm Error TragedySet.Plot
+decoderSubPlot1 =
+    Decoder.identity
+        |> Decoder.lift .subPlot1
+
+
+decoderSubPlot2 : Decoder RegisterForm Error (Maybe TragedySet.Plot)
+decoderSubPlot2 =
+    Decoder.identity
+        |> Decoder.lift .subPlot2
 
 
 
@@ -316,4 +333,6 @@ encode script =
         , ( "name", E.string <| Name.toString script.name )
         , ( "set", E.string <| TragedySet.toString script.set )
         , ( "mainPlot", E.string <| TragedySet.plotToString script.mainPlot )
+        , ( "subPlot1", E.string <| TragedySet.plotToString script.subPlot1 )
+        , ( "subPlot2", ExEncode.maybe E.string <| Maybe.map TragedySet.plotToString script.subPlot2 )
         ]
