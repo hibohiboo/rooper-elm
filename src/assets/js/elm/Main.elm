@@ -67,7 +67,7 @@ initModel flags =
 
 
 
--- UPDATE
+-- Msg
 
 
 type Msg
@@ -111,6 +111,10 @@ type ModalState
     = OpenModalState
     | CloseModalState
     | ConfirmModalState Msg
+
+
+
+-- UPDATE
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -250,13 +254,37 @@ view model =
             [ div [ class "left" ] [ text "惨劇RoopeR online tool" ]
             , headNavRight model
             ]
-        , main_ [ class "rooper-main" ]
-            [ div [ class "center box" ]
-                [ mainTabs model
-                , mainMessage model
-                ]
-            ]
+        , main_ [ class "rooper-main" ] [ mainContent model ]
         , modal model
+        ]
+
+
+mainContent : Model -> Html Msg
+mainContent model =
+    case model.loginUser of
+        Nothing ->
+            mainContentBox model
+
+        Just _ ->
+            case model.mainAreaState of
+                ScriptTab ->
+                    mainContentBox model
+
+                ScriptCreateTab ->
+                    div [ class "content" ] [ createScriptView model ]
+
+                MainTab ->
+                    mainContentBox model
+
+                NothingTab ->
+                    text ""
+
+
+mainContentBox : Model -> Html Msg
+mainContentBox model =
+    div [ class "center box" ]
+        [ mainTabs model
+        , mainMessage model
         ]
 
 
@@ -488,41 +516,54 @@ createScriptView { scriptForm, script } =
     Script.registerForm title
         [ Form.field
             (scriptFormView scriptForm)
-        , div [ class "control" ]
-            [ button [ class "button is-primary", disabled isScriptInvalid, onClick UpdateScript ] [ text mode ]
-            ]
-        , div [ class "columns is-mobile" ]
-            [ div [ class "column  is-4 is-offset-8 control" ]
-                [ button [ class "button is-danger", onClick OpenModalConfirmScriptDelete ] [ text "削除" ]
+        , Form.field
+            [ div [ class "control" ]
+                [ button [ class "button is-primary", disabled isScriptInvalid, onClick UpdateScript ] [ text mode ]
                 ]
+            ]
+        , Form.field
+            [ div [ class "columns is-mobile" ]
+                [ div [ class "column  is-4 is-offset-8 control" ]
+                    [ button [ class "button is-danger", onClick OpenModalConfirmScriptDelete ] [ text "削除" ]
+                    ]
+                ]
+            ]
+        , Form.field
+            [ a [ href "/rooper/script/" ] [ text "戻る" ]
             ]
         ]
 
 
 scriptFormView : Script.RegisterForm -> List (Html Msg)
 scriptFormView scriptForm =
-    [ label [ class "label has-text-white" ] [ text "脚本名" ]
-    , Form.control
-        [ input [ class "input", required True, value scriptForm.name, onInput ChangeScriptName ] []
+    [ Form.field
+        [ label [ class "label has-text-white" ] [ text "脚本名" ]
+        , Form.control
+            [ input [ class "input", required True, value scriptForm.name, onInput ChangeScriptName ] []
+            ]
+        , Form.errors (Script.getNameError scriptForm)
         ]
-    , Form.errors (Script.getNameError scriptForm)
-    , label
-        [ class "label has-text-white" ]
-        [ text "使用セット" ]
-    , Form.control
-        [ div [ class "select" ]
-            [ select [ onChange ChangeTragedySet ]
-                [ option [ value "FistSteps", selected (Script.isSetFirstSteps scriptForm) ] [ text "First Steps" ]
-                , option [ value "BasicTragedy", selected (Script.isSetBasicTragedy scriptForm) ] [ text "Basic Tragedy X" ]
+    , Form.field
+        [ label
+            [ class "label has-text-white" ]
+            [ text "使用セット" ]
+        , Form.control
+            [ div [ class "select" ]
+                [ select [ onChange ChangeTragedySet ]
+                    [ option [ value "FistSteps", selected (Script.isSetFirstSteps scriptForm) ] [ text "First Steps" ]
+                    , option [ value "BasicTragedy", selected (Script.isSetBasicTragedy scriptForm) ] [ text "Basic Tragedy X" ]
+                    ]
                 ]
             ]
         ]
-    , label
-        [ class "label has-text-white", style "padding-top" "10px" ]
-        [ text "ルールY" ]
-    , Form.control
-        [ div [ class "select" ]
-            [ Script.mainPlots ChangeMainPlot scriptForm.mainPlot (Script.getMainPlots scriptForm)
+    , Form.field
+        [ label
+            [ class "label has-text-white" ]
+            [ text "ルールY" ]
+        , Form.control
+            [ div [ class "select" ]
+                [ Script.mainPlots ChangeMainPlot scriptForm.mainPlot (Script.getMainPlots scriptForm)
+                ]
             ]
         ]
     ]

@@ -5,8 +5,11 @@
 
   // main直下の領域がはみ出さないように調整
   &-main > div {
+    height: 100%;
     overflow: hidden;
     overflow-y: scroll;
+    padding: 1rem;
+    width: 100%;
   }
 }
 
