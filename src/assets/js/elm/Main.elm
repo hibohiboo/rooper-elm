@@ -229,16 +229,16 @@ update msg model =
                 update (OpenModal "脚本の削除に失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
 
         ChangeTragedySet val ->
-            ( { model | scriptForm = Script.setTragedySet val model.scriptForm }, Cmd.none )
+            update ChangedScript { model | scriptForm = Script.setTragedySet val model.scriptForm }
 
         ChangeMainPlot val ->
-            ( { model | scriptForm = Script.setMainPlot val model.scriptForm }, Cmd.none )
+            update ChangedScript { model | scriptForm = Script.setMainPlot val model.scriptForm }
 
         ChangeSubPlot1 val ->
-            ( { model | scriptForm = Script.setSubPlot1 val model.scriptForm }, Cmd.none )
+            update ChangedScript { model | scriptForm = Script.setSubPlot1 val model.scriptForm }
 
         ChangeSubPlot2 val ->
-            ( { model | scriptForm = Script.setSubPlot2 val model.scriptForm }, Cmd.none )
+            update ChangedScript { model | scriptForm = Script.setSubPlot2 val model.scriptForm }
 
         ChangedScript ->
             ( { model | script = Script.convert model.scriptForm }, Cmd.none )
