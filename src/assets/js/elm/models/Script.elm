@@ -148,9 +148,14 @@ getMainPlots f =
     TragedySet.filterMainPlots f.set.plots
 
 
-getSubPlots : RegisterForm -> List TragedySet.Plot
-getSubPlots f =
-    TragedySet.filterSubPlots f.set.plots
+getSubPlots : RegisterForm -> Maybe TragedySet.Plot -> List TragedySet.Plot
+getSubPlots f m =
+    case m of
+        Nothing ->
+            TragedySet.filterSubPlots f.set.plots
+
+        Just plot ->
+            TragedySet.filterSubPlots f.set.plots |> List.filter (\p -> plot /= p)
 
 
 
@@ -225,6 +230,11 @@ setSubPlot1 s f =
     { f | subPlot1 = TragedySet.plotFromStringWithDefault s }
 
 
+setSubPlot2 : String -> RegisterForm -> RegisterForm
+setSubPlot2 s f =
+    { f | subPlot2 = TragedySet.plotFromString s }
+
+
 setId : String -> RegisterForm -> RegisterForm
 setId s f =
     { f | id = s }
@@ -262,7 +272,7 @@ subPlots1 : (String -> msg) -> TragedySet.Plot -> RegisterForm -> Html msg
 subPlots1 chgMsg selectedPlot scriptForm =
     let
         plotList =
-            getSubPlots scriptForm
+            getSubPlots scriptForm scriptForm.subPlot2
 
         plotKey =
             TragedySet.plotToString selectedPlot
@@ -282,7 +292,7 @@ subPlots2 chgMsg maybeSelectedPlot scriptForm =
         Just selectedPlot ->
             let
                 plotList =
-                    getSubPlots scriptForm
+                    getSubPlots scriptForm (Just scriptForm.subPlot1)
 
                 plotKey =
                     TragedySet.plotToString selectedPlot
