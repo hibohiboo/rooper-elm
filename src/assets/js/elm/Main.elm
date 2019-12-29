@@ -158,7 +158,7 @@ update msg model =
                     ( { model | mainAreaState = ScriptCreateTab }, readScript s )
 
                 Route.NotFound ->
-                    update (OpenModal "指定されたURLが見つかりません。\nご確認お願いします。") { model | mainAreaState = NothingTab }
+                    update (OpenModal ("指定されたURLが見つかりません。\nご確認お願いします。\n" ++ url)) { model | mainAreaState = NothingTab }
 
         ChangeRoomId id ->
             ( { model | roomForm = Room.setId id model.roomForm }, Cmd.none )

@@ -35,7 +35,8 @@ export const historyInit = (ports) => {
 
   // elmからのURL移動を受け取る
   ports.changeUrl.subscribe((url) => {
-    pushHistory(ports, `${document.location.protocol}//${document.location.hostname}:${document.location.port}${url}`);
+    const port = document.location.port ? `:${document.location.port}` : '';
+    pushHistory(ports, `${document.location.protocol}//${document.location.hostname}${port}${url}`);
   });
 };
 

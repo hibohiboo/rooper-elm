@@ -40,8 +40,9 @@ const initApp = async () => {
       await Script.updateScript(script, firebaseBackEnd.db, firebaseBackEnd.getTimestamp(), user.uid, user.storeUserId);
     }
 
+    const port = document.location.port ? `:${document.location.port}` : '';
     // /script/のように、最後の/がないとfirebaseでエラーとなる
-    pushHistory(ports, `${document.location.protocol}//${document.location.hostname}:${document.location.port}/rooper/script/`);
+    pushHistory(ports, `${document.location.protocol}//${document.location.hostname}${port}/rooper/script/`);
   });
 
   ports.readScriptNames.subscribe(async () => {
