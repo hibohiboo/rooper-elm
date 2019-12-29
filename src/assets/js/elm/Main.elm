@@ -92,6 +92,7 @@ type Msg
     | DeletedScript Bool
     | ChangeTragedySet String
     | ChangeMainPlot String
+    | ChangeSubPlot1 String
     | ChangedScript
 
 
@@ -231,6 +232,9 @@ update msg model =
 
         ChangeMainPlot val ->
             ( { model | scriptForm = Script.setMainPlot val model.scriptForm }, Cmd.none )
+
+        ChangeSubPlot1 val ->
+            ( { model | scriptForm = Script.setSubPlot1 val model.scriptForm }, Cmd.none )
 
         ChangedScript ->
             ( { model | script = Script.convert model.scriptForm }, Cmd.none )
@@ -572,7 +576,7 @@ scriptFormView scriptForm =
             [ text "ルールX1" ]
         , Form.control
             [ div [ class "select" ]
-                [ Script.subPlots1 ChangeMainPlot scriptForm.subPlot1 scriptForm
+                [ Script.subPlots1 ChangeSubPlot1 scriptForm.subPlot1 scriptForm
                 ]
             ]
         ]

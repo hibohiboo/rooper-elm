@@ -220,6 +220,11 @@ setMainPlot s f =
     { f | mainPlot = TragedySet.plotFromStringWithDefault s }
 
 
+setSubPlot1 : String -> RegisterForm -> RegisterForm
+setSubPlot1 s f =
+    { f | subPlot1 = TragedySet.plotFromStringWithDefault s }
+
+
 setId : String -> RegisterForm -> RegisterForm
 setId s f =
     { f | id = s }
