@@ -473,10 +473,10 @@ characterToCardUrl c =
                     "char17.png"
 
                 Illusion ->
-                    "char18.png"
+                    "char19.png"
 
                 Scientist ->
-                    "char19.png"
+                    "char18.png"
 
                 ForensicSpecialist ->
                     "char20.png"
