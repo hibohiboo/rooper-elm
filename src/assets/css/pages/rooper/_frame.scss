@@ -4,12 +4,16 @@
   }
 
   // main直下の領域がはみ出さないように調整
-  &-main > div {
-    height: 100%;
+  &-main {
     overflow: hidden;
-    overflow-y: scroll;
-    padding: 1rem;
-    width: 100%;
+
+    > div {
+      height: 100%;
+      overflow: hidden;
+      overflow-y: scroll;
+      padding: 1rem;
+      width: 100%;
+    }
   }
 }
 
@@ -23,7 +27,7 @@
   width: 100%;
 
   // ヘッダ部分
-  .page-head {
+  .rooper-page-head {
     display: flex;
     overflow: hidden;
     width: 100%;
