@@ -8,6 +8,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Html.Events.Extra exposing (onChange)
 import Json.Encode exposing (Value)
+import Models.Character as Character
 import Models.Room as Room exposing (Room)
 import Models.RoomName as RoomName exposing (RoomName)
 import Models.Script as Script exposing (Script)
@@ -94,6 +95,7 @@ type Msg
     | ChangeMainPlot String
     | ChangeSubPlot1 String
     | ChangeSubPlot2 String
+    | OpenCaracterSelectModal
     | ChangedScript
 
 
@@ -113,6 +115,7 @@ type ModalState
     = OpenModalState
     | CloseModalState
     | ConfirmModalState Msg
+    | CharactertSelectModalState
 
 
 
@@ -240,6 +243,9 @@ update msg model =
         ChangeSubPlot2 val ->
             update ChangedScript { model | scriptForm = Script.setSubPlot2 val model.scriptForm }
 
+        OpenCaracterSelectModal ->
+            ( { model | modalState = CharactertSelectModalState }, Cmd.none )
+
         ChangedScript ->
             ( { model | script = Script.convert model.scriptForm }, Cmd.none )
 
@@ -327,8 +333,15 @@ modal model =
                             ]
                         ]
 
-                _ ->
+                OpenModalState ->
                     text modalMessage
+
+                CloseModalState ->
+                    text modalMessage
+
+                CharactertSelectModalState ->
+                    div []
+                        (List.map (\c -> text c.name) Character.characters)
             ]
 
 
@@ -598,4 +611,10 @@ scriptFormView scriptForm =
 
       else
         text ""
+    , Form.field
+        [ label
+            [ class "label has-text-white" ]
+            [ text "キャラクター" ]
+        , button [ class "button is-danger", onClick OpenCaracterSelectModal ] [ text "追加" ]
+        ]
     ]
