@@ -51,16 +51,16 @@ select nodeKeySuffix chgMsg selectedKey rs =
     Keyed.node "select"
         [ onChange chgMsg ]
     <|
-        List.map (\r -> keyedOption nodeKeySuffix r selectedKey) rs
+        List.indexedMap (\i r -> keyedOption i nodeKeySuffix r selectedKey) rs
 
 
-keyedOption : String -> ( String, String ) -> String -> ( String, Html msg )
-keyedOption nodeKeySuffix tuple selectedKey =
+keyedOption : Int -> String -> ( String, String ) -> String -> ( String, Html msg )
+keyedOption i nodeKeySuffix tuple selectedKey =
     let
         key =
             Tuple.first tuple
     in
-    ( key ++ nodeKeySuffix, Html.lazy (selectOption tuple) (key == selectedKey) )
+    ( key ++ String.fromInt i ++ nodeKeySuffix, Html.lazy (selectOption tuple) (key == selectedKey) )
 
 
 selectOption : ( String, String ) -> Bool -> Html msg
