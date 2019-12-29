@@ -303,6 +303,11 @@ decoderPlot =
     D.map plotFromStringWithDefault D.string
 
 
+decoderMaybePlot : D.Decoder (Maybe Plot)
+decoderMaybePlot =
+    D.map plotFromString D.string
+
+
 
 -- ルール ＞ データ
 

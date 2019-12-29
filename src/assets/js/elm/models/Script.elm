@@ -93,6 +93,8 @@ formDecoder =
         |> Pipeline.required "name" D.string
         |> Pipeline.optional "set" TragedySet.decoderTragedySet TragedySet.initBasicTragedy
         |> Pipeline.optional "mainPlot" TragedySet.decoderPlot TragedySet.murderPlan
+        |> Pipeline.optional "subPlot1" TragedySet.decoderPlot TragedySet.circleOfFriends
+        |> Pipeline.optional "subPlot2" TragedySet.decoderMaybePlot Nothing
 
 
 
@@ -104,6 +106,8 @@ type alias RegisterForm =
     , name : String
     , set : TragedySet
     , mainPlot : TragedySet.Plot
+    , subPlot1 : TragedySet.Plot
+    , subPlot2 : Maybe TragedySet.Plot
     }
 
 
@@ -113,6 +117,8 @@ initForm =
     , name = ""
     , set = TragedySet.initBasicTragedy
     , mainPlot = TragedySet.murderPlan
+    , subPlot1 = TragedySet.circleOfFriends
+    , subPlot2 = Nothing
     }
 
 
