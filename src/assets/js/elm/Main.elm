@@ -340,9 +340,14 @@ modal model =
                     text modalMessage
 
                 CharactertSelectModalState ->
-                    div []
-                        (List.map (\c -> text c.name) Character.characters)
+                    div [ style "display" "flex", style "flex-wrap" "wrap" ]
+                        (List.map (\c -> characterNameCard c) Character.characters)
             ]
+
+
+characterNameCard : Character.Character -> Html Msg
+characterNameCard c =
+    Character.characterNameCard c False
 
 
 mainTabs : Model -> Html msg

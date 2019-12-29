@@ -1,5 +1,7 @@
 module Models.Character exposing (..)
 
+import Html exposing (..)
+import Html.Attributes exposing (..)
 import Models.Board as Board exposing (BoardType(..))
 import Models.TragedySet exposing (Role)
 
@@ -405,3 +407,118 @@ blackCat =
 littleGirl : Character
 littleGirl =
     Character LittleGirl "女の子" 1 School
+
+
+
+-- View Method
+
+
+characterToCardUrl : Character -> String
+characterToCardUrl c =
+    let
+        filename =
+            case c.characterType of
+                BoyStudent ->
+                    "char0.png"
+
+                GirlStudent ->
+                    "char1.png"
+
+                RichMansDaughter ->
+                    "char2.png"
+
+                ShrineMaiden ->
+                    "char3.png"
+
+                PoliceOfficer ->
+                    "char4.png"
+
+                OfficeWorker ->
+                    "char5.png"
+
+                Informer ->
+                    "char6.png"
+
+                Doctor ->
+                    "char7.png"
+
+                Patient ->
+                    "char8.png"
+
+                ClassRep ->
+                    "char9.png"
+
+                MysteryBoy ->
+                    "char10.png"
+
+                Alien ->
+                    "char11.png"
+
+                GodlyBeing ->
+                    "char12.png"
+
+                PopIdol ->
+                    "char13.png"
+
+                Journalist ->
+                    "char14.png"
+
+                Boss ->
+                    "char15.png"
+
+                Nurse ->
+                    "char16.png"
+
+                Henchman ->
+                    "char17.png"
+
+                Illusion ->
+                    "char18.png"
+
+                Scientist ->
+                    "char19.png"
+
+                ForensicSpecialist ->
+                    "char20.png"
+
+                AI ->
+                    "char21.png"
+
+                Teacher ->
+                    "silhouette.png"
+
+                TransferStudent ->
+                    "silhouette.png"
+
+                Soldier ->
+                    "silhouette.png"
+
+                BlackCat ->
+                    "silhouette.png"
+
+                LittleGirl ->
+                    "silhouette.png"
+    in
+    "/assets/images/characters/" ++ filename
+
+
+
+-- View
+
+
+characterNameCard : Character -> Bool -> Html msg
+characterNameCard c isSelected =
+    let
+        borderAttr =
+            if isSelected then
+                [ style "border" "solid yellow 2px" ]
+
+            else
+                [ style "border" "solid #fff 1px", style "opacity" "0.5" ]
+    in
+    div (List.append [ style "width" "90px", style "margin-left" "5px", style "margin-bottom" "10px" ] borderAttr)
+        [ figure [ class "image", style "width" "35px", style "height" "50px", style "margin" "0 auto" ]
+            [ img [ src (characterToCardUrl c) ] []
+            ]
+        , div [ style "text-align" "center" ] [ text c.name ]
+        ]
