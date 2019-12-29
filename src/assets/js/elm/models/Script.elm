@@ -145,7 +145,12 @@ isSetFirstSteps f =
 
 getMainPlots : RegisterForm -> List TragedySet.Plot
 getMainPlots f =
-    TragedySet.getMainPlot f.set.plots
+    TragedySet.filterMainPlots f.set.plots
+
+
+getSubPlots : RegisterForm -> List TragedySet.Plot
+getSubPlots f =
+    TragedySet.filterSubPlots f.set.plots
 
 
 
@@ -198,7 +203,16 @@ setName s f =
 
 setTragedySet : String -> RegisterForm -> RegisterForm
 setTragedySet s f =
-    { f | set = TragedySet.getTragedySetFromString s }
+    let
+        set =
+            TragedySet.getTragedySetFromString s
+    in
+    case set.setType of
+        TragedySet.BasicTragedy ->
+            { f | set = set, mainPlot = TragedySet.murderPlan, subPlot1 = TragedySet.circleOfFriends, subPlot2 = Just TragedySet.shadowOfTheRipper }
+
+        TragedySet.FirstSteps ->
+            { f | set = set, mainPlot = TragedySet.murderPlan, subPlot1 = TragedySet.circleOfFriends, subPlot2 = Nothing }
 
 
 setMainPlot : String -> RegisterForm -> RegisterForm
@@ -220,9 +234,16 @@ registerForm title children =
         ]
 
 
-mainPlots : (String -> msg) -> TragedySet.Plot -> List TragedySet.Plot -> Html msg
-mainPlots chgMsg selectedPlot plotList =
+
+-- View
+
+
+mainPlots : (String -> msg) -> TragedySet.Plot -> RegisterForm -> Html msg
+mainPlots chgMsg selectedPlot scriptForm =
     let
+        plotList =
+            getMainPlots scriptForm
+
         plotKey =
             TragedySet.plotToString selectedPlot
 
@@ -230,6 +251,21 @@ mainPlots chgMsg selectedPlot plotList =
             List.map (\p -> Tuple.pair (TragedySet.plotToString p) p.name) plotList
     in
     Form.select "-main-plot" chgMsg plotKey optionList
+
+
+subPlots1 : (String -> msg) -> TragedySet.Plot -> RegisterForm -> Html msg
+subPlots1 chgMsg selectedPlot scriptForm =
+    let
+        plotList =
+            getSubPlots scriptForm
+
+        plotKey =
+            TragedySet.plotToString selectedPlot
+
+        optionList =
+            List.map (\p -> Tuple.pair (TragedySet.plotToString p) p.name) plotList
+    in
+    Form.select "-sub-plot-1" chgMsg plotKey optionList
 
 
 

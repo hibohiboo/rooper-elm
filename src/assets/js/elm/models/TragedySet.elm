@@ -177,9 +177,14 @@ type Timing
 -- ルール > メソッド
 
 
-getMainPlot : List Plot -> List Plot
-getMainPlot plots =
+filterMainPlots : List Plot -> List Plot
+filterMainPlots plots =
     List.filter (\plot -> plot.isMain) plots
+
+
+filterSubPlots : List Plot -> List Plot
+filterSubPlots plots =
+    List.filter (\plot -> not plot.isMain) plots
 
 
 plotToString : Plot -> String
