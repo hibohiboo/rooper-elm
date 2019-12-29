@@ -119,7 +119,7 @@ initForm =
     , set = TragedySet.initBasicTragedy
     , mainPlot = TragedySet.murderPlan
     , subPlot1 = TragedySet.circleOfFriends
-    , subPlot2 = Nothing
+    , subPlot2 = Just TragedySet.theHiddenFreak
     }
 
 
@@ -209,7 +209,7 @@ setTragedySet s f =
     in
     case set.setType of
         TragedySet.BasicTragedy ->
-            { f | set = set, mainPlot = TragedySet.murderPlan, subPlot1 = TragedySet.circleOfFriends, subPlot2 = Just TragedySet.shadowOfTheRipper }
+            { f | set = set, mainPlot = TragedySet.murderPlan, subPlot1 = TragedySet.circleOfFriends, subPlot2 = Just TragedySet.theHiddenFreak }
 
         TragedySet.FirstSteps ->
             { f | set = set, mainPlot = TragedySet.murderPlan, subPlot1 = TragedySet.circleOfFriends, subPlot2 = Nothing }
@@ -271,6 +271,26 @@ subPlots1 chgMsg selectedPlot scriptForm =
             List.map (\p -> Tuple.pair (TragedySet.plotToString p) p.name) plotList
     in
     Form.select "-sub-plot-1" chgMsg plotKey optionList
+
+
+subPlots2 : (String -> msg) -> Maybe TragedySet.Plot -> RegisterForm -> Html msg
+subPlots2 chgMsg maybeSelectedPlot scriptForm =
+    case maybeSelectedPlot of
+        Nothing ->
+            text "エラー。ありえないパターンです。管理者に現在のURLを伝えてください。"
+
+        Just selectedPlot ->
+            let
+                plotList =
+                    getSubPlots scriptForm
+
+                plotKey =
+                    TragedySet.plotToString selectedPlot
+
+                optionList =
+                    List.map (\p -> Tuple.pair (TragedySet.plotToString p) p.name) plotList
+            in
+            Form.select "-sub-plot-2" chgMsg plotKey optionList
 
 
 

@@ -580,4 +580,18 @@ scriptFormView scriptForm =
                 ]
             ]
         ]
+    , if scriptForm.set.subPlotNumber == 2 then
+        Form.field
+            [ label
+                [ class "label has-text-white" ]
+                [ text "ルールX2" ]
+            , Form.control
+                [ div [ class "select" ]
+                    [ Script.subPlots2 ChangeSubPlot1 scriptForm.subPlot2 scriptForm
+                    ]
+                ]
+            ]
+
+      else
+        text ""
     ]
