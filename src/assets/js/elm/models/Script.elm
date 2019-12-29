@@ -1,5 +1,6 @@
 module Models.Script exposing (..)
 
+import Component.Form as Form
 import Form.Decoder as Decoder exposing (Decoder)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -220,24 +221,15 @@ registerForm title children =
 
 
 mainPlots : (String -> msg) -> TragedySet.Plot -> List TragedySet.Plot -> Html msg
-mainPlots chgMsg selectedPlot rs =
-    Keyed.node "select"
-        [ onChange chgMsg ]
-    <|
-        List.map (\r -> keyedPlot r selectedPlot) rs
+mainPlots chgMsg selectedPlot plotList =
+    let
+        plotKey =
+            TragedySet.plotToString selectedPlot
 
-
-keyedPlot : TragedySet.Plot -> TragedySet.Plot -> ( String, Html msg )
-keyedPlot p selectedPlot =
-    ( p.name ++ "-main-plot", Html.lazy (plot p) (p == selectedPlot) )
-
-
-plot : TragedySet.Plot -> Bool -> Html msg
-plot p isSelected =
-    option
-        [ value (TragedySet.plotToString p), selected isSelected ]
-        [ text p.name
-        ]
+        optionList =
+            List.map (\p -> Tuple.pair (TragedySet.plotToString p) p.name) plotList
+    in
+    Form.select "-main-plot" chgMsg plotKey optionList
 
 
 

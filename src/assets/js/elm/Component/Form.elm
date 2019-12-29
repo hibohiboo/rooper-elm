@@ -3,6 +3,9 @@ module Component.Form exposing (..)
 import Html exposing (..)
 import Html.Attributes as Attributes exposing (..)
 import Html.Events exposing (onClick)
+import Html.Events.Extra exposing (onChange)
+import Html.Keyed as Keyed
+import Html.Lazy as Html
 
 
 
@@ -40,4 +43,29 @@ createButton message =
             [ i [ class "fas fa-plus" ] []
             ]
         , span [] [ text "create" ]
+        ]
+
+
+select : String -> (String -> msg) -> String -> List ( String, String ) -> Html msg
+select nodeKeySuffix chgMsg selectedKey rs =
+    Keyed.node "select"
+        [ onChange chgMsg ]
+    <|
+        List.map (\r -> keyedOption nodeKeySuffix r selectedKey) rs
+
+
+keyedOption : String -> ( String, String ) -> String -> ( String, Html msg )
+keyedOption nodeKeySuffix tuple selectedKey =
+    let
+        key =
+            Tuple.first tuple
+    in
+    ( key ++ nodeKeySuffix, Html.lazy (selectOption tuple) (key == selectedKey) )
+
+
+selectOption : ( String, String ) -> Bool -> Html msg
+selectOption ( key, txt ) isSelected =
+    option
+        [ value key, selected isSelected ]
+        [ text txt
         ]
