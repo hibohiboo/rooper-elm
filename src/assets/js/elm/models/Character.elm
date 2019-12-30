@@ -541,3 +541,13 @@ characterNameCard clickMsg c isSelected =
             ]
         , div [] [ text c.name ]
         ]
+
+
+characterFormCollectionItem : Character -> Html msg
+characterFormCollectionItem c =
+    div [ class "media" ]
+        [ div [ class "media-left" ]
+            [ img [ src (characterToCardUrl c) ] []
+            ]
+        , div [ class "media-content" ] []
+        ]

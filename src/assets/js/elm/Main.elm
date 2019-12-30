@@ -641,4 +641,15 @@ scriptFormView scriptForm =
             [ text "キャラクター" ]
         , button [ class "button is-info", onClick OpenCaracterSelectModal ] [ text "追加" ]
         ]
+    , Form.field
+        (characterFormCollection scriptForm)
     ]
+
+
+characterFormCollection : Script.RegisterForm -> List (Html Msg)
+characterFormCollection scriptForm =
+    scriptForm.characters
+        |> List.reverse
+        -- 選んだ順に表示するため並び替え
+        |> List.map
+            (\c -> Character.characterFormCollectionItem c)
