@@ -11,6 +11,7 @@ import Json.Decode as D exposing (Value)
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
 import Json.Encode.Extra as ExEncode
+import List.Extra as ExList
 import Models.Character as Character
 import Models.Script.Id as Id exposing (Id)
 import Models.Script.Name as Name exposing (Name)
@@ -375,19 +376,33 @@ subPlots2 chgMsg maybeSelectedPlot scriptForm =
             Form.select "-sub-plot-2" chgMsg plotKey optionList
 
 
-characterRoles : (String -> msg) -> RegisterForm -> Html msg
-characterRoles chgMsg scriptForm =
+characterRoles : Character.CharacterScriptData -> (String -> msg) -> RegisterForm -> Html msg
+characterRoles char chgMsg scriptForm =
     let
+        characterRoleList =
+            Character.rolesFromCharacterScriptDataList scriptForm.characters
+
+        scriptRoleList =
+            getScriptRoles scriptForm
+
+        exceptList =
+            TragedySet.exceptRoleList characterRoleList scriptRoleList
+
         roleList =
-            TragedySet.person :: getScriptRoles scriptForm
+            case char.role of
+                Just role ->
+                    role :: TragedySet.person :: exceptList
+
+                Nothing ->
+                    TragedySet.person :: exceptList
 
         roleKey =
-            TragedySet.roleToString TragedySet.person
+            TragedySet.roleToString (Maybe.withDefault TragedySet.person char.role)
 
         optionList =
             List.map (\r -> Tuple.pair (TragedySet.roleToString r) r.name) roleList
     in
-    Form.select "-character-roles" chgMsg roleKey optionList
+    Form.select ("-character-roles-" ++ Character.characterToString char.character) chgMsg roleKey optionList
 
 
 

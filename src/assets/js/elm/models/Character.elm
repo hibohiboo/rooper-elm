@@ -300,6 +300,13 @@ charactersFromCharacterScriptDataList list =
     List.map (\data -> data.character) list
 
 
+rolesFromCharacterScriptDataList : List CharacterScriptData -> List Role
+rolesFromCharacterScriptDataList list =
+    list
+        |> List.filter (\data -> data.role /= Nothing)
+        |> List.map (\data -> Maybe.withDefault TragedySet.person data.role)
+
+
 
 -- Method Decoder デコーダ
 -- システムを通じて入れたfirebaseからの値のデコードを想定しているため失敗しない前提でとりあえず殺人計画をデフォルトにしておく

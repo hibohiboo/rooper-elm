@@ -656,7 +656,7 @@ characterFormCollection scriptForm =
         |> List.reverse
         -- 選んだ順に表示するため並び替え
         |> List.map
-            (\c -> Character.characterFormCollectionItem c [ Script.characterRoles (ChangeCharacterRole c) scriptForm ])
+            (\c -> Character.characterFormCollectionItem c [ Script.characterRoles c (ChangeCharacterRole c) scriptForm ])
 
 
 
