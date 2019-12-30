@@ -293,6 +293,7 @@ characters =
     , transferStudent
     , soldier
     , blackCat
+    , littleGirl
     ]
 
 
