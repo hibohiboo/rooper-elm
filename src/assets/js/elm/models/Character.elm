@@ -2,12 +2,13 @@ module Models.Character exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
+import Html.Events.Extra exposing (onChange)
 import Json.Decode as D
 import Json.Encode as E
 import Models.Board as Board exposing (BoardType(..))
 import Models.TragedySet exposing (Role)
-import Html.Events.Extra exposing (onChange)
-import Html.Events exposing (onClick)
+
 
 type CharacterType
     = BoyStudent -- 男子学生
@@ -529,14 +530,14 @@ characterNameCard clickMsg c isSelected =
     let
         borderAttr =
             if isSelected then
-                [ style "border" "solid yellow 2px" ]
+                [ class "rooper-character-card-is-active" ]
 
             else
-                [ style "border" "solid #fff 1px", style "opacity" "0.5" ]
+                []
     in
-    div (List.append [ style "width" "90px", style "margin-left" "5px", style "margin-bottom" "10px", onClick clickMsg ] borderAttr)
-        [ figure [ class "image", style "width" "35px", style "height" "50px", style "margin" "0 auto" ]
+    div (List.append [ class "rooper-character-card", onClick clickMsg ] borderAttr)
+        [ figure [ class "image" ]
             [ img [ src (characterToCardUrl c) ] []
             ]
-        , div [ style "text-align" "center" ] [ text c.name ]
+        , div [] [ text c.name ]
         ]

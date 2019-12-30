@@ -8,7 +8,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Html.Events.Extra exposing (onChange)
 import Json.Encode exposing (Value)
-import Models.Character as Character exposing(Character)
+import Models.Character as Character exposing (Character)
 import Models.Room as Room exposing (Room)
 import Models.RoomName as RoomName exposing (RoomName)
 import Models.Script as Script exposing (Script)
@@ -249,10 +249,10 @@ update msg model =
             ( { model | modalState = CharactertSelectModalState }, Cmd.none )
 
         AddCharacter c ->
-           update ChangedScript { model | scriptForm = Script.setCharacter c model.scriptForm }
+            update ChangedScript { model | scriptForm = Script.setCharacter c model.scriptForm }
 
         DeleteCharacter c ->
-           update ChangedScript { model | scriptForm = Script.deleteCharacter c model.scriptForm }
+            update ChangedScript { model | scriptForm = Script.deleteCharacter c model.scriptForm }
 
         ChangedScript ->
             ( { model | script = Script.convert model.scriptForm }, Cmd.none )
@@ -356,12 +356,15 @@ modal model =
 characterNameCard : Character.Character -> Model -> Html Msg
 characterNameCard c model =
     let
-      isSelected = Script.containCharacter c model.scriptForm
-      clickMessage =
-          if isSelected then
-              DeleteCharacter c
-          else
-              AddCharacter c
+        isSelected =
+            Script.containCharacter c model.scriptForm
+
+        clickMessage =
+            if isSelected then
+                DeleteCharacter c
+
+            else
+                AddCharacter c
     in
     Character.characterNameCard clickMessage c isSelected
 
@@ -636,6 +639,6 @@ scriptFormView scriptForm =
         [ label
             [ class "label has-text-white" ]
             [ text "キャラクター" ]
-        , button [ class "button is-danger", onClick OpenCaracterSelectModal ] [ text "追加" ]
+        , button [ class "button is-info", onClick OpenCaracterSelectModal ] [ text "追加" ]
         ]
     ]
