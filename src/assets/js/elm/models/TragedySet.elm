@@ -5,76 +5,94 @@ import Html exposing (..)
 import Json.Decode as D exposing (Value)
 import Json.Decode.Pipeline exposing (hardcoded, optional, required)
 import Json.Encode as E
+import List.Extra as ExList
+
+
+type RoleType
+    = Person
+    | Killer
+    | Brain
+    | KeyPerson
+    | Cultist
+    | TimeTraveler
+    | Witch
+    | Friend
+    | LovedOne
+    | Lover
+    | SerialKiller
+    | Factor
+    | ConspiracyTheorist
+    | Curmudgeon
 
 
 person : Role
 person =
-    Role "パーソン" Nothing
+    Role Person "パーソン" Nothing
 
 
 killer : Role
 killer =
-    Role "キラー" Nothing
+    Role Killer "キラー" Nothing
 
 
 brain : Role
 brain =
-    Role "クロマク" Nothing
+    Role Brain "クロマク" Nothing
 
 
 keyPerson : Role
 keyPerson =
-    Role "キーパーソン" Nothing
+    Role KeyPerson "キーパーソン" Nothing
 
 
 cultist : Role
 cultist =
-    Role "カルティスト" Nothing
+    Role Cultist "カルティスト" Nothing
 
 
 timeTraveler : Role
 timeTraveler =
-    Role "タイムトラベラー" Nothing
+    Role TimeTraveler "タイムトラベラー" Nothing
 
 
 witch : Role
 witch =
-    Role "ウィッチ" Nothing
+    Role Witch "ウィッチ" Nothing
 
 
 friend : Role
 friend =
-    Role "フレンド" (Just 2)
+    Role Friend "フレンド" (Just 2)
 
 
 lovedOne : Role
 lovedOne =
-    Role "メインラバーズ" Nothing
+    Role LovedOne "メインラバーズ" Nothing
 
 
 lover : Role
 lover =
-    Role "ラバーズ" Nothing
+    Role Lover "ラバーズ" Nothing
 
 
 serialKiller : Role
 serialKiller =
-    Role "シリアルキラー" Nothing
+    Role SerialKiller "シリアルキラー" Nothing
 
 
 factor : Role
 factor =
-    Role "ファクター" Nothing
+    Role Factor "ファクター" Nothing
 
 
 conspiracyTheorist : Role
 conspiracyTheorist =
-    Role "ミスリーダー" (Just 1)
+    Role ConspiracyTheorist "ミスリーダー" (Just 1)
 
 
 curmudgeon : Role
 curmudgeon =
-    Role "マイナス" Nothing
+    Role Curmudgeon "マイナス" Nothing
 
 
 initFirstStepsRoles : List Role
@@ -107,9 +125,137 @@ initBasicTragedyRoles =
 
 
 type alias Role =
-    { name : String
+    { roleType : RoleType
+    , name : String
     , limit : Maybe Int
     }
+
+
+
+-- Role Method
+
+
+roleToString : Role -> String
+roleToString r =
+    case r.roleType of
+        Person ->
+            "Person"
+
+        Killer ->
+            "Killer"
+
+        Brain ->
+            "Brain"
+
+        KeyPerson ->
+            "KeyPerson"
+
+        Cultist ->
+            "Cultist"
+
+        TimeTraveler ->
+            "TimeTraveler"
+
+        Witch ->
+            "Witch"
+
+        Friend ->
+            "Friend"
+
+        LovedOne ->
+            "LovedOne"
+
+        Lover ->
+            "Lover"
+
+        SerialKiller ->
+            "SerialKiller"
+
+        Factor ->
+            "Factor"
+
+        ConspiracyTheorist ->
+            "ConspiracyTheorist"
+
+        Curmudgeon ->
+            "Curmudgeon"
+
+
+roleFromString : String -> Maybe Role
+roleFromString s =
+    case s of
+        "Person" ->
+            Just person
+
+        "Killer" ->
+            Just killer
+
+        "Brain" ->
+            Just brain
+
+        "KeyPerson" ->
+            Just keyPerson
+
+        "Cultist" ->
+            Just cultist
+
+        "TimeTraveler" ->
+            Just timeTraveler
+
+        "Witch" ->
+            Just witch
+
+        "Friend" ->
+            Just friend
+
+        "LovedOne" ->
+            Just lovedOne
+
+        "Lover" ->
+            Just lover
+
+        "SerialKiller" ->
+            Just serialKiller
+
+        "Factor" ->
+            Just factor
+
+        "ConspiracyTheorist" ->
+            Just conspiracyTheorist
+
+        "Curmudgeon" ->
+            Just curmudgeon
+
+        _ ->
+            Nothing
+
+
+filterRoleLimit : List Role -> List Role
+filterRoleLimit list =
+    filterRoleLimitHelp list []
+
+
+filterRoleLimitHelp : List Role -> List Role -> List Role
+filterRoleLimitHelp remaining accumulator =
+    case remaining of
+        [] ->
+            List.reverse accumulator
+
+        first :: rest ->
+            case first.limit of
+                Nothing ->
+                    filterRoleLimitHelp rest (first :: accumulator)
+
+                Just limit ->
+                    let
+                        cnt =
+                            ExList.count ((==) first) accumulator
+                    in
+                    if cnt >= limit then
+                        filterRoleLimitHelp rest accumulator
+
+                    else
+                        filterRoleLimitHelp rest (first :: accumulator)
 
 
 

@@ -652,4 +652,8 @@ characterFormCollection scriptForm =
         |> List.reverse
         -- 選んだ順に表示するため並び替え
         |> List.map
-            (\c -> Character.characterFormCollectionItem c)
+            (\c -> Character.characterFormCollectionItem c [ Script.characterRoles ChangeSubPlot2 scriptForm ])
+
+
+
+-- TODO: 一旦置いているChangeSubPlot2を修正

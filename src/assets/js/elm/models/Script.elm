@@ -164,6 +164,10 @@ isSetFirstSteps f =
             False
 
 
+
+-- Method Get
+
+
 getMainPlots : RegisterForm -> List TragedySet.Plot
 getMainPlots f =
     TragedySet.filterMainPlots f.set.plots
@@ -177,6 +181,22 @@ getSubPlots f m =
 
         Just plot ->
             TragedySet.filterSubPlots f.set.plots |> List.filter (\p -> plot /= p)
+
+
+containCharacter : Character.Character -> RegisterForm -> Bool
+containCharacter c f =
+    List.member c f.characters
+
+
+getScriptRoles : RegisterForm -> List TragedySet.Role
+getScriptRoles f =
+    TragedySet.filterRoleLimit <|
+        case f.subPlot2 of
+            Just p ->
+                List.concat [ f.mainPlot.roles, f.subPlot1.roles, p.roles ]
+
+            Nothing ->
+                List.concat [ f.mainPlot.roles, f.subPlot1.roles ]
 
 
 
@@ -194,32 +214,7 @@ convert f =
 
 
 
--- Error
-
-
-type Error
-    = NameError Name.Error
-    | IdError Id.Error
-    | TragedySetError TragedySet.Error
-
-
-errors : RegisterForm -> List Error
-errors f =
-    Decoder.errors form f
-
-
-getNameError : RegisterForm -> List ( String, Bool )
-getNameError f =
-    List.map
-        (\err ->
-            case err of
-                NameError e ->
-                    ( Name.errorField e, True )
-
-                _ ->
-                    ( "", False )
-        )
-        (errors f)
+-- Method Set
 
 
 setName : String -> RegisterForm -> RegisterForm
@@ -271,11 +266,6 @@ deleteCharacter c f =
     { f | characters = List.filter (\char -> char /= c) f.characters }
 
 
-containCharacter : Character.Character -> RegisterForm -> Bool
-containCharacter c f =
-    List.member c f.characters
-
-
 registerForm : String -> List (Html msg) -> Html msg
 registerForm title children =
     div []
@@ -283,6 +273,35 @@ registerForm title children =
         , div []
             children
         ]
+
+
+
+-- Error
+
+
+type Error
+    = NameError Name.Error
+    | IdError Id.Error
+    | TragedySetError TragedySet.Error
+
+
+errors : RegisterForm -> List Error
+errors f =
+    Decoder.errors form f
+
+
+getNameError : RegisterForm -> List ( String, Bool )
+getNameError f =
+    List.map
+        (\err ->
+            case err of
+                NameError e ->
+                    ( Name.errorField e, True )
+
+                _ ->
+                    ( "", False )
+        )
+        (errors f)
 
 
 
@@ -337,6 +356,21 @@ subPlots2 chgMsg maybeSelectedPlot scriptForm =
                     List.map (\p -> Tuple.pair (TragedySet.plotToString p) p.name) plotList
             in
             Form.select "-sub-plot-2" chgMsg plotKey optionList
+
+
+characterRoles : (String -> msg) -> RegisterForm -> Html msg
+characterRoles chgMsg scriptForm =
+    let
+        roleList =
+            TragedySet.person :: getScriptRoles scriptForm
+
+        roleKey =
+            TragedySet.roleToString TragedySet.person
+
+        optionList =
+            List.map (\r -> Tuple.pair (TragedySet.roleToString r) r.name) roleList
+    in
+    Form.select "-character-roles" chgMsg roleKey optionList
 
 
 
