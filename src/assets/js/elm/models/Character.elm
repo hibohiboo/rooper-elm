@@ -7,6 +7,7 @@ import Html.Events.Extra exposing (onChange)
 import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
+import Json.Encode.Extra as ExEncode
 import Models.Board as Board exposing (Board)
 import Models.TragedySet as TragedySet exposing (Role)
 
@@ -332,6 +333,25 @@ decodeCharacterScriptData =
 
 
 
+-- Method Encode エンコーダ
+
+
+encodeCharacter : Character -> E.Value
+encodeCharacter char =
+    E.string <| characterToString char
+
+
+encodeCharacterScriptData : CharacterScriptData -> E.Value
+encodeCharacterScriptData data =
+    E.object
+        [ ( "character", encodeCharacter data.character )
+        , ( "role", ExEncode.maybe E.string <| Maybe.map TragedySet.roleToString data.role )
+        , ( "optionalNumber", ExEncode.maybe E.int data.optionalNumber )
+        , ( "turf", ExEncode.maybe E.string <| Maybe.map Board.boardToString data.turf )
+        ]
+
+
+
 -- データ
 
 
@@ -590,6 +610,7 @@ characterFormCollectionItem { character } children =
     div [ class "media" ]
         [ div [ class "media-left" ]
             [ img [ src (characterToCardUrl character) ] []
+            , div [] [ text character.name ]
             ]
         , div [ class "media-content" ] children
         ]

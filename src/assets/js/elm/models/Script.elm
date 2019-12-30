@@ -29,6 +29,7 @@ type alias Script =
     , mainPlot : TragedySet.Plot
     , subPlot1 : TragedySet.Plot
     , subPlot2 : Maybe TragedySet.Plot
+    , characters : List Character.CharacterScriptData
     }
 
 
@@ -50,6 +51,7 @@ form =
         |> Decoder.field decoderMainPlot
         |> Decoder.field decoderSubPlot1
         |> Decoder.field decoderSubPlot2
+        |> Decoder.field decoderCharacters
 
 
 
@@ -93,6 +95,12 @@ decoderSubPlot2 : Decoder RegisterForm Error (Maybe TragedySet.Plot)
 decoderSubPlot2 =
     Decoder.identity
         |> Decoder.lift .subPlot2
+
+
+decoderCharacters : Decoder RegisterForm Error (List Character.CharacterScriptData)
+decoderCharacters =
+    Decoder.identity
+        |> Decoder.lift .characters
 
 
 
@@ -420,4 +428,5 @@ encode script =
         , ( "mainPlot", E.string <| TragedySet.plotToString script.mainPlot )
         , ( "subPlot1", E.string <| TragedySet.plotToString script.subPlot1 )
         , ( "subPlot2", ExEncode.maybe E.string <| Maybe.map TragedySet.plotToString script.subPlot2 )
+        , ( "characters", E.list Character.encodeCharacterScriptData script.characters )
         ]
