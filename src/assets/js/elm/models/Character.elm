@@ -58,7 +58,7 @@ type alias CharacterScriptData =
 
 
 type alias CharacterData =
-    { character : CharacterScriptData
+    { scriptData : CharacterScriptData
     , goodWill : Int -- 友好
     , paranoia : Int -- 不安
     , intrigue : Int -- 暗躍
