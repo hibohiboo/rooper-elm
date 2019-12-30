@@ -647,6 +647,7 @@ scriptFormView scriptForm =
         , Form.errors (Script.getNameError scriptForm)
         , Form.errors
             [ ( "キャラクターを追加してください", List.member Script.NoCharacterError (Script.errors scriptForm) )
+            , ( "ルールで追加された役職を全て設定してください", List.member Script.InvalidCharacterRoles (Script.errors scriptForm) )
             ]
         ]
     , Form.field

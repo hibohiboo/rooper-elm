@@ -53,6 +53,7 @@ form =
         |> Decoder.field decoderSubPlot2
         |> Decoder.field decoderCharacters
         |> Decoder.assert charactersValidator
+        |> Decoder.assert characterRolesValidator
 
 
 
@@ -117,6 +118,17 @@ charactersValidator =
 
             else
                 Err [ NoCharacterError ]
+
+
+characterRolesValidator : Decoder.Validator Script Error
+characterRolesValidator =
+    Decoder.custom <|
+        \script ->
+            if List.length (unassignedRoles script) == 0 then
+                Ok ()
+
+            else
+                Err [ InvalidCharacterRoles ]
 
 
 
@@ -213,7 +225,7 @@ containCharacter c f =
     List.member c (Character.charactersFromCharacterScriptDataList f.characters)
 
 
-getScriptRoles : RegisterForm -> List TragedySet.Role
+getScriptRoles : { a | mainPlot : TragedySet.Plot, subPlot1 : TragedySet.Plot, subPlot2 : Maybe TragedySet.Plot } -> List TragedySet.Role
 getScriptRoles f =
     TragedySet.filterRoleLimit <|
         case f.subPlot2 of
@@ -222,6 +234,18 @@ getScriptRoles f =
 
             Nothing ->
                 List.concat [ f.mainPlot.roles, f.subPlot1.roles ]
+
+
+unassignedRoles : { a | mainPlot : TragedySet.Plot, subPlot1 : TragedySet.Plot, subPlot2 : Maybe TragedySet.Plot, characters : List Character.CharacterScriptData } -> List TragedySet.Role
+unassignedRoles scriptForm =
+    let
+        characterRoleList =
+            Character.rolesFromCharacterScriptDataList scriptForm.characters
+
+        scriptRoleList =
+            getScriptRoles scriptForm
+    in
+    TragedySet.exceptRoleList characterRoleList scriptRoleList
 
 
 
@@ -326,6 +350,7 @@ type Error
     | IdError Id.Error
     | TragedySetError TragedySet.Error
     | NoCharacterError
+    | InvalidCharacterRoles
 
 
 errors : RegisterForm -> List Error
@@ -404,14 +429,8 @@ subPlots2 chgMsg maybeSelectedPlot scriptForm =
 characterRoles : Character.CharacterScriptData -> (String -> msg) -> RegisterForm -> Html msg
 characterRoles char chgMsg scriptForm =
     let
-        characterRoleList =
-            Character.rolesFromCharacterScriptDataList scriptForm.characters
-
-        scriptRoleList =
-            getScriptRoles scriptForm
-
         exceptList =
-            TragedySet.exceptRoleList characterRoleList scriptRoleList
+            unassignedRoles scriptForm
 
         roleList =
             case char.role of
