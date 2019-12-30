@@ -5,9 +5,10 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Html.Events.Extra exposing (onChange)
 import Json.Decode as D
+import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
-import Models.Board as Board exposing (BoardType(..))
-import Models.TragedySet exposing (Role)
+import Models.Board as Board exposing (Board)
+import Models.TragedySet as TragedySet exposing (Role)
 
 
 type CharacterType
@@ -44,7 +45,7 @@ type alias Character =
     { characterType : CharacterType
     , name : String
     , paranoiaLimit : Int
-    , firstLocation : BoardType
+    , firstLocation : Board
     }
 
 
@@ -52,7 +53,7 @@ type alias CharacterScriptData =
     { character : Character
     , role : Maybe Role -- 役職
     , optionalNumber : Maybe Int -- 神格の場合、登場ループ数。転校生の場合、登場日数。
-    , turf : Maybe BoardType -- 大物の場合のテリトリー
+    , turf : Maybe Board -- 大物の場合のテリトリー
     }
 
 
@@ -61,13 +62,30 @@ type alias CharacterData =
     , goodWill : Int -- 友好
     , paranoia : Int -- 不安
     , intrigue : Int -- 暗躍
-    , location : Maybe BoardType -- 現在のボード
-    , forbiddenLocations : List BoardType
+    , location : Maybe Board -- 現在のボード
+    , forbiddenLocations : List Board
     }
 
 
 
--- Method
+-- Method CharacterScriptData
+
+
+characterScriptDataFromCharacter : Character -> CharacterScriptData
+characterScriptDataFromCharacter c =
+    case c.characterType of
+        GodlyBeing ->
+            CharacterScriptData c Nothing (Just 1) Nothing
+
+        TransferStudent ->
+            CharacterScriptData c Nothing (Just 1) Nothing
+
+        _ ->
+            CharacterScriptData c Nothing Nothing (Just Board.city)
+
+
+
+-- Method Character
 
 
 characterToString : Character -> String
@@ -274,8 +292,13 @@ characters =
     ]
 
 
+charactersFromCharacterScriptDataList : List CharacterScriptData -> List Character
+charactersFromCharacterScriptDataList list =
+    List.map (\data -> data.character) list
 
--- Method
+
+
+-- Method Decoder デコーダ
 -- システムを通じて入れたfirebaseからの値のデコードを想定しているため失敗しない前提でとりあえず殺人計画をデフォルトにしておく
 
 
@@ -289,143 +312,152 @@ decoderCharacter =
     D.map characterFromStringWithDefault D.string
 
 
+decodeCharacterScriptData : D.Decoder CharacterScriptData
+decodeCharacterScriptData =
+    D.succeed CharacterScriptData
+        |> Pipeline.required "character" decoderCharacter
+        |> Pipeline.optional "role" TragedySet.decodeRole Nothing
+        |> Pipeline.optional "optionalNumber" (D.maybe D.int) Nothing
+        |> Pipeline.optional "turf" Board.decodeBoard Nothing
+
+
 
 -- データ
 
 
 boyStudent : Character
 boyStudent =
-    Character BoyStudent "男子学生" 2 School
+    Character BoyStudent "男子学生" 2 Board.school
 
 
 girlStudent : Character
 girlStudent =
-    Character GirlStudent "女子学生" 3 School
+    Character GirlStudent "女子学生" 3 Board.school
 
 
 richMansDaughter : Character
 richMansDaughter =
-    Character RichMansDaughter "お嬢様" 1 School
+    Character RichMansDaughter "お嬢様" 1 Board.school
 
 
 shrineMaiden : Character
 shrineMaiden =
-    Character ShrineMaiden "巫女" 2 Shrine
+    Character ShrineMaiden "巫女" 2 Board.shrine
 
 
 policeOfficer : Character
 policeOfficer =
-    Character PoliceOfficer "刑事" 2 City
+    Character PoliceOfficer "刑事" 2 Board.city
 
 
 officeWorker : Character
 officeWorker =
-    Character OfficeWorker "サラリーマン" 2 City
+    Character OfficeWorker "サラリーマン" 2 Board.city
 
 
 informer : Character
 informer =
-    Character Informer "情報屋" 3 City
+    Character Informer "情報屋" 3 Board.city
 
 
 doctor : Character
 doctor =
-    Character Doctor "医者" 2 Hospital
+    Character Doctor "医者" 2 Board.hospital
 
 
 patient : Character
 patient =
-    Character Patient "患者" 2 Hospital
+    Character Patient "患者" 2 Board.hospital
 
 
 classRep : Character
 classRep =
-    Character ClassRep "委員長" 2 School
+    Character ClassRep "委員長" 2 Board.school
 
 
 mysteryBoy : Character
 mysteryBoy =
-    Character MysteryBoy "イレギュラー" 3 School
+    Character MysteryBoy "イレギュラー" 3 Board.school
 
 
 alien : Character
 alien =
-    Character Alien "異世界人" 2 Shrine
+    Character Alien "異世界人" 2 Board.shrine
 
 
 godlyBeing : Character
 godlyBeing =
-    Character GodlyBeing "神格" 3 Shrine
+    Character GodlyBeing "神格" 3 Board.shrine
 
 
 popIdol : Character
 popIdol =
-    Character PopIdol "アイドル" 2 City
+    Character PopIdol "アイドル" 2 Board.city
 
 
 journalist : Character
 journalist =
-    Character Journalist "マスコミ" 2 City
+    Character Journalist "マスコミ" 2 Board.city
 
 
 boss : Character
 boss =
-    Character Boss "大物" 4 City
+    Character Boss "大物" 4 Board.city
 
 
 nurse : Character
 nurse =
-    Character Nurse "ナース" 2 Hospital
+    Character Nurse "ナース" 2 Board.hospital
 
 
 henchman : Character
 henchman =
-    Character Henchman "手先" 1 Shrine
+    Character Henchman "手先" 1 Board.shrine
 
 
 illusion : Character
 illusion =
-    Character Illusion "幻想" 3 Shrine
+    Character Illusion "幻想" 3 Board.shrine
 
 
 scientist : Character
 scientist =
-    Character Scientist "学者" 2 Hospital
+    Character Scientist "学者" 2 Board.hospital
 
 
 forensicSpecialist : Character
 forensicSpecialist =
-    Character ForensicSpecialist "鑑識官" 3 City
+    Character ForensicSpecialist "鑑識官" 3 Board.city
 
 
 ai : Character
 ai =
-    Character AI "A.I." 4 City
+    Character AI "A.I." 4 Board.city
 
 
 teacher : Character
 teacher =
-    Character Teacher "教師" 2 School
+    Character Teacher "教師" 2 Board.school
 
 
 transferStudent : Character
 transferStudent =
-    Character TransferStudent "転校生" 2 School
+    Character TransferStudent "転校生" 2 Board.school
 
 
 soldier : Character
 soldier =
-    Character Soldier "軍人" 3 Hospital
+    Character Soldier "軍人" 3 Board.hospital
 
 
 blackCat : Character
 blackCat =
-    Character BlackCat "黒猫" 0 Shrine
+    Character BlackCat "黒猫" 0 Board.shrine
 
 
 littleGirl : Character
 littleGirl =
-    Character LittleGirl "女の子" 1 School
+    Character LittleGirl "女の子" 1 Board.school
 
 
 
@@ -543,11 +575,11 @@ characterNameCard clickMsg c isSelected =
         ]
 
 
-characterFormCollectionItem : Character -> List (Html msg) -> Html msg
-characterFormCollectionItem c children =
+characterFormCollectionItem : CharacterScriptData -> List (Html msg) -> Html msg
+characterFormCollectionItem { character } children =
     div [ class "media" ]
         [ div [ class "media-left" ]
-            [ img [ src (characterToCardUrl c) ] []
+            [ img [ src (characterToCardUrl character) ] []
             ]
         , div [ class "media-content" ] children
         ]

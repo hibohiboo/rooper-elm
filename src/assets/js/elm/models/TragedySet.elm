@@ -3,7 +3,7 @@ module Models.TragedySet exposing (..)
 import Form.Decoder as Decoder exposing (Decoder, Validator)
 import Html exposing (..)
 import Json.Decode as D exposing (Value)
-import Json.Decode.Pipeline exposing (hardcoded, optional, required)
+import Json.Decode.Pipeline
 import Json.Encode as E
 import List.Extra as ExList
 
@@ -34,6 +34,12 @@ type alias Role =
 
 
 -- Role Method
+-- Role Decoder
+
+
+decodeRole : D.Decoder (Maybe Role)
+decodeRole =
+    D.map roleFromString D.string
 
 
 roleToString : Role -> String

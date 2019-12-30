@@ -114,7 +114,7 @@ formDecoder =
         |> Pipeline.optional "mainPlot" TragedySet.decoderPlot TragedySet.murderPlan
         |> Pipeline.optional "subPlot1" TragedySet.decoderPlot TragedySet.circleOfFriends
         |> Pipeline.optional "subPlot2" TragedySet.decoderMaybePlot Nothing
-        |> Pipeline.optional "characters" (D.list Character.decoderCharacter) []
+        |> Pipeline.optional "characters" (D.list Character.decodeCharacterScriptData) []
 
 
 
@@ -128,7 +128,7 @@ type alias RegisterForm =
     , mainPlot : TragedySet.Plot
     , subPlot1 : TragedySet.Plot
     , subPlot2 : Maybe TragedySet.Plot
-    , characters : List Character.Character
+    , characters : List Character.CharacterScriptData
     }
 
 
@@ -185,7 +185,7 @@ getSubPlots f m =
 
 containCharacter : Character.Character -> RegisterForm -> Bool
 containCharacter c f =
-    List.member c f.characters
+    List.member c (Character.charactersFromCharacterScriptDataList f.characters)
 
 
 getScriptRoles : RegisterForm -> List TragedySet.Role
@@ -258,12 +258,12 @@ setId s f =
 
 setCharacter : Character.Character -> RegisterForm -> RegisterForm
 setCharacter c f =
-    { f | characters = c :: f.characters }
+    { f | characters = Character.characterScriptDataFromCharacter c :: f.characters }
 
 
 deleteCharacter : Character.Character -> RegisterForm -> RegisterForm
 deleteCharacter c f =
-    { f | characters = List.filter (\char -> char /= c) f.characters }
+    { f | characters = List.filter (\data -> data.character /= c) f.characters }
 
 
 registerForm : String -> List (Html msg) -> Html msg
