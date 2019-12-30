@@ -92,7 +92,7 @@ roleFromString : String -> Maybe Role
 roleFromString s =
     case s of
         "Person" ->
-            Just person
+            Nothing
 
         "Killer" ->
             Just killer

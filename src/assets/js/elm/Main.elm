@@ -97,6 +97,7 @@ type Msg
     | ChangeSubPlot2 String
     | AddCharacter Character
     | DeleteCharacter Character
+    | ChangeCharacterRole Character.CharacterScriptData String
     | OpenCaracterSelectModal
     | ChangedScript
 
@@ -244,6 +245,9 @@ update msg model =
 
         ChangeSubPlot2 val ->
             update ChangedScript { model | scriptForm = Script.setSubPlot2 val model.scriptForm }
+
+        ChangeCharacterRole char val ->
+            update ChangedScript { model | scriptForm = Script.setCharacterRole char val model.scriptForm }
 
         OpenCaracterSelectModal ->
             ( { model | modalState = CharactertSelectModalState }, Cmd.none )
@@ -652,7 +656,7 @@ characterFormCollection scriptForm =
         |> List.reverse
         -- 選んだ順に表示するため並び替え
         |> List.map
-            (\c -> Character.characterFormCollectionItem c [ Script.characterRoles ChangeSubPlot2 scriptForm ])
+            (\c -> Character.characterFormCollectionItem c [ Script.characterRoles (ChangeCharacterRole c) scriptForm ])
 
 
 

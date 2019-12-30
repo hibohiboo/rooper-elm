@@ -266,6 +266,23 @@ deleteCharacter c f =
     { f | characters = List.filter (\data -> data.character /= c) f.characters }
 
 
+setCharacterRole : Character.CharacterScriptData -> String -> RegisterForm -> RegisterForm
+setCharacterRole c s f =
+    let
+        characters =
+            List.map
+                (\data ->
+                    if data == c then
+                        { data | role = TragedySet.roleFromString s }
+
+                    else
+                        data
+                )
+                f.characters
+    in
+    { f | characters = characters }
+
+
 registerForm : String -> List (Html msg) -> Html msg
 registerForm title children =
     div []
