@@ -25,105 +25,6 @@ type RoleType
     | Curmudgeon
 
 
-person : Role
-person =
-    Role Person "パーソン" Nothing
-
-
-killer : Role
-killer =
-    Role Killer "キラー" Nothing
-
-
-brain : Role
-brain =
-    Role Brain "クロマク" Nothing
-
-
-keyPerson : Role
-keyPerson =
-    Role KeyPerson "キーパーソン" Nothing
-
-
-cultist : Role
-cultist =
-    Role Cultist "カルティスト" Nothing
-
-
-timeTraveler : Role
-timeTraveler =
-    Role TimeTraveler "タイムトラベラー" Nothing
-
-
-witch : Role
-witch =
-    Role Witch "ウィッチ" Nothing
-
-
-friend : Role
-friend =
-    Role Friend "フレンド" (Just 2)
-
-
-lovedOne : Role
-lovedOne =
-    Role LovedOne "メインラバーズ" Nothing
-
-
-lover : Role
-lover =
-    Role Lover "ラバーズ" Nothing
-
-
-serialKiller : Role
-serialKiller =
-    Role SerialKiller "シリアルキラー" Nothing
-
-
-factor : Role
-factor =
-    Role Factor "ファクター" Nothing
-
-
-conspiracyTheorist : Role
-conspiracyTheorist =
-    Role ConspiracyTheorist "ミスリーダー" (Just 1)
-
-
-curmudgeon : Role
-curmudgeon =
-    Role Curmudgeon "マイナス" Nothing
-
-
-initFirstStepsRoles : List Role
-initFirstStepsRoles =
-    [ killer
-    , brain
-    , keyPerson
-    , cultist
-    , friend
-    , serialKiller
-    , conspiracyTheorist
-    ]
-
-
-initBasicTragedyRoles : List Role
-initBasicTragedyRoles =
-    [ killer
-    , brain
-    , keyPerson
-    , cultist
-    , timeTraveler
-    , witch
-    , friend
-    , lovedOne
-    , lover
-    , serialKiller
-    , factor
-    , conspiracyTheorist
-    ]
-
-
 type alias Role =
     { roleType : RoleType
     , name : String
@@ -460,6 +361,16 @@ decoderMaybePlot =
 
 
 
+-- 事件
+
+
+type alias Incident =
+    { name : String
+    , effect : String
+    }
+
+
+
 -- ルール ＞ データ
 
 
@@ -577,13 +488,110 @@ initFirstStepsPlots =
 
 
 
--- 事件
+-- 役職 データ
 
 
-type alias Incident =
-    { name : String
-    , effect : String
-    }
+person : Role
+person =
+    Role Person "パーソン" Nothing
+
+
+killer : Role
+killer =
+    Role Killer "キラー" Nothing
+
+
+brain : Role
+brain =
+    Role Brain "クロマク" Nothing
+
+
+keyPerson : Role
+keyPerson =
+    Role KeyPerson "キーパーソン" Nothing
+
+
+cultist : Role
+cultist =
+    Role Cultist "カルティスト" Nothing
+
+
+timeTraveler : Role
+timeTraveler =
+    Role TimeTraveler "タイムトラベラー" Nothing
+
+
+witch : Role
+witch =
+    Role Witch "ウィッチ" Nothing
+
+
+friend : Role
+friend =
+    Role Friend "フレンド" (Just 2)
+
+
+lovedOne : Role
+lovedOne =
+    Role LovedOne "メインラバーズ" Nothing
+
+
+lover : Role
+lover =
+    Role Lover "ラバーズ" Nothing
+
+
+serialKiller : Role
+serialKiller =
+    Role SerialKiller "シリアルキラー" Nothing
+
+
+factor : Role
+factor =
+    Role Factor "ファクター" Nothing
+
+
+conspiracyTheorist : Role
+conspiracyTheorist =
+    Role ConspiracyTheorist "ミスリーダー" (Just 1)
+
+
+curmudgeon : Role
+curmudgeon =
+    Role Curmudgeon "マイナス" Nothing
+
+
+initFirstStepsRoles : List Role
+initFirstStepsRoles =
+    [ killer
+    , brain
+    , keyPerson
+    , cultist
+    , friend
+    , serialKiller
+    , conspiracyTheorist
+    ]
+
+
+initBasicTragedyRoles : List Role
+initBasicTragedyRoles =
+    [ killer
+    , brain
+    , keyPerson
+    , cultist
+    , timeTraveler
+    , witch
+    , friend
+    , lovedOne
+    , lover
+    , serialKiller
+    , factor
+    , conspiracyTheorist
+    ]
+
+
+
+-- 事件 データ
 
 
 murder : Incident
