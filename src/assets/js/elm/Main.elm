@@ -644,6 +644,10 @@ scriptFormView scriptForm =
             [ class "label has-text-white" ]
             [ text "キャラクター" ]
         , button [ class "button is-info", onClick OpenCaracterSelectModal ] [ text "追加" ]
+        , Form.errors (Script.getNameError scriptForm)
+        , Form.errors
+            [ ( "キャラクターを追加してください", List.member Script.NoCharacterError (Script.errors scriptForm) )
+            ]
         ]
     , Form.field
         (characterFormCollection scriptForm)

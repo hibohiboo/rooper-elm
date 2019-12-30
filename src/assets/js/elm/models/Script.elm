@@ -52,6 +52,7 @@ form =
         |> Decoder.field decoderSubPlot1
         |> Decoder.field decoderSubPlot2
         |> Decoder.field decoderCharacters
+        |> Decoder.assert charactersValidator
 
 
 
@@ -101,6 +102,21 @@ decoderCharacters : Decoder RegisterForm Error (List Character.CharacterScriptDa
 decoderCharacters =
     Decoder.identity
         |> Decoder.lift .characters
+
+
+
+-- Method バリデーション
+
+
+charactersValidator : Decoder.Validator Script Error
+charactersValidator =
+    Decoder.custom <|
+        \script ->
+            if List.length script.characters > 0 then
+                Ok ()
+
+            else
+                Err [ NoCharacterError ]
 
 
 
@@ -309,6 +325,7 @@ type Error
     = NameError Name.Error
     | IdError Id.Error
     | TragedySetError TragedySet.Error
+    | NoCharacterError
 
 
 errors : RegisterForm -> List Error
