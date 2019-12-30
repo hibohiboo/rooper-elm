@@ -80,8 +80,11 @@ characterScriptDataFromCharacter c =
         TransferStudent ->
             CharacterScriptData c Nothing (Just 1) Nothing
 
-        _ ->
+        Boss ->
             CharacterScriptData c Nothing Nothing (Just Board.city)
+
+        _ ->
+            CharacterScriptData c Nothing Nothing Nothing
 
 
 
