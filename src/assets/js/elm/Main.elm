@@ -101,6 +101,7 @@ type Msg
     | ChangeOptionalNumber Character.CharacterScriptData String
     | ChangeTurf Character.CharacterScriptData String
     | ChangeNumberOfLoops String
+    | ChangeDaysInOneLoop String
     | OpenCaracterSelectModal
     | ChangedScript
 
@@ -269,6 +270,9 @@ update msg model =
 
         ChangeNumberOfLoops val ->
             update ChangedScript { model | scriptForm = Script.setNumberOfLoops val model.scriptForm }
+
+        ChangeDaysInOneLoop val ->
+            update ChangedScript { model | scriptForm = Script.setDaysInOneLoop val model.scriptForm }
 
         ChangedScript ->
             ( { model | script = Script.convert model.scriptForm }, Cmd.none )
@@ -679,6 +683,12 @@ scriptFormView scriptForm =
         [ label [ class "label has-text-white" ] [ text "ループ回数" ]
         , Form.control
             [ input [ class "input", Html.Attributes.min "1", type_ "number", required True, value <| String.fromInt scriptForm.numberOfLoops, onChange ChangeNumberOfLoops ] []
+            ]
+        ]
+    , Form.field
+        [ label [ class "label has-text-white" ] [ text "１ループ日数" ]
+        , Form.control
+            [ input [ class "input", Html.Attributes.min "1", type_ "number", required True, value <| String.fromInt scriptForm.daysInOneLoop, onChange ChangeDaysInOneLoop ] []
             ]
         ]
     ]
