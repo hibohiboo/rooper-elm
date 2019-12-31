@@ -332,6 +332,23 @@ setCharacterRole c s f =
     { f | characters = characters }
 
 
+setCharacterOptionalNumber : Character.CharacterScriptData -> String -> RegisterForm -> RegisterForm
+setCharacterOptionalNumber c s f =
+    let
+        characters =
+            List.map
+                (\data ->
+                    if data == c then
+                        { data | optionalNumber = String.toInt s }
+
+                    else
+                        data
+                )
+                f.characters
+    in
+    { f | characters = characters }
+
+
 registerForm : String -> List (Html msg) -> Html msg
 registerForm title children =
     div []

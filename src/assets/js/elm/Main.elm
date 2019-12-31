@@ -98,6 +98,7 @@ type Msg
     | AddCharacter Character
     | DeleteCharacter Character
     | ChangeCharacterRole Character.CharacterScriptData String
+    | ChangeOptionalNumber Character.CharacterScriptData String
     | OpenCaracterSelectModal
     | ChangedScript
 
@@ -257,6 +258,9 @@ update msg model =
 
         DeleteCharacter c ->
             update ChangedScript { model | scriptForm = Script.deleteCharacter c model.scriptForm }
+
+        ChangeOptionalNumber char val ->
+            update ChangedScript { model | scriptForm = Script.setCharacterOptionalNumber char val model.scriptForm }
 
         ChangedScript ->
             ( { model | script = Script.convert model.scriptForm }, Cmd.none )
@@ -588,7 +592,7 @@ scriptFormView scriptForm =
     [ Form.field
         [ label [ class "label has-text-white" ] [ text "脚本名" ]
         , Form.control
-            [ input [ class "input", required True, value scriptForm.name, onInput ChangeScriptName ] []
+            [ input [ class "input", required True, value scriptForm.name, onChange ChangeScriptName ] []
             ]
         , Form.errors (Script.getNameError scriptForm)
         ]
@@ -661,8 +665,17 @@ characterFormCollection scriptForm =
         |> List.reverse
         -- 選んだ順に表示するため並び替え
         |> List.map
-            (\c -> Character.characterFormCollectionItem c [ Script.characterRoles c (ChangeCharacterRole c) scriptForm ])
+            (\c ->
+                Character.characterFormCollectionItem c
+                    [ Script.characterRoles c (ChangeCharacterRole c) scriptForm
+                    , case c.character.characterType of
+                        Character.TransferStudent ->
+                            Form.field
+                                [ label [ class "label has-text-white" ] [ text "登場日" ]
+                                , input [ required True, type_ "number", value <| String.fromInt (Maybe.withDefault 0 c.optionalNumber), onChange (ChangeOptionalNumber c) ] []
+                                ]
 
-
-
--- TODO: 一旦置いているChangeSubPlot2を修正
+                        _ ->
+                            text ""
+                    ]
+            )
