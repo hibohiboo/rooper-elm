@@ -1,5 +1,6 @@
 module Models.Character exposing (..)
 
+import Component.Form as Form
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
@@ -615,3 +616,15 @@ characterFormCollectionItem { character } children =
             ]
         , div [ class "media-content" ] children
         ]
+
+
+characterTurfBoards : CharacterScriptData -> (String -> msg) -> Html msg
+characterTurfBoards char chgMsg =
+    let
+        boardKey =
+            Board.boardToString (Maybe.withDefault Board.city char.turf)
+
+        optionList =
+            List.map (\b -> Tuple.pair (Board.boardToString b) b.name) Board.boards
+    in
+    Form.select ("-character-board-" ++ characterToString char.character) chgMsg boardKey optionList

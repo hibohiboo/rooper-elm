@@ -74,3 +74,12 @@ hospital =
 city : Board
 city =
     Board City "都市"
+
+
+boards : List Board
+boards =
+    [ shrine
+    , school
+    , hospital
+    , city
+    ]

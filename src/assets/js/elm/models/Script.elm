@@ -12,6 +12,7 @@ import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
 import Json.Encode.Extra as ExEncode
 import List.Extra as ExList
+import Models.Board as Board
 import Models.Character as Character
 import Models.Script.Id as Id exposing (Id)
 import Models.Script.Name as Name exposing (Name)
@@ -340,6 +341,23 @@ setCharacterOptionalNumber c s f =
                 (\data ->
                     if data == c then
                         { data | optionalNumber = String.toInt s }
+
+                    else
+                        data
+                )
+                f.characters
+    in
+    { f | characters = characters }
+
+
+setCharacterTurf : Character.CharacterScriptData -> String -> RegisterForm -> RegisterForm
+setCharacterTurf c s f =
+    let
+        characters =
+            List.map
+                (\data ->
+                    if data == c then
+                        { data | turf = Board.boardFromString s }
 
                     else
                         data

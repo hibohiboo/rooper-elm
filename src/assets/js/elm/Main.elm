@@ -99,6 +99,7 @@ type Msg
     | DeleteCharacter Character
     | ChangeCharacterRole Character.CharacterScriptData String
     | ChangeOptionalNumber Character.CharacterScriptData String
+    | ChangeTurf Character.CharacterScriptData String
     | OpenCaracterSelectModal
     | ChangedScript
 
@@ -261,6 +262,9 @@ update msg model =
 
         ChangeOptionalNumber char val ->
             update ChangedScript { model | scriptForm = Script.setCharacterOptionalNumber char val model.scriptForm }
+
+        ChangeTurf char val ->
+            update ChangedScript { model | scriptForm = Script.setCharacterTurf char val model.scriptForm }
 
         ChangedScript ->
             ( { model | script = Script.convert model.scriptForm }, Cmd.none )
@@ -673,6 +677,18 @@ characterFormCollection scriptForm =
                             Form.field
                                 [ label [ class "label has-text-white" ] [ text "登場日" ]
                                 , input [ required True, type_ "number", value <| String.fromInt (Maybe.withDefault 0 c.optionalNumber), onChange (ChangeOptionalNumber c) ] []
+                                ]
+
+                        Character.GodlyBeing ->
+                            Form.field
+                                [ label [ class "label has-text-white" ] [ text "登場ループ" ]
+                                , input [ required True, type_ "number", value <| String.fromInt (Maybe.withDefault 0 c.optionalNumber), onChange (ChangeOptionalNumber c) ] []
+                                ]
+
+                        Character.Boss ->
+                            Form.field
+                                [ label [ class "label has-text-white" ] [ text "テリトリー" ]
+                                , Character.characterTurfBoards c (ChangeTurf c)
                                 ]
 
                         _ ->
