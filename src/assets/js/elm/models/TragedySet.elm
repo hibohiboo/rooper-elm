@@ -386,9 +386,91 @@ decoderMaybePlot =
 
 
 type alias Incident =
-    { name : String
+    { incidentType : IncidentType
+    , name : String
     , effect : String
     }
+
+
+type IncidentType
+    = Murder
+    | IncreasingUnease
+    | Suicide
+    | HospitalIncident
+    | FarawayMurder
+    | MissingPerson
+    | Spreading
+    | FoulEvil
+    | ButterflyEffect
+
+
+
+-- 事件 ＞ メソッド
+
+
+incidentToString : Incident -> String
+incidentToString i =
+    case i.incidentType of
+        Murder ->
+            "Murder"
+
+        IncreasingUnease ->
+            "IncreasingUnease"
+
+        Suicide ->
+            "Suicide"
+
+        HospitalIncident ->
+            "HospitalIncident"
+
+        FarawayMurder ->
+            "FarawayMurder"
+
+        MissingPerson ->
+            "MissingPerson"
+
+        Spreading ->
+            "Spreading"
+
+        FoulEvil ->
+            "FoulEvil"
+
+        ButterflyEffect ->
+            "ButterflyEffect"
+
+
+incidentFromString : String -> Maybe Incident
+incidentFromString s =
+    case s of
+        "Murder" ->
+            Just murder
+
+        "IncreasingUnease" ->
+            Just increasingUnease
+
+        "Suicide" ->
+            Just suicide
+
+        "HospitalIncident" ->
+            Just hospitalIncident
+
+        "FarawayMurder" ->
+            Just farawayMurder
+
+        "MissingPerson" ->
+            Just missingPerson
+
+        "Spreading" ->
+            Just spreading
+
+        "FoulEvil" ->
+            Just foulEvil
+
+        "ButterflyEffect" ->
+            Just butterflyEffect
+
+        _ ->
+            Nothing
 
 
 
@@ -617,47 +699,47 @@ initBasicTragedyRoles =
 
 murder : Incident
 murder =
-    Incident "殺人事件" "犯人と同一エリアにいる犯人以外の任意のキャラクター１人を死亡させる。"
+    Incident Murder "殺人事件" "犯人と同一エリアにいる犯人以外の任意のキャラクター１人を死亡させる。"
 
 
 increasingUnease : Incident
 increasingUnease =
-    Incident "不安拡大" "任意のキャラクター１人に不安カウンターを２つ置き、任意の別のキャラクター１人に暗躍カウンターを１つ置く。"
+    Incident IncreasingUnease "不安拡大" "任意のキャラクター１人に不安カウンターを２つ置き、任意の別のキャラクター１人に暗躍カウンターを１つ置く。"
 
 
 suicide : Incident
 suicide =
-    Incident "自殺" "犯人は死亡する。"
+    Incident Suicide "自殺" "犯人は死亡する。"
 
 
 hospitalIncident : Incident
 hospitalIncident =
-    Incident "病院の事件" "病院に[暗躍カウンター]が１つ以上→病院にいる全てのキャラクターを死亡させる。病院に[暗躍カウンター]が２つ以上→主人公を死亡させる。"
+    Incident HospitalIncident "病院の事件" "病院に[暗躍カウンター]が１つ以上→病院にいる全てのキャラクターを死亡させる。病院に[暗躍カウンター]が２つ以上→主人公を死亡させる。"
 
 
 farawayMurder : Incident
 farawayMurder =
-    Incident "遠隔殺人" "[暗躍カウンター]が２つ以上置かれたキャラクター１人を死亡させる"
+    Incident FarawayMurder "遠隔殺人" "[暗躍カウンター]が２つ以上置かれたキャラクター１人を死亡させる"
 
 
 missingPerson : Incident
 missingPerson =
-    Incident "行方不明" "犯人を任意のボードに移動させる。その後、犯人のいるボードに[暗躍カウンター]を１つ置く"
+    Incident MissingPerson "行方不明" "犯人を任意のボードに移動させる。その後、犯人のいるボードに[暗躍カウンター]を１つ置く"
 
 
 spreading : Incident
 spreading =
-    Incident "流布" "任意のキャラクター１人から[友好カウンター]を２つ取り除き、別のキャラクター１人に[友好カウンター]を２つ置く。"
+    Incident Spreading "流布" "任意のキャラクター１人から[友好カウンター]を２つ取り除き、別のキャラクター１人に[友好カウンター]を２つ置く。"
 
 
 foulEvil : Incident
 foulEvil =
-    Incident "邪気の汚染" "神社に[暗躍カウンター]を２つ置く。"
+    Incident FoulEvil "邪気の汚染" "神社に[暗躍カウンター]を２つ置く。"
 
 
 butterflyEffect : Incident
 butterflyEffect =
-    Incident "蝶の羽ばたき" "犯人と同一エリアにいるキャラクター1人にいずれかのカウンターを１つ置く。"
+    Incident ButterflyEffect "蝶の羽ばたき" "犯人と同一エリアにいるキャラクター1人にいずれかのカウンターを１つ置く。"
 
 
 initBasicTragedyIncidents : List Incident

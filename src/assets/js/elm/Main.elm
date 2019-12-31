@@ -102,7 +102,8 @@ type Msg
     | ChangeTurf Character.CharacterScriptData String
     | ChangeNumberOfLoops String
     | ChangeDaysInOneLoop String
-    | OpenCaracterSelectModal
+    | OpenCharacterSelectModal
+    | OpenAddIncidentModal
     | ChangedScript
 
 
@@ -122,7 +123,8 @@ type ModalState
     = OpenModalState
     | CloseModalState
     | ConfirmModalState Msg
-    | CharactertSelectModalState
+    | CharacterSelectModalState
+    | OpenAddIncidentModalState
 
 
 
@@ -253,8 +255,8 @@ update msg model =
         ChangeCharacterRole char val ->
             update ChangedScript { model | scriptForm = Script.setCharacterRole char val model.scriptForm }
 
-        OpenCaracterSelectModal ->
-            ( { model | modalState = CharactertSelectModalState }, Cmd.none )
+        OpenCharacterSelectModal ->
+            ( { model | modalState = CharacterSelectModalState }, Cmd.none )
 
         AddCharacter c ->
             update ChangedScript { model | scriptForm = Script.setCharacter c model.scriptForm }
@@ -273,6 +275,9 @@ update msg model =
 
         ChangeDaysInOneLoop val ->
             update ChangedScript { model | scriptForm = Script.setDaysInOneLoop val model.scriptForm }
+
+        OpenAddIncidentModal ->
+            ( { model | modalState = OpenAddIncidentModalState }, Cmd.none )
 
         ChangedScript ->
             ( { model | script = Script.convert model.scriptForm }, Cmd.none )
@@ -367,9 +372,26 @@ modal model =
                 CloseModalState ->
                     text modalMessage
 
-                CharactertSelectModalState ->
+                CharacterSelectModalState ->
                     div [ style "display" "flex", style "flex-wrap" "wrap" ]
                         (List.map (\c -> characterNameCard c model) Character.characters)
+
+                OpenAddIncidentModalState ->
+                    div []
+                        [ Form.field
+                            -- TODO: 正しいメッセージ
+                            [ label [ class "label has-text-white" ] [ text "事件予定日" ]
+                            , div [ class "select" ] [ Script.incidentDays ChangeSubPlot2 model.scriptForm ]
+                            ]
+                        , Form.field
+                            [ label [ class "label has-text-white" ] [ text "事件" ]
+                            , div [ class "select" ] [ Script.incidents ChangeSubPlot2 model.scriptForm ]
+                            ]
+                        , Form.field
+                            [ label [ class "label has-text-white" ] [ text "犯人" ]
+                            , div [ class "select" ] [ Script.incidentCulprits ChangeSubPlot2 model.scriptForm ]
+                            ]
+                        ]
             ]
 
 
@@ -670,7 +692,7 @@ scriptFormView scriptForm =
         [ label
             [ class "label has-text-white" ]
             [ text "キャラクター" ]
-        , button [ class "button is-info", onClick OpenCaracterSelectModal ] [ text "追加" ]
+        , button [ class "button is-info", onClick OpenCharacterSelectModal ] [ text "追加" ]
         , Form.errors (Script.getNameError scriptForm)
         , Form.errors
             [ ( "キャラクターを追加してください", List.member Script.NoCharacterError (Script.errors scriptForm) )
@@ -690,6 +712,12 @@ scriptFormView scriptForm =
         , Form.control
             [ input [ class "input", Html.Attributes.min "1", type_ "number", required True, value <| String.fromInt scriptForm.daysInOneLoop, onChange ChangeDaysInOneLoop ] []
             ]
+        ]
+    , Form.field
+        [ label
+            [ class "label has-text-white" ]
+            [ text "事件" ]
+        , button [ class "button is-info", onClick OpenAddIncidentModal ] [ text "追加" ]
         ]
     ]
 

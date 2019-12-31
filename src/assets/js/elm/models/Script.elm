@@ -15,6 +15,7 @@ import List.Extra as ExList
 import Models.Board as Board
 import Models.Character as Character
 import Models.Script.Id as Id exposing (Id)
+import Models.Script.IncidentScriptData as IncidentScriptData exposing (IncidentScriptData)
 import Models.Script.Name as Name exposing (Name)
 import Models.TragedySet as TragedySet exposing (TragedySet)
 
@@ -33,13 +34,6 @@ type alias Script =
     , characters : List Character.CharacterScriptData
     , numberOfLoops : Int
     , daysInOneLoop : Int
-    }
-
-
-type alias IncidentScriptData =
-    { incident : TragedySet.Incident
-    , day : Int
-    , culprit : Character.Character
     }
 
 
@@ -166,6 +160,10 @@ formDecoder =
         |> Pipeline.optional "characters" (D.list Character.decodeCharacterScriptData) []
         |> Pipeline.optional "numberOfLoops" D.int 1
         |> Pipeline.optional "daysInOneLoop" D.int 1
+        |> Pipeline.optional "incidentDay" D.int 1
+        |> Pipeline.optional "incident" D.string ""
+        |> Pipeline.optional "incidentCulprit" D.string ""
+        |> Pipeline.optional "incidents" (D.list IncidentScriptData.decode) []
 
 
 
@@ -182,6 +180,10 @@ type alias RegisterForm =
     , characters : List Character.CharacterScriptData
     , numberOfLoops : Int
     , daysInOneLoop : Int
+    , incidentDay : Int
+    , incident : String
+    , incidentCulprit : String
+    , incidents : List IncidentScriptData
     }
 
 
@@ -196,6 +198,10 @@ initForm =
     , characters = []
     , numberOfLoops = 4
     , daysInOneLoop = 5
+    , incidentDay = 1
+    , incident = ""
+    , incidentCulprit = ""
+    , incidents = []
     }
 
 
@@ -509,6 +515,53 @@ characterRoles char chgMsg scriptForm =
             List.map (\r -> Tuple.pair (TragedySet.roleToString r) r.name) roleList
     in
     Form.select ("-character-roles-" ++ Character.characterToString char.character) chgMsg roleKey optionList
+
+
+incidents : (String -> msg) -> RegisterForm -> Html msg
+incidents chgMsg scriptForm =
+    let
+        roleKey =
+            ""
+
+        optionList =
+            List.map (\incident -> Tuple.pair (TragedySet.incidentToString incident) incident.name) scriptForm.set.incidents
+    in
+    Form.select "-incidents" chgMsg roleKey optionList
+
+
+
+-- TODO: 選択した日付は選べないように
+
+
+incidentDays : (String -> msg) -> RegisterForm -> Html msg
+incidentDays chgMsg scriptForm =
+    let
+        roleKey =
+            ""
+
+        daysList =
+            List.range 1 scriptForm.daysInOneLoop
+
+        optionList =
+            List.map (\i -> Tuple.pair (String.fromInt i) (String.fromInt i)) daysList
+    in
+    Form.select "-incident-days" chgMsg roleKey optionList
+
+
+incidentCulprits : (String -> msg) -> RegisterForm -> Html msg
+incidentCulprits chgMsg scriptForm =
+    let
+        roleKey =
+            ""
+
+        charactersList =
+            Character.charactersFromCharacterScriptDataList scriptForm.characters
+                |> List.reverse
+
+        optionList =
+            List.map (\char -> Tuple.pair (Character.characterToString char) char.name) charactersList
+    in
+    Form.select "-incident-culprits" chgMsg roleKey optionList
 
 
 
