@@ -31,6 +31,8 @@ type alias Script =
     , subPlot1 : TragedySet.Plot
     , subPlot2 : Maybe TragedySet.Plot
     , characters : List Character.CharacterScriptData
+    , numberOfLoops : Int
+    , daysInOneLoop : Int
     }
 
 
@@ -60,6 +62,8 @@ form =
         |> Decoder.field decoderSubPlot1
         |> Decoder.field decoderSubPlot2
         |> Decoder.field decoderCharacters
+        |> Decoder.field (Decoder.identity |> Decoder.lift .numberOfLoops)
+        |> Decoder.field (Decoder.identity |> Decoder.lift .daysInOneLoop)
         |> Decoder.assert charactersValidator
         |> Decoder.assert characterRolesValidator
 
@@ -523,4 +527,6 @@ encode script =
         , ( "subPlot1", E.string <| TragedySet.plotToString script.subPlot1 )
         , ( "subPlot2", ExEncode.maybe E.string <| Maybe.map TragedySet.plotToString script.subPlot2 )
         , ( "characters", E.list Character.encodeCharacterScriptData script.characters )
+        , ( "numberOfLoops", E.int script.numberOfLoops )
+        , ( "daysInOneLoop", E.int script.daysInOneLoop )
         ]
