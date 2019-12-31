@@ -34,6 +34,13 @@ type alias Script =
     }
 
 
+type alias IncidentScriptData =
+    { incident : TragedySet.Incident
+    , day : Int
+    , culprit : Character.Character
+    }
+
+
 initScript : Maybe Script
 initScript =
     Nothing
