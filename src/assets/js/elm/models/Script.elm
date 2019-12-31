@@ -153,6 +153,8 @@ formDecoder =
         |> Pipeline.optional "subPlot1" TragedySet.decoderPlot TragedySet.circleOfFriends
         |> Pipeline.optional "subPlot2" TragedySet.decoderMaybePlot Nothing
         |> Pipeline.optional "characters" (D.list Character.decodeCharacterScriptData) []
+        |> Pipeline.optional "numberOfLoops" D.int 1
+        |> Pipeline.optional "daysInOneLoop" D.int 1
 
 
 
@@ -167,6 +169,8 @@ type alias RegisterForm =
     , subPlot1 : TragedySet.Plot
     , subPlot2 : Maybe TragedySet.Plot
     , characters : List Character.CharacterScriptData
+    , numberOfLoops : Int
+    , daysInOneLoop : Int
     }
 
 
@@ -179,6 +183,8 @@ initForm =
     , subPlot1 = TragedySet.circleOfFriends
     , subPlot2 = Just TragedySet.theHiddenFreak
     , characters = []
+    , numberOfLoops = 4
+    , daysInOneLoop = 5
     }
 
 
@@ -299,6 +305,16 @@ setSubPlot1 s f =
 setSubPlot2 : String -> RegisterForm -> RegisterForm
 setSubPlot2 s f =
     { f | subPlot2 = TragedySet.plotFromString s }
+
+
+setNumberOfLoops : String -> RegisterForm -> RegisterForm
+setNumberOfLoops s f =
+    { f | numberOfLoops = Maybe.withDefault 1 <| String.toInt s }
+
+
+setDaysInOneLoop : String -> RegisterForm -> RegisterForm
+setDaysInOneLoop s f =
+    { f | daysInOneLoop = Maybe.withDefault 1 <| String.toInt s }
 
 
 setId : String -> RegisterForm -> RegisterForm

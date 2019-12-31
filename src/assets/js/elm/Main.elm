@@ -100,6 +100,7 @@ type Msg
     | ChangeCharacterRole Character.CharacterScriptData String
     | ChangeOptionalNumber Character.CharacterScriptData String
     | ChangeTurf Character.CharacterScriptData String
+    | ChangeNumberOfLoops String
     | OpenCaracterSelectModal
     | ChangedScript
 
@@ -265,6 +266,9 @@ update msg model =
 
         ChangeTurf char val ->
             update ChangedScript { model | scriptForm = Script.setCharacterTurf char val model.scriptForm }
+
+        ChangeNumberOfLoops val ->
+            update ChangedScript { model | scriptForm = Script.setNumberOfLoops val model.scriptForm }
 
         ChangedScript ->
             ( { model | script = Script.convert model.scriptForm }, Cmd.none )
@@ -500,6 +504,7 @@ mainTopContent model =
 --             [ button [ class "button is-primary", onClick UpdateRoom ] [ text "作成" ]
 --             ]
 --         ]
+-- ログインメッセージ
 
 
 loginMessage : Html msg
@@ -513,6 +518,10 @@ loginMessage =
             [ id "firebaseui-auth-container" ]
             []
         ]
+
+
+
+-- メニュー
 
 
 headNavRight : Model -> Html Msg
@@ -547,6 +556,10 @@ headNavRight model =
 
         Nothing ->
             text ""
+
+
+
+-- 脚本
 
 
 createScriptView : Model -> Html Msg
@@ -633,6 +646,8 @@ scriptFormView scriptForm =
                 ]
             ]
         ]
+
+    -- FirstSteps用
     , if scriptForm.set.subPlotNumber == 2 then
         Form.field
             [ label
@@ -660,6 +675,12 @@ scriptFormView scriptForm =
         ]
     , Form.field
         (characterFormCollection scriptForm)
+    , Form.field
+        [ label [ class "label has-text-white" ] [ text "ループ回数" ]
+        , Form.control
+            [ input [ class "input", Html.Attributes.min "1", type_ "number", required True, value <| String.fromInt scriptForm.numberOfLoops, onChange ChangeNumberOfLoops ] []
+            ]
+        ]
     ]
 
 
