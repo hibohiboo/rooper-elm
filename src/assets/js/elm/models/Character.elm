@@ -307,6 +307,7 @@ rolesFromCharacterScriptDataList : List CharacterScriptData -> List Role
 rolesFromCharacterScriptDataList list =
     list
         |> List.filter (\data -> data.role /= Nothing)
+        |> List.filter (\data -> data.character.characterType /= MysteryBoy)
         |> List.map (\data -> Maybe.withDefault TragedySet.person data.role)
 
 

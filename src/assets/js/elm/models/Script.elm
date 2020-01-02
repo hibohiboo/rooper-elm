@@ -284,6 +284,15 @@ unassignedRoles scriptForm =
     TragedySet.exceptRoleList characterRoleList scriptRoleList
 
 
+mysteryBoyRoles : RegisterForm -> List TragedySet.Role
+mysteryBoyRoles scriptForm =
+    let
+        list =
+            unassignedRoles scriptForm
+    in
+    List.filter (\r -> not <| List.member r list) scriptForm.set.roles
+
+
 unassignedIncidentDays : RegisterForm -> List Int
 unassignedIncidentDays f =
     let
@@ -350,25 +359,59 @@ setTragedySet s f =
     in
     case set.setType of
         TragedySet.BasicTragedy ->
-            { f | set = set, mainPlot = TragedySet.murderPlan, subPlot1 = TragedySet.circleOfFriends, subPlot2 = Just TragedySet.theHiddenFreak, incidents = [], characters = List.map (\c -> { c | role = Nothing }) f.characters }
+            let
+                new =
+                    { f | set = set, mainPlot = TragedySet.murderPlan, subPlot1 = TragedySet.circleOfFriends, subPlot2 = Just TragedySet.theHiddenFreak, incidents = [] }
+            in
+            { new | characters = resetRolesCharacterScriptDataList new }
 
         TragedySet.FirstSteps ->
-            { f | set = set, mainPlot = TragedySet.murderPlan, subPlot1 = TragedySet.circleOfFriends, subPlot2 = Nothing, incidents = [], characters = List.map (\c -> { c | role = Nothing }) f.characters }
+            let
+                new =
+                    { f | set = set, mainPlot = TragedySet.murderPlan, subPlot1 = TragedySet.shadowOfTheRipper, subPlot2 = Nothing, incidents = [] }
+            in
+            { new | characters = resetRolesCharacterScriptDataList new }
+
+
+resetRolesCharacterScriptDataList : RegisterForm -> List Character.CharacterScriptData
+resetRolesCharacterScriptDataList f =
+    List.map
+        (\c ->
+            case c.character.characterType of
+                Character.MysteryBoy ->
+                    { c | role = List.head <| mysteryBoyRoles f }
+
+                _ ->
+                    { c | role = Nothing }
+        )
+        f.characters
 
 
 setMainPlot : String -> RegisterForm -> RegisterForm
 setMainPlot s f =
-    { f | mainPlot = TragedySet.plotFromStringWithDefault s, characters = List.map (\c -> { c | role = Nothing }) f.characters }
+    let
+        new =
+            { f | mainPlot = TragedySet.plotFromStringWithDefault s }
+    in
+    { new | characters = resetRolesCharacterScriptDataList new }
 
 
 setSubPlot1 : String -> RegisterForm -> RegisterForm
 setSubPlot1 s f =
-    { f | subPlot1 = TragedySet.plotFromStringWithDefault s, characters = List.map (\c -> { c | role = Nothing }) f.characters }
+    let
+        new =
+            { f | subPlot1 = TragedySet.plotFromStringWithDefault s }
+    in
+    { new | characters = resetRolesCharacterScriptDataList new }
 
 
 setSubPlot2 : String -> RegisterForm -> RegisterForm
 setSubPlot2 s f =
-    { f | subPlot2 = TragedySet.plotFromString s, characters = List.map (\c -> { c | role = Nothing }) f.characters }
+    let
+        new =
+            { f | subPlot2 = TragedySet.plotFromString s }
+    in
+    { new | characters = resetRolesCharacterScriptDataList new }
 
 
 setNumberOfLoops : String -> RegisterForm -> RegisterForm
@@ -597,12 +640,16 @@ characterRoles char chgMsg scriptForm =
             unassignedRoles scriptForm
 
         roleList =
-            case char.role of
-                Just role ->
-                    role :: TragedySet.person :: exceptList
+            if char.character.characterType == Character.MysteryBoy then
+                mysteryBoyRoles scriptForm
 
-                Nothing ->
-                    TragedySet.person :: exceptList
+            else
+                case char.role of
+                    Just role ->
+                        role :: TragedySet.person :: exceptList
+
+                    Nothing ->
+                        TragedySet.person :: exceptList
 
         roleKey =
             TragedySet.roleToString (Maybe.withDefault TragedySet.person char.role)
