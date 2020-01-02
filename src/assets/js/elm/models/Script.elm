@@ -272,6 +272,18 @@ unassignedRoles scriptForm =
     TragedySet.exceptRoleList characterRoleList scriptRoleList
 
 
+unassignedIncidentDays : RegisterForm -> List Int
+unassignedIncidentDays f =
+    let
+        daysList =
+            List.range 1 f.daysInOneLoop
+
+        assignedList =
+            IncidentScriptData.assignedIncidentDays f.incidents
+    in
+    List.filter (\day -> not <| List.member day assignedList) daysList
+
+
 
 -- Convert
 
@@ -337,6 +349,11 @@ setDaysInOneLoop s f =
 setId : String -> RegisterForm -> RegisterForm
 setId s f =
     { f | id = s }
+
+
+setIntIncidentDay : Int -> RegisterForm -> RegisterForm
+setIntIncidentDay i f =
+    { f | incidentDay = i }
 
 
 setIncidentDay : String -> RegisterForm -> RegisterForm
@@ -577,10 +594,10 @@ incidentDays : (String -> msg) -> RegisterForm -> Html msg
 incidentDays chgMsg scriptForm =
     let
         roleKey =
-            ""
+            String.fromInt scriptForm.incidentDay
 
         daysList =
-            List.range 1 scriptForm.daysInOneLoop
+            unassignedIncidentDays scriptForm
 
         optionList =
             List.map (\i -> Tuple.pair (String.fromInt i) (String.fromInt i)) daysList

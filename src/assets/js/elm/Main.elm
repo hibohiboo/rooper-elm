@@ -283,7 +283,21 @@ update msg model =
             update ChangedScript { model | scriptForm = Script.setDaysInOneLoop val model.scriptForm }
 
         OpenAddIncidentModal ->
-            ( { model | modalState = OpenAddIncidentModalState }, Cmd.none )
+            let
+                unassignedIncidentDays =
+                    Script.unassignedIncidentDays model.scriptForm
+            in
+            case unassignedIncidentDays of
+                [] ->
+                    update (OpenModal "既に全ての日に事件が割り振られています。") model
+
+                head :: rest ->
+                    let
+                        scriptForm =
+                            model.scriptForm
+                                |> Script.setIntIncidentDay head
+                    in
+                    ( { model | modalState = OpenAddIncidentModalState, scriptForm = scriptForm }, Cmd.none )
 
         ChangeIncidentCreateFormDay val ->
             ( { model | scriptForm = Script.setIncidentDay val model.scriptForm }, Cmd.none )
@@ -400,7 +414,6 @@ modal model =
                 OpenAddIncidentModalState ->
                     div []
                         [ Form.field
-                            -- TODO: 正しいメッセージ
                             [ label [ class "label has-text-white" ] [ text "事件予定日" ]
                             , div [ class "select" ] [ Script.incidentDays ChangeIncidentCreateFormDay model.scriptForm ]
                             ]
