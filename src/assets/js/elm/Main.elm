@@ -751,14 +751,15 @@ incidentCollection scriptForm =
                     [ div [ class "media-left", style "padding-left" "1rem", style "align-self" "center" ]
                         [ text <| String.fromInt data.day ++ "日目"
                         ]
-                    , div [ class "media-content", style "text-align" "center", style "align-self" "center" ]
-                        [ text data.incident.name
-                        ]
-                    , div [ class "media-right" ]
-                        [ div [ style "padding-right" "2rem" ]
+                    , div [ class "media-content is-flex" ]
+                        [ div [ style "text-align" "center", style "align-self" "center" ] [ text data.incident.name ]
+                        , div [ style "padding-left" "1rem" ]
                             [ img [ src (Character.characterToCardUrl data.culprit) ] []
-                            , div [] [ text data.culprit.name ]
+                            , div [] [ text <| "" ++ data.culprit.name ]
                             ]
+                        ]
+                    , div [ class "media-right ", style "align-self" "center" ]
+                        [ div [ class "tag is-danger" ] [ text "削除", button [ class "delete is-small" ] [] ]
                         ]
                     ]
             )
