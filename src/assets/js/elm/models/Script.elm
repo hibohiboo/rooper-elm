@@ -339,6 +339,41 @@ setId s f =
     { f | id = s }
 
 
+setIncidentDay : String -> RegisterForm -> RegisterForm
+setIncidentDay s f =
+    { f | incidentDay = Maybe.withDefault 1 <| String.toInt s }
+
+
+setIncident : String -> RegisterForm -> RegisterForm
+setIncident s f =
+    { f | incident = s }
+
+
+setIncidentCulprit : String -> RegisterForm -> RegisterForm
+setIncidentCulprit s f =
+    { f | incidentCulprit = s }
+
+
+addIncidents : RegisterForm -> RegisterForm
+addIncidents f =
+    let
+        -- TODO: フォーム上からは失敗しない想定でwithDefaultを使用
+        incident =
+            Maybe.withDefault TragedySet.murder (TragedySet.incidentFromString f.incident)
+
+        char =
+            Maybe.withDefault Character.boyStudent (Character.characterFromString f.incidentCulprit)
+    in
+    { f
+        | incidents =
+            IncidentScriptData
+                incident
+                f.incidentDay
+                char
+                :: f.incidents
+    }
+
+
 setCharacter : Character.Character -> RegisterForm -> RegisterForm
 setCharacter c f =
     { f | characters = Character.characterScriptDataFromCharacter c :: f.characters }
