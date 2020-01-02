@@ -34,6 +34,7 @@ type alias Script =
     , characters : List Character.CharacterScriptData
     , numberOfLoops : Int
     , daysInOneLoop : Int
+    , incidents : List IncidentScriptData
     }
 
 
@@ -58,6 +59,7 @@ form =
         |> Decoder.field decoderCharacters
         |> Decoder.field (Decoder.identity |> Decoder.lift .numberOfLoops)
         |> Decoder.field (Decoder.identity |> Decoder.lift .daysInOneLoop)
+        |> Decoder.field (Decoder.identity |> Decoder.lift .incidents)
         |> Decoder.assert charactersValidator
         |> Decoder.assert characterRolesValidator
 
@@ -655,4 +657,5 @@ encode script =
         , ( "characters", E.list Character.encodeCharacterScriptData script.characters )
         , ( "numberOfLoops", E.int script.numberOfLoops )
         , ( "daysInOneLoop", E.int script.daysInOneLoop )
+        , ( "incidents", E.list IncidentScriptData.encode script.incidents )
         ]
