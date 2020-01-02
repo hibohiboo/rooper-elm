@@ -736,7 +736,32 @@ scriptFormView scriptForm =
             [ text "事件" ]
         , button [ class "button is-info", onClick OpenAddIncidentModal ] [ text "追加" ]
         ]
+    , Form.field <| incidentCollection scriptForm
     ]
+
+
+incidentCollection : Script.RegisterForm -> List (Html Msg)
+incidentCollection scriptForm =
+    scriptForm.incidents
+        -- 日付順にソート
+        |> List.sortBy .day
+        |> List.map
+            (\data ->
+                div [ class "media" ]
+                    [ div [ class "media-left", style "padding-left" "1rem", style "align-self" "center" ]
+                        [ text <| String.fromInt data.day ++ "日目"
+                        ]
+                    , div [ class "media-content", style "text-align" "center", style "align-self" "center" ]
+                        [ text data.incident.name
+                        ]
+                    , div [ class "media-right" ]
+                        [ div [ style "padding-right" "2rem" ]
+                            [ img [ src (Character.characterToCardUrl data.culprit) ] []
+                            , div [] [ text data.culprit.name ]
+                            ]
+                        ]
+                    ]
+            )
 
 
 characterFormCollection : Script.RegisterForm -> List (Html Msg)
