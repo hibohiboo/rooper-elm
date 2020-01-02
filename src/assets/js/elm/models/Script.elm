@@ -356,7 +356,11 @@ setNumberOfLoops s f =
 
 setDaysInOneLoop : String -> RegisterForm -> RegisterForm
 setDaysInOneLoop s f =
-    { f | daysInOneLoop = Maybe.withDefault 1 <| String.toInt s }
+    let
+        daysInOneLoop =
+            Maybe.withDefault 1 <| String.toInt s
+    in
+    { f | daysInOneLoop = daysInOneLoop, incidents = List.filter (\i -> i.day <= daysInOneLoop) f.incidents }
 
 
 setId : String -> RegisterForm -> RegisterForm
