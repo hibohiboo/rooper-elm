@@ -102,9 +102,9 @@ type Msg
     | ChangeTurf Character.CharacterScriptData String
     | ChangeNumberOfLoops String
     | ChangeDaysInOneLoop String
-    | ChangeIncidentDay String
-    | ChangeIncidentCulprit String
-    | ChangeIncident String
+    | ChangeIncidentCreateFormDay String
+    | ChangeIncidentCreateFormCulprit String
+    | ChangeIncidentCreateFormIncident String
     | AddIncidents
     | OpenCharacterSelectModal
     | OpenAddIncidentModal
@@ -283,13 +283,13 @@ update msg model =
         OpenAddIncidentModal ->
             ( { model | modalState = OpenAddIncidentModalState }, Cmd.none )
 
-        ChangeIncidentDay val ->
+        ChangeIncidentCreateFormDay val ->
             ( { model | scriptForm = Script.setIncidentDay val model.scriptForm }, Cmd.none )
 
-        ChangeIncidentCulprit val ->
+        ChangeIncidentCreateFormCulprit val ->
             ( { model | scriptForm = Script.setIncidentCulprit val model.scriptForm }, Cmd.none )
 
-        ChangeIncident val ->
+        ChangeIncidentCreateFormIncident val ->
             ( { model | scriptForm = Script.setIncident val model.scriptForm }, Cmd.none )
 
         AddIncidents ->
@@ -397,15 +397,15 @@ modal model =
                         [ Form.field
                             -- TODO: 正しいメッセージ
                             [ label [ class "label has-text-white" ] [ text "事件予定日" ]
-                            , div [ class "select" ] [ Script.incidentDays ChangeIncidentDay model.scriptForm ]
+                            , div [ class "select" ] [ Script.incidentDays ChangeIncidentCreateFormDay model.scriptForm ]
                             ]
                         , Form.field
                             [ label [ class "label has-text-white" ] [ text "事件" ]
-                            , div [ class "select" ] [ Script.incidents ChangeIncident model.scriptForm ]
+                            , div [ class "select" ] [ Script.incidents ChangeIncidentCreateFormIncident model.scriptForm ]
                             ]
                         , Form.field
                             [ label [ class "label has-text-white" ] [ text "犯人" ]
-                            , div [ class "select" ] [ Script.incidentCulprits ChangeIncidentCulprit model.scriptForm ]
+                            , div [ class "select" ] [ Script.incidentCulprits ChangeIncidentCreateFormCulprit model.scriptForm ]
                             ]
                         , Form.field [ button [ class "button is-info", onClick AddIncidents ] [ text "追加" ] ]
                         ]
