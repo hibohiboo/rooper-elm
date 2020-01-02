@@ -374,6 +374,11 @@ addIncidents f =
     }
 
 
+deleteIncidents : IncidentScriptData -> RegisterForm -> RegisterForm
+deleteIncidents d f =
+    { f | incidents = List.filter (\data -> data /= d) f.incidents }
+
+
 setCharacter : Character.Character -> RegisterForm -> RegisterForm
 setCharacter c f =
     { f | characters = Character.characterScriptDataFromCharacter c :: f.characters }

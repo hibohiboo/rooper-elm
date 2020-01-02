@@ -12,6 +12,7 @@ import Models.Character as Character exposing (Character)
 import Models.Room as Room exposing (Room)
 import Models.RoomName as RoomName exposing (RoomName)
 import Models.Script as Script exposing (Script)
+import Models.Script.IncidentScriptData exposing (IncidentScriptData)
 import Models.ScriptName as ScriptName exposing (ScriptName)
 import Models.User exposing (User)
 import Ports exposing (..)
@@ -106,6 +107,7 @@ type Msg
     | ChangeIncidentCreateFormCulprit String
     | ChangeIncidentCreateFormIncident String
     | AddIncidents
+    | DeleteIncidents IncidentScriptData
     | OpenCharacterSelectModal
     | OpenAddIncidentModal
     | ChangedScript
@@ -293,7 +295,10 @@ update msg model =
             ( { model | scriptForm = Script.setIncident val model.scriptForm }, Cmd.none )
 
         AddIncidents ->
-            ( { model | scriptForm = Script.addIncidents model.scriptForm, modalState = CloseModalState }, Cmd.none )
+            update ChangedScript { model | scriptForm = Script.addIncidents model.scriptForm, modalState = CloseModalState }
+
+        DeleteIncidents val ->
+            update ChangedScript { model | scriptForm = Script.deleteIncidents val model.scriptForm }
 
         ChangedScript ->
             ( { model | script = Script.convert model.scriptForm }, Cmd.none )
@@ -759,7 +764,7 @@ incidentCollection scriptForm =
                             ]
                         ]
                     , div [ class "media-right ", style "align-self" "center" ]
-                        [ div [ class "tag is-danger" ] [ text "削除", button [ class "delete is-small" ] [] ]
+                        [ div [ class "tag is-danger", onClick (DeleteIncidents data) ] [ text "削除", button [ class "delete is-small" ] [] ]
                         ]
                     ]
             )
