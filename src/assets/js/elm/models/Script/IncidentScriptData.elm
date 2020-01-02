@@ -36,3 +36,8 @@ encode data =
 assignedIncidentDays : List IncidentScriptData -> List Int
 assignedIncidentDays list =
     List.map (\d -> d.day) list
+
+
+assignedCulpritCharacters : List IncidentScriptData -> List Character.Character
+assignedCulpritCharacters list =
+    List.map (\d -> d.culprit) list

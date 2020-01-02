@@ -283,21 +283,23 @@ update msg model =
             update ChangedScript { model | scriptForm = Script.setDaysInOneLoop val model.scriptForm }
 
         OpenAddIncidentModal ->
-            let
-                unassignedIncidentDays =
-                    Script.unassignedIncidentDays model.scriptForm
-            in
-            case unassignedIncidentDays of
+            case Script.unassignedIncidentDays model.scriptForm of
                 [] ->
                     update (OpenModal "既に全ての日に事件が割り振られています。") model
 
-                head :: rest ->
-                    let
-                        scriptForm =
-                            model.scriptForm
-                                |> Script.setIntIncidentDay head
-                    in
-                    ( { model | modalState = OpenAddIncidentModalState, scriptForm = scriptForm }, Cmd.none )
+                day :: _ ->
+                    case Script.unassignedCulpritCharacters model.scriptForm of
+                        [] ->
+                            update (OpenModal "既にキャラクターに事件が割り振られています。") model
+
+                        char :: _ ->
+                            let
+                                scriptForm =
+                                    model.scriptForm
+                                        |> Script.setIntIncidentDay day
+                                        |> Script.setIncidentCulprit (Character.characterToString char)
+                            in
+                            ( { model | modalState = OpenAddIncidentModalState, scriptForm = scriptForm }, Cmd.none )
 
         ChangeIncidentCreateFormDay val ->
             ( { model | scriptForm = Script.setIncidentDay val model.scriptForm }, Cmd.none )

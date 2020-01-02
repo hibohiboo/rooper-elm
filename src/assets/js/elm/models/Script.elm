@@ -284,6 +284,19 @@ unassignedIncidentDays f =
     List.filter (\day -> not <| List.member day assignedList) daysList
 
 
+unassignedCulpritCharacters : RegisterForm -> List Character.Character
+unassignedCulpritCharacters f =
+    let
+        charactersList =
+            Character.charactersFromCharacterScriptDataList f.characters
+                |> List.reverse
+
+        assignedList =
+            IncidentScriptData.assignedCulpritCharacters f.incidents
+    in
+    List.filter (\c -> not <| List.member c assignedList) charactersList
+
+
 
 -- Convert
 
@@ -609,11 +622,10 @@ incidentCulprits : (String -> msg) -> RegisterForm -> Html msg
 incidentCulprits chgMsg scriptForm =
     let
         roleKey =
-            ""
+            scriptForm.incidentCulprit
 
         charactersList =
-            Character.charactersFromCharacterScriptDataList scriptForm.characters
-                |> List.reverse
+            unassignedCulpritCharacters scriptForm
 
         optionList =
             List.map (\char -> Tuple.pair (Character.characterToString char) char.name) charactersList
