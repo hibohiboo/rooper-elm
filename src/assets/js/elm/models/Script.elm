@@ -420,7 +420,7 @@ setCharacter c f =
 
 deleteCharacter : Character.Character -> RegisterForm -> RegisterForm
 deleteCharacter c f =
-    { f | characters = List.filter (\data -> data.character /= c) f.characters }
+    { f | characters = List.filter (\data -> data.character /= c) f.characters, incidents = List.filter (\i -> i.culprit /= c) f.incidents }
 
 
 setCharacterRole : Character.CharacterScriptData -> String -> RegisterForm -> RegisterForm
