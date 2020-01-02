@@ -336,17 +336,17 @@ setTragedySet s f =
 
 setMainPlot : String -> RegisterForm -> RegisterForm
 setMainPlot s f =
-    { f | mainPlot = TragedySet.plotFromStringWithDefault s }
+    { f | mainPlot = TragedySet.plotFromStringWithDefault s, characters = List.map (\c -> { c | role = Nothing }) f.characters }
 
 
 setSubPlot1 : String -> RegisterForm -> RegisterForm
 setSubPlot1 s f =
-    { f | subPlot1 = TragedySet.plotFromStringWithDefault s }
+    { f | subPlot1 = TragedySet.plotFromStringWithDefault s, characters = List.map (\c -> { c | role = Nothing }) f.characters }
 
 
 setSubPlot2 : String -> RegisterForm -> RegisterForm
 setSubPlot2 s f =
-    { f | subPlot2 = TragedySet.plotFromString s }
+    { f | subPlot2 = TragedySet.plotFromString s, characters = List.map (\c -> { c | role = Nothing }) f.characters }
 
 
 setNumberOfLoops : String -> RegisterForm -> RegisterForm
