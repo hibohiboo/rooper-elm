@@ -729,7 +729,7 @@ scriptFormView scriptForm =
         [ label
             [ class "label has-text-white" ]
             [ text "キャラクター" ]
-        , button [ class "button is-info", onClick OpenCharacterSelectModal ] [ text "追加" ]
+        , button [ class "button is-info", onClick OpenCharacterSelectModal ] [ text "キャラクター選択" ]
         , Form.errors (Script.getNameError scriptForm)
         , Form.errors
             [ ( "キャラクターを追加してください", List.member Script.NoCharacterError (Script.errors scriptForm) )

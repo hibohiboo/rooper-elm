@@ -328,10 +328,10 @@ setTragedySet s f =
     in
     case set.setType of
         TragedySet.BasicTragedy ->
-            { f | set = set, mainPlot = TragedySet.murderPlan, subPlot1 = TragedySet.circleOfFriends, subPlot2 = Just TragedySet.theHiddenFreak }
+            { f | set = set, mainPlot = TragedySet.murderPlan, subPlot1 = TragedySet.circleOfFriends, subPlot2 = Just TragedySet.theHiddenFreak, incidents = [], characters = List.map (\c -> { c | role = Nothing }) f.characters }
 
         TragedySet.FirstSteps ->
-            { f | set = set, mainPlot = TragedySet.murderPlan, subPlot1 = TragedySet.circleOfFriends, subPlot2 = Nothing }
+            { f | set = set, mainPlot = TragedySet.murderPlan, subPlot1 = TragedySet.circleOfFriends, subPlot2 = Nothing, incidents = [], characters = List.map (\c -> { c | role = Nothing }) f.characters }
 
 
 setMainPlot : String -> RegisterForm -> RegisterForm
