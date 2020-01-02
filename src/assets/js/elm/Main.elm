@@ -77,14 +77,11 @@ type Msg
     | OpenMenu
     | CloseMenu
     | SignOut
-    | ChangeRoomName String
-    | ChangeRoomId String
-    | UpdateRoom
-    | ReadedRooms Value
     | ChangedUrl String
     | ChangeUrl String
     | OpenModal String
     | CloseModal
+      -- 脚本作成
     | ChangeScriptName String
     | UpdateScript
     | ReadedScriptNames Value
@@ -110,7 +107,14 @@ type Msg
     | DeleteIncidents IncidentScriptData
     | OpenCharacterSelectModal
     | OpenAddIncidentModal
+    | ChangeScriptExtra String
+    | ChangeScriptMemo String
     | ChangedScript
+      -- ルーム作成
+    | ChangeRoomName String
+    | ChangeRoomId String
+    | UpdateRoom
+    | ReadedRooms Value
 
 
 type MenuState
@@ -315,6 +319,12 @@ update msg model =
 
         DeleteIncidents val ->
             update ChangedScript { model | scriptForm = Script.deleteIncidents val model.scriptForm }
+
+        ChangeScriptExtra val ->
+            update ChangedScript { model | scriptForm = Script.setExtra val model.scriptForm }
+
+        ChangeScriptMemo val ->
+            update ChangedScript { model | scriptForm = Script.setMemo val model.scriptForm }
 
         ChangedScript ->
             ( { model | script = Script.convert model.scriptForm }, Cmd.none )
@@ -730,7 +740,6 @@ scriptFormView scriptForm =
             [ class "label has-text-white" ]
             [ text "キャラクター" ]
         , button [ class "button is-info", onClick OpenCharacterSelectModal ] [ text "キャラクター選択" ]
-        , Form.errors (Script.getNameError scriptForm)
         , Form.errors
             [ ( "キャラクターを追加してください", List.member Script.NoCharacterError (Script.errors scriptForm) )
             , ( "ルールで追加された役職を全て設定してください", List.member Script.InvalidCharacterRoles (Script.errors scriptForm) )
@@ -757,6 +766,18 @@ scriptFormView scriptForm =
         , button [ class "button is-info", onClick OpenAddIncidentModal ] [ text "追加" ]
         ]
     , Form.field <| incidentCollection scriptForm
+    , Form.field
+        [ label [ class "label has-text-white" ] [ text "特別ルール" ]
+        , Form.control
+            [ textarea [ class "textarea", rows 8, value scriptForm.extra, onChange ChangeScriptExtra ] []
+            ]
+        ]
+    , Form.field
+        [ label [ class "label has-text-white" ] [ text "メモ" ]
+        , Form.control
+            [ textarea [ class "textarea", rows 8, value scriptForm.memo, onChange ChangeScriptMemo ] []
+            ]
+        ]
     ]
 
 

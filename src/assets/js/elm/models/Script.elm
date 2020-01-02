@@ -35,6 +35,8 @@ type alias Script =
     , numberOfLoops : Int
     , daysInOneLoop : Int
     , incidents : List IncidentScriptData
+    , extra : String
+    , memo : String
     }
 
 
@@ -60,6 +62,8 @@ form =
         |> Decoder.field (Decoder.identity |> Decoder.lift .numberOfLoops)
         |> Decoder.field (Decoder.identity |> Decoder.lift .daysInOneLoop)
         |> Decoder.field (Decoder.identity |> Decoder.lift .incidents)
+        |> Decoder.field (Decoder.identity |> Decoder.lift .extra)
+        |> Decoder.field (Decoder.identity |> Decoder.lift .memo)
         |> Decoder.assert charactersValidator
         |> Decoder.assert characterRolesValidator
 
@@ -166,6 +170,8 @@ formDecoder =
         |> Pipeline.optional "incident" D.string ""
         |> Pipeline.optional "incidentCulprit" D.string ""
         |> Pipeline.optional "incidents" (D.list IncidentScriptData.decode) []
+        |> Pipeline.optional "extra" D.string ""
+        |> Pipeline.optional "memo" D.string ""
 
 
 
@@ -186,6 +192,8 @@ type alias RegisterForm =
     , incident : String
     , incidentCulprit : String
     , incidents : List IncidentScriptData
+    , extra : String
+    , memo : String
     }
 
 
@@ -204,6 +212,8 @@ initForm =
     , incident = ""
     , incidentCulprit = ""
     , incidents = []
+    , extra = "相談不可。 \n最後の戦いあり。"
+    , memo = "【シナリオの特徴】\nここに書かれた内容は、主人公には公開されません。\n【脚本家への指針】"
     }
 
 
@@ -320,6 +330,16 @@ convert f =
 setName : String -> RegisterForm -> RegisterForm
 setName s f =
     { f | name = s }
+
+
+setExtra : String -> RegisterForm -> RegisterForm
+setExtra s f =
+    { f | extra = s }
+
+
+setMemo : String -> RegisterForm -> RegisterForm
+setMemo s f =
+    { f | memo = s }
 
 
 setTragedySet : String -> RegisterForm -> RegisterForm
@@ -658,4 +678,6 @@ encode script =
         , ( "numberOfLoops", E.int script.numberOfLoops )
         , ( "daysInOneLoop", E.int script.daysInOneLoop )
         , ( "incidents", E.list IncidentScriptData.encode script.incidents )
+        , ( "extra", E.string script.extra )
+        , ( "memo", E.string script.memo )
         ]
