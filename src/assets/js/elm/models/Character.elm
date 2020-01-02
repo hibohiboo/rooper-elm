@@ -612,7 +612,7 @@ characterFormCollectionItem { character } children =
     div [ class "media" ]
         [ div [ class "media-left" ]
             [ img [ src (characterToCardUrl character) ] []
-            , div [] [ text character.name ]
+            , div [ style "min-width" "7rem" ] [ text character.name ]
             ]
         , div [ class "media-content" ] children
         ]
