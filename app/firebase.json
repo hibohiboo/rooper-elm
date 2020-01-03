@@ -12,5 +12,8 @@
         "destination": "/rooper/index.html"
       }
     ]
+  },
+  "firestore": {
+    "rules": "firestore.rules"
   }
 }

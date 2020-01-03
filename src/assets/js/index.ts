@@ -21,7 +21,7 @@ const initApp = async () => {
   if (user === null) {
     return;
   }
-  let rooms = await readRooms(firebaseBackEnd.db, user.storeUserId);
+  let rooms = await readRooms(firebaseBackEnd.db, user.uid, user.storeUserId);
   if (rooms.length === 0) {
     const room = new Room({
       createUserId: user.storeUserId, id: '', name: `room-${user.twitterScreenName}`, uid: user.uid,
@@ -29,7 +29,7 @@ const initApp = async () => {
     addRoom(room, firebaseBackEnd.db, firebaseBackEnd.getTimestamp(), user.uid, user.storeUserId);
 
     // 再取得
-    rooms = await readRooms(firebaseBackEnd.db, user.storeUserId);
+    rooms = await readRooms(firebaseBackEnd.db, user.uid, user.storeUserId);
   }
   ports.readedRooms.send(rooms);
 
@@ -52,7 +52,7 @@ const initApp = async () => {
 
   ports.readScript.subscribe(async (scriptId) => {
     showLoader();
-    const script = await Script.readScript(firebaseBackEnd.db, scriptId);
+    const script = await Script.readScript(firebaseBackEnd.db, user.uid, scriptId);
     console.log(scriptId, script);
     ports.readedScript.send(script);
     hideLoader();

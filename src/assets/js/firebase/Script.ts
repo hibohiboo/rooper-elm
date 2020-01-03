@@ -72,11 +72,16 @@ export async function readScriptNames(db, storeUserId) {
  * @param db
  * @param storeUserId
  */
-export async function readScript(db, scriptId) {
+export async function readScript(db, uid, scriptId) {
 
-  const doc = await db.collection('scripts').doc(scriptId).get();
-  console.log(doc)
-  return doc.data();
+  const snapshot = await db.collection('scripts').where("uid", "==", uid).where("id", "==", scriptId).get();
+  if (snapshot.size === 0) {
+    alert("不正な読み込みです。");
+    window.location.href = '/';
+    return;
+  }
+
+  return snapshot.docs[0].data();
 }
 
 /**
