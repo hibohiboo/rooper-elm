@@ -28,7 +28,7 @@ export const historyInit = (ports) => {
   });
 
   // ブラウザの戻るボタンを押したときの挙動を設定
-  window.addEventListener('popstate', (event) => { console.log(event); ports.changeUrl.send(window.location.href); });
+  window.addEventListener('popstate', (event) => { console.log(event); ports.changedUrl.send(window.location.href); });
 
   // elm に 表示時のページURLを伝える
   ports.changedUrl.send(window.location.href);
