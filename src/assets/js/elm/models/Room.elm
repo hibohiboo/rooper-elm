@@ -1,5 +1,6 @@
 module Models.Room exposing (..)
 
+import Component.Form as Form
 import Form.Decoder as Decoder exposing (Decoder)
 import Html exposing (..)
 import Json.Decode as D
@@ -7,6 +8,7 @@ import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
 import Models.Room.Id as Id exposing (Id)
 import Models.Room.Name as Name exposing (Name)
+import Models.ScriptName as ScriptName exposing (ScriptName)
 
 
 
@@ -56,6 +58,7 @@ decoderId =
 type alias RegisterForm =
     { id : String
     , name : String
+    , scriptId : String
     }
 
 
@@ -63,6 +66,7 @@ init : RegisterForm
 init =
     { id = ""
     , name = ""
+    , scriptId = ""
     }
 
 
@@ -118,6 +122,11 @@ setId s f =
     { f | id = s }
 
 
+setScriptId : String -> RegisterForm -> RegisterForm
+setScriptId s f =
+    { f | scriptId = s }
+
+
 
 -- Decoder Register Form
 
@@ -134,53 +143,11 @@ formDecoder =
     D.succeed RegisterForm
         |> Pipeline.required "id" D.string
         |> Pipeline.required "name" D.string
+        |> Pipeline.optional "scriptId" D.string ""
 
 
 
--- Atomic view only for listing registered goats
--- pageTitle : String -> Html msg
--- pageTitle t =
---     Html.h1 [] [ text t ]
--- rooms : List Room -> Html msg
--- rooms rs =
---     div []
---         [ pageTitle "List of rooms"
---         , Keyed.node "div"
---             []
---           <|
---             List.map keyedRoom rs
---         ]
--- keyedRoom : Room -> ( String, Html msg )
--- keyedRoom r =
---     ( Name.toString r.name, Html.lazy room r )
--- room : Room -> Html msg
--- room r =
---     div
---         [ class "roomWrapper"
---         ]
---         [ div
---             [ class "room"
---             ]
---             [ roomField "Name" <| Name.toString r.name
---             , roomField "Id" <| Id.toString r.id
---             ]
---         ]
--- roomField : String -> String -> Html msg
--- roomField title content =
---     div
---         [ class "roomField"
---         ]
---         [ div
---             [ class "roomTitle"
---             ]
---             [ text title
---             ]
---         , div
---             [ class "roomContent"
---             ]
---             [ text content
---             ]
---         ]
+-- View
 -- Atomic view only for this register form
 
 
@@ -191,6 +158,22 @@ registerForm children =
         , div []
             children
         ]
+
+
+
+-- Views
+
+
+script : (String -> msg) -> List ScriptName -> RegisterForm -> Html msg
+script chgMsg list f =
+    let
+        key =
+            f.scriptId
+
+        optionList =
+            ( "", "脚本を選択してください" ) :: List.map (\item -> Tuple.pair item.id item.name) list
+    in
+    Form.select "-main-plot" chgMsg key optionList
 
 
 

@@ -116,6 +116,7 @@ type Msg
     | UpdateRoom
     | ReadedRooms Value
     | ReadedRoom Value
+    | ChangeRoomScript String
 
 
 type MenuState
@@ -188,37 +189,12 @@ update msg model =
                     ( { model | mainAreaState = ScriptCreateTab }, readScript s )
 
                 Route.RoomEdit s ->
-                    ( { model | mainAreaState = RoomEditTab }, readRoom s )
+                    ( { model | mainAreaState = RoomEditTab }, Cmd.batch [ readScriptNames (), readRoom s ] )
 
                 Route.NotFound ->
                     update (OpenModal ("指定されたURLが見つかりません。\nご確認お願いします。\n" ++ url)) { model | mainAreaState = NothingTab }
 
-        ChangeRoomId id ->
-            ( { model | roomForm = Room.setId id model.roomForm }, Cmd.none )
-
-        UpdateRoom ->
-            case Room.convert model.roomForm of
-                Nothing ->
-                    update (OpenModal "保存に失敗しました。項目を再確認してください") { model | room = Nothing }
-
-                Just r ->
-                    ( { model | room = Just r }, updateRoom <| Room.encode r )
-
-        ReadedRooms val ->
-            ( { model | rooms = RoomName.decodeRoomNameListFromJson val }, Cmd.none )
-
-        ReadedRoom val ->
-            let
-                registerForm =
-                    Room.decodeRegisterFormFromJson val
-            in
-            case registerForm of
-                Just f ->
-                    ( { model | roomForm = f, room = Room.convert f }, Cmd.none )
-
-                Nothing ->
-                    update (OpenModal "部屋の読み込みに失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
-
+        -- 脚本作成画面
         ChangeScriptName name ->
             update ChangedScript { model | scriptForm = Script.setName name model.scriptForm }
 
@@ -338,6 +314,36 @@ update msg model =
 
         ChangedScript ->
             ( { model | script = Script.convert model.scriptForm }, Cmd.none )
+
+        -- 部屋編集画面
+        ChangeRoomId id ->
+            ( { model | roomForm = Room.setId id model.roomForm }, Cmd.none )
+
+        UpdateRoom ->
+            case Room.convert model.roomForm of
+                Nothing ->
+                    update (OpenModal "保存に失敗しました。項目を再確認してください") { model | room = Nothing }
+
+                Just r ->
+                    ( { model | room = Just r }, updateRoom <| Room.encode r )
+
+        ReadedRooms val ->
+            ( { model | rooms = RoomName.decodeRoomNameListFromJson val }, Cmd.none )
+
+        ReadedRoom val ->
+            let
+                registerForm =
+                    Room.decodeRegisterFormFromJson val
+            in
+            case registerForm of
+                Just f ->
+                    ( { model | roomForm = f, room = Room.convert f }, Cmd.none )
+
+                Nothing ->
+                    update (OpenModal "部屋の読み込みに失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
+
+        ChangeRoomScript s ->
+            ( { model | roomForm = Room.setScriptId s model.roomForm }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -578,7 +584,7 @@ mainTopContent model =
 
 
 editRoomView : Model -> Html Msg
-editRoomView { roomForm } =
+editRoomView { roomForm, scripts } =
     Room.registerForm
         [ Form.field
             [ label [ class "label has-text-white" ]
@@ -588,6 +594,15 @@ editRoomView { roomForm } =
                 [ input [ class "input", required True, onInput ChangeRoomName, value roomForm.name ] []
                 ]
             , Form.errors (Room.getNameError roomForm)
+            ]
+        , Form.field
+            [ label [ class "label has-text-white" ] [ text "脚本" ]
+            , case scripts of
+                Just list ->
+                    div [ class "select" ] [ Room.script ChangeRoomScript list roomForm ]
+
+                Nothing ->
+                    text "脚本がありません。先に作成してください"
             ]
         , div [ class "control" ]
             [ button [ class "button is-primary", onClick UpdateRoom ] [ text "更新" ]
