@@ -18,6 +18,9 @@ port initSwiper : () -> Cmd msg
 port updateRoom : Value -> Cmd msg
 
 
+port readRooms : () -> Cmd msg
+
+
 port readedRooms : (Value -> msg) -> Sub msg
 
 

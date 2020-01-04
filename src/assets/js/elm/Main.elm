@@ -176,7 +176,7 @@ update msg model =
         ChangedUrl url ->
             case Route.toRoute url of
                 Route.Top ->
-                    ( { model | mainAreaState = MainTab }, Cmd.none )
+                    ( { model | mainAreaState = MainTab }, readRooms () )
 
                 Route.Script ->
                     ( { model | mainAreaState = ScriptTab }, readScriptNames () )
@@ -197,19 +197,12 @@ update msg model =
             ( { model | roomForm = Room.setId id model.roomForm }, Cmd.none )
 
         UpdateRoom ->
-            let
-                room =
-                    Room.convert model.roomForm
+            case Room.convert model.roomForm of
+                Nothing ->
+                    update (OpenModal "保存に失敗しました。項目を再確認してください") { model | room = Nothing }
 
-                cmd =
-                    case room of
-                        Nothing ->
-                            Cmd.none
-
-                        Just r ->
-                            updateRoom <| Room.encode r
-            in
-            ( { model | room = room }, cmd )
+                Just r ->
+                    ( { model | room = Just r }, updateRoom <| Room.encode r )
 
         ReadedRooms val ->
             ( { model | rooms = RoomName.decodeRoomNameListFromJson val }, Cmd.none )

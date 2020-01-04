@@ -32,6 +32,11 @@ const initApp = async () => {
     rooms = await Room.readRooms(firebaseBackEnd.db, user.uid, user.storeUserId);
   }
   ports.readedRooms.send(rooms);
+  ports.readRooms.subscribe(async () => {
+    const readRooms = await Room.readRooms(firebaseBackEnd.db, user.uid, user.storeUserId);
+    ports.readedRooms.send(readRooms);
+  });
+
 
   ports.readRoom.subscribe(async (roomId) => {
     showLoader();
@@ -72,14 +77,16 @@ const initApp = async () => {
     ports.deletedScript.send(result);
     hideLoader();
   });
-  // ports.updateRoom.subscribe(({ id, name }) => {
-  //   const room = new Room({
-  //     createUserId: user.storeUserId, id, name, uid: user.uid,
-  //   });
-  //   if (room.id === '') {
-  //     addRoom(room, firebaseBackEnd.db, firebaseBackEnd.getTimestamp(), user.uid, user.storeUserId);
-  //   }
-  // });
+  ports.updateRoom.subscribe(async (room: any) => {
+    if (!room.id) {
+      await Room.addRoom(room, firebaseBackEnd.db, firebaseBackEnd.getTimestamp(), user.uid, user.storeUserId);
+    } else {
+      await Room.updateRoom(room, firebaseBackEnd.db, firebaseBackEnd.getTimestamp(), user.uid, user.storeUserId);
+    }
+    const port = document.location.port ? `:${document.location.port}` : '';
+    // /script/のように、最後の/がないとfirebaseでエラーとなる
+    pushHistory(ports, `${document.location.protocol}//${document.location.hostname}${port}/rooper/`);
+  });
 
   // let mySwiper;
   // ports.initSwiper.subscribe(() => {
