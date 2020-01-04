@@ -21,6 +21,12 @@ port updateRoom : Value -> Cmd msg
 port readedRooms : (Value -> msg) -> Sub msg
 
 
+port readRoom : String -> Cmd msg
+
+
+port readedRoom : (Value -> msg) -> Sub msg
+
+
 port updateScript : Value -> Cmd msg
 
 

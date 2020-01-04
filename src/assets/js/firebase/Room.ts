@@ -1,27 +1,3 @@
-export default class Room {
-  public uid: string;
-
-  public createUserId: string;
-
-  public name: string;
-
-  public id: string;
-
-  public script?;
-
-  public createdAt?;
-
-  public updatedAt?;
-
-  constructor({
-    createUserId, uid, name, id,
-  }) {
-    this.createUserId = createUserId;
-    this.uid = uid;
-    this.name = name;
-    this.id = id;
-  }
-}
 
 
 /**
@@ -32,7 +8,7 @@ export default class Room {
  * @param timestamp
  * @param uid
  */
-export async function addRoom({ name }: Room, db, timestamp, uid, storeUserId) {
+export async function addRoom({ name }: { name: String }, db, timestamp, uid, storeUserId) {
   const userRef = db.collection('users').doc(storeUserId);
   const ref = await userRef.collection('rooms').doc();
   const { id } = ref;
@@ -64,4 +40,31 @@ export async function readRooms(db, uid, storeUserId) {
     rooms.push({ id, name });
   });
   return rooms;
+}
+
+/**
+ * データベースから指定したルーム情報を取得する
+ *
+ * @param db
+ * @param storeUserId
+ */
+export async function readRoom(db, roomId) {
+  const doc = await db.collection('rooms').doc(roomId).get();
+  return doc.data();
+}
+export async function updateRoom(obj, db, timestamp, uid, storeUserId) {
+  const { id } = obj;
+  const roomNameRef = db.collection('users').doc(storeUserId).collection('rooms').doc(id);
+  const roomName = {
+    name: obj.name, uid, id, updatedAt: timestamp,
+  };
+
+  const script = {
+    ...obj, id, uid, updatedAt: timestamp,
+  };
+
+  return Promise.all([
+    (await roomNameRef.set(roomName)),
+    (await db.collection('rooms').doc(id).set(script)),
+  ]);
 }

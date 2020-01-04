@@ -2,6 +2,8 @@ module Models.Room exposing (..)
 
 import Form.Decoder as Decoder exposing (Decoder)
 import Html exposing (..)
+import Json.Decode as D
+import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
 import Models.Room.Id as Id exposing (Id)
 import Models.Room.Name as Name exposing (Name)
@@ -117,6 +119,24 @@ setId s f =
 
 
 
+-- Decoder Register Form
+
+
+decodeRegisterFormFromJson : D.Value -> Maybe RegisterForm
+decodeRegisterFormFromJson json =
+    json
+        |> D.decodeValue formDecoder
+        |> Result.toMaybe
+
+
+formDecoder : D.Decoder RegisterForm
+formDecoder =
+    D.succeed RegisterForm
+        |> Pipeline.required "id" D.string
+        |> Pipeline.required "name" D.string
+
+
+
 -- Atomic view only for listing registered goats
 -- pageTitle : String -> Html msg
 -- pageTitle t =
@@ -167,7 +187,7 @@ setId s f =
 registerForm : List (Html msg) -> Html msg
 registerForm children =
     div []
-        [ h2 [] [ text "ルーム作成" ]
+        [ h2 [] [ text "ルーム編集" ]
         , div []
             children
         ]

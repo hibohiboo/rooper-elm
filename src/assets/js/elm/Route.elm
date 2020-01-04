@@ -9,6 +9,7 @@ type Route
     | Script
     | ScriptCreate
     | ScriptEdit String
+    | RoomEdit String
     | NotFound
 
 
@@ -25,6 +26,7 @@ parser =
         , map Script (s "rooper" </> s "script")
         , map ScriptCreate (s "rooper" </> s "script" </> s "create")
         , map ScriptEdit (s "rooper" </> s "script" </> s "edit" </> string)
+        , map RoomEdit (s "rooper" </> s "room" </> s "edit" </> string)
         ]
 
 

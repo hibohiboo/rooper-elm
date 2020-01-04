@@ -58,5 +58,6 @@ script r =
         [ class "panel-block"
         , href ("/rooper/script/edit/" ++ r.id)
         ]
-        [ text r.name
+        [ span [ class "panel-icon" ] [ i [ class "fa fa-edit" ] [] ]
+        , text r.name
         ]

@@ -115,6 +115,7 @@ type Msg
     | ChangeRoomId String
     | UpdateRoom
     | ReadedRooms Value
+    | ReadedRoom Value
 
 
 type MenuState
@@ -127,6 +128,7 @@ type MainAreaState
     | ScriptTab
     | NothingTab
     | ScriptCreateTab
+    | RoomEditTab
 
 
 type ModalState
@@ -185,6 +187,9 @@ update msg model =
                 Route.ScriptEdit s ->
                     ( { model | mainAreaState = ScriptCreateTab }, readScript s )
 
+                Route.RoomEdit s ->
+                    ( { model | mainAreaState = RoomEditTab }, readRoom s )
+
                 Route.NotFound ->
                     update (OpenModal ("指定されたURLが見つかりません。\nご確認お願いします。\n" ++ url)) { model | mainAreaState = NothingTab }
 
@@ -208,6 +213,18 @@ update msg model =
 
         ReadedRooms val ->
             ( { model | rooms = RoomName.decodeRoomNameListFromJson val }, Cmd.none )
+
+        ReadedRoom val ->
+            let
+                registerForm =
+                    Room.decodeRegisterFormFromJson val
+            in
+            case registerForm of
+                Just f ->
+                    ( { model | roomForm = f, room = Room.convert f }, Cmd.none )
+
+                Nothing ->
+                    update (OpenModal "部屋の読み込みに失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
 
         ChangeScriptName name ->
             update ChangedScript { model | scriptForm = Script.setName name model.scriptForm }
@@ -338,6 +355,7 @@ subscriptions model =
         , readedScriptNames ReadedScriptNames
         , readedScript ReadedScript
         , deletedScript DeletedScript
+        , readedRoom ReadedRoom
         ]
 
 
@@ -366,6 +384,9 @@ mainContent model =
 
                 ScriptCreateTab ->
                     div [ class "content" ] [ createScriptView model ]
+
+                RoomEditTab ->
+                    div [ class "content" ] [ editRoomView model ]
 
                 MainTab ->
                     mainContentBox model
@@ -521,6 +542,9 @@ logginedMainArea model =
         ScriptCreateTab ->
             createScriptView model
 
+        RoomEditTab ->
+            editRoomView model
+
 
 mainScriptContent : Model -> Html Msg
 mainScriptContent model =
@@ -560,23 +584,25 @@ mainTopContent model =
             text ""
 
 
+editRoomView : Model -> Html Msg
+editRoomView { roomForm } =
+    Room.registerForm
+        [ Form.field
+            [ label [ class "label has-text-white" ]
+                [ text "ルーム名"
+                ]
+            , Form.control
+                [ input [ class "input", required True, onInput ChangeRoomName, value roomForm.name ] []
+                ]
+            , Form.errors (Room.getNameError roomForm)
+            ]
+        , div [ class "control" ]
+            [ button [ class "button is-primary", onClick UpdateRoom ] [ text "更新" ]
+            ]
+        ]
 
--- createRoomView : Model -> Html Msg
--- createRoomView { roomForm } =
---     Room.registerForm
---         [ Form.field
---             [ label [ class "label has-text-white" ]
---                 [ text "ルーム名"
---                 ]
---             , Form.control
---                 [ input [ class "input", required True, onInput ChangeRoomName ] []
---                 ]
---             , Form.errors (Room.getNameError roomForm)
---             ]
---         , div [ class "control" ]
---             [ button [ class "button is-primary", onClick UpdateRoom ] [ text "作成" ]
---             ]
---         ]
+
+
 -- ログインメッセージ
 
 

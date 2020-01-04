@@ -1,7 +1,7 @@
 // import * as M from 'M'; //  tslint-disable-line
 import * as Swiper from 'swiper';
 import firebaseBackEnd from './firebase/FireBaseBackEnd';
-import Room, { addRoom, readRooms } from './firebase/Room';
+import * as Room from './firebase/Room';
 import { Elm } from './elm/Main'; //  eslint-disable-line import/no-unresolved
 import { hideLoader, showLoader } from './utils/spinner';
 import { historyInit, pushHistory } from './utils/history';
@@ -21,17 +21,25 @@ const initApp = async () => {
   if (user === null) {
     return;
   }
-  let rooms = await readRooms(firebaseBackEnd.db, user.uid, user.storeUserId);
+  let rooms = await Room.readRooms(firebaseBackEnd.db, user.uid, user.storeUserId);
   if (rooms.length === 0) {
-    const room = new Room({
+    const room = {
       createUserId: user.storeUserId, id: '', name: `room-${user.twitterScreenName}`, uid: user.uid,
-    });
-    addRoom(room, firebaseBackEnd.db, firebaseBackEnd.getTimestamp(), user.uid, user.storeUserId);
+    };
+    Room.addRoom(room, firebaseBackEnd.db, firebaseBackEnd.getTimestamp(), user.uid, user.storeUserId);
 
     // 再取得
-    rooms = await readRooms(firebaseBackEnd.db, user.uid, user.storeUserId);
+    rooms = await Room.readRooms(firebaseBackEnd.db, user.uid, user.storeUserId);
   }
   ports.readedRooms.send(rooms);
+
+  ports.readRoom.subscribe(async (roomId) => {
+    showLoader();
+    const room = await Room.readRoom(firebaseBackEnd.db, roomId);
+    ports.readedRoom.send(room);
+    hideLoader();
+  });
+
 
   ports.updateScript.subscribe(async script => {
     if (!script.id) {

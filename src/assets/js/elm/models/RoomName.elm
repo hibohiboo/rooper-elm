@@ -60,9 +60,10 @@ room : RoomName -> Html msg
 room r =
     a
         [ class "panel-block"
-
-        -- TODO
-        -- , href ("/rooper/room/" ++ r.id)
+        , href ("/rooper/room/edit/" ++ r.id ++ "/")
         ]
-        [ text r.name
+        [ span [ class "panel-icon" ] [ i [ class "fa fa-edit" ] [] ]
+        , text r.name
+
+        -- , span [ class "tag is-info" ] [ span [ class "panel-icon" ] [ i [ class "fa fa-edit" ] [] ], span [] [ text "編集" ] ]
         ]
