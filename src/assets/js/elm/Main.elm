@@ -117,6 +117,7 @@ type Msg
     | ReadedRooms Value
     | ReadedRoom Value
     | ChangeRoomScript String
+    | ChangedRoom
 
 
 type MenuState
@@ -317,7 +318,7 @@ update msg model =
 
         -- 部屋編集画面
         ChangeRoomId id ->
-            ( { model | roomForm = Room.setId id model.roomForm }, Cmd.none )
+            update ChangedRoom { model | roomForm = Room.setId id model.roomForm }
 
         UpdateRoom ->
             case Room.convert model.roomForm of
@@ -343,7 +344,10 @@ update msg model =
                     update (OpenModal "部屋の読み込みに失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
 
         ChangeRoomScript s ->
-            ( { model | roomForm = Room.setScriptId s model.roomForm }, Cmd.none )
+            update ChangedRoom { model | roomForm = Room.setScriptId s model.roomForm }
+
+        ChangedRoom ->
+            ( { model | room = Room.convert model.roomForm }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -584,7 +588,16 @@ mainTopContent model =
 
 
 editRoomView : Model -> Html Msg
-editRoomView { roomForm, scripts } =
+editRoomView { roomForm, scripts, room } =
+    let
+        isRoomInvalid =
+            case room of
+                Just _ ->
+                    False
+
+                Nothing ->
+                    True
+    in
     Room.registerForm
         [ Form.field
             [ label [ class "label has-text-white" ]
@@ -603,9 +616,12 @@ editRoomView { roomForm, scripts } =
 
                 Nothing ->
                     text "脚本がありません。先に作成してください"
+            , Form.errors
+                [ ( "脚本を選択してください", List.member Room.ScriptRequired (Room.errors roomForm) )
+                ]
             ]
         , div [ class "control" ]
-            [ button [ class "button is-primary", onClick UpdateRoom ] [ text "更新" ]
+            [ button [ class "button is-primary", disabled isRoomInvalid, onClick UpdateRoom ] [ text "更新" ]
             ]
         ]
 

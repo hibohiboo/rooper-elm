@@ -18,6 +18,7 @@ import Models.ScriptName as ScriptName exposing (ScriptName)
 type alias Room =
     { id : Id
     , name : Name
+    , scriptId : String
     }
 
 
@@ -35,6 +36,7 @@ form =
     Decoder.top Room
         |> Decoder.field decoderId
         |> Decoder.field decoderName
+        |> Decoder.field decoderScriptId
 
 
 decoderName : Decoder RegisterForm Error Name
@@ -49,6 +51,13 @@ decoderId =
     Id.decoder
         |> Decoder.mapError IdError
         |> Decoder.lift .id
+
+
+decoderScriptId : Decoder RegisterForm Error String
+decoderScriptId =
+    Decoder.identity
+        |> Decoder.assert (Decoder.minLength ScriptRequired 1)
+        |> Decoder.lift .scriptId
 
 
 
@@ -91,6 +100,7 @@ convert f =
 type Error
     = NameError Name.Error
     | IdError Id.Error
+    | ScriptRequired
 
 
 errors : RegisterForm -> List Error
@@ -171,7 +181,7 @@ script chgMsg list f =
             f.scriptId
 
         optionList =
-            ( "", "脚本を選択してください" ) :: List.map (\item -> Tuple.pair item.id item.name) list
+            ( "", "未選択" ) :: List.map (\item -> Tuple.pair item.id item.name) list
     in
     Form.select "-main-plot" chgMsg key optionList
 
@@ -187,4 +197,5 @@ encode room =
     E.object
         [ ( "id", E.string <| Id.toString room.id )
         , ( "name", E.string <| Name.toString room.name )
+        , ( "scriptId", E.string room.scriptId )
         ]
