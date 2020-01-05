@@ -34,17 +34,18 @@ export async function addScript(obj, db, timestamp, uid, storeUserId) {
  */
 export async function updateScript(obj, db, timestamp, uid, storeUserId) {
   const { id } = obj;
-  const srtiptNameRef = db.collection('users').doc(storeUserId).collection('scripts').doc(id);
+  const scriptNameRef = db.collection('users').doc(storeUserId).collection('scripts').doc(id);
+  const doc = await scriptNameRef.get();
   const scriptName = {
-    name: obj.name, uid, id, updatedAt: timestamp,
+    name: obj.name, uid, id, updatedAt: timestamp, createdAt: doc.data().createdAt
   };
 
   const script = {
-    ...obj, id, uid, updatedAt: timestamp,
+    ...obj, id, uid, updatedAt: timestamp, createdAt: doc.data().createdAt
   };
 
   return Promise.all([
-    (await srtiptNameRef.set(scriptName)),
+    (await scriptNameRef.set(scriptName)),
     (await db.collection('scripts').doc(id).set(script)),
   ]);
 }

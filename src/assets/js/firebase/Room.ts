@@ -55,12 +55,13 @@ export async function readRoom(db, roomId) {
 export async function updateRoom(obj, db, timestamp, uid, storeUserId) {
   const { id } = obj;
   const roomNameRef = db.collection('users').doc(storeUserId).collection('rooms').doc(id);
+  const doc = await roomNameRef.get();
   const roomName = {
-    name: obj.name, uid, id, updatedAt: timestamp,
+    name: obj.name, uid, id, updatedAt: timestamp, createdAt: doc.data().createdAt
   };
 
   const script = {
-    ...obj, id, uid, updatedAt: timestamp,
+    ...obj, id, uid, updatedAt: timestamp, createdAt: doc.data().createdAt
   };
 
   return Promise.all([
