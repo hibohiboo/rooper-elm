@@ -338,7 +338,24 @@ update msg model =
             in
             case registerForm of
                 Just f ->
-                    ( { model | roomForm = f, room = Room.convert f }, Cmd.none )
+                    let
+                        -- 脚本家の初期値をユーザのTwitterIDに変更
+                        mastermindTwitterId =
+                            if f.mastermindTwitterId == "" then
+                                case model.loginUser of
+                                    Just user ->
+                                        user.twitterScreenName
+
+                                    Nothing ->
+                                        ""
+
+                            else
+                                f.mastermindTwitterId
+
+                        newF =
+                            { f | mastermindTwitterId = mastermindTwitterId }
+                    in
+                    ( { model | roomForm = newF, room = Room.convert newF }, Cmd.none )
 
                 Nothing ->
                     update (OpenModal "部屋の読み込みに失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
@@ -619,6 +636,15 @@ editRoomView { roomForm, scripts, room } =
             , Form.errors
                 [ ( "脚本を選択してください", List.member Room.ScriptRequired (Room.errors roomForm) )
                 ]
+            ]
+        , Form.field
+            [ label [ class "label has-text-white" ]
+                [ text "脚本家TwitterId"
+                ]
+            , Form.control
+                [ input [ class "input", required True, onInput ChangeRoomName, value roomForm.mastermindTwitterId ] []
+                ]
+            , Form.errors (Room.getNameError roomForm)
             ]
         , div [ class "control" ]
             [ button [ class "button is-primary", disabled isRoomInvalid, onClick UpdateRoom ] [ text "更新" ]

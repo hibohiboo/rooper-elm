@@ -68,6 +68,10 @@ type alias RegisterForm =
     { id : String
     , name : String
     , scriptId : String
+    , mastermindTwitterId : String
+    , protagonist1TwitterId : String
+    , protagonist2TwitterId : String
+    , protagonist3TwitterId : String
     }
 
 
@@ -76,6 +80,10 @@ init =
     { id = ""
     , name = ""
     , scriptId = ""
+    , mastermindTwitterId = ""
+    , protagonist1TwitterId = ""
+    , protagonist2TwitterId = ""
+    , protagonist3TwitterId = ""
     }
 
 
@@ -137,6 +145,26 @@ setScriptId s f =
     { f | scriptId = s }
 
 
+setMastermindTwitterId : String -> RegisterForm -> RegisterForm
+setMastermindTwitterId s f =
+    { f | mastermindTwitterId = s }
+
+
+setProtagonist1TwitterId : String -> RegisterForm -> RegisterForm
+setProtagonist1TwitterId s f =
+    { f | protagonist1TwitterId = s }
+
+
+setProtagonist2TwitterId : String -> RegisterForm -> RegisterForm
+setProtagonist2TwitterId s f =
+    { f | protagonist2TwitterId = s }
+
+
+setProtagonist3TwitterId : String -> RegisterForm -> RegisterForm
+setProtagonist3TwitterId s f =
+    { f | protagonist3TwitterId = s }
+
+
 
 -- Decoder Register Form
 
@@ -154,6 +182,10 @@ formDecoder =
         |> Pipeline.required "id" D.string
         |> Pipeline.required "name" D.string
         |> Pipeline.optional "scriptId" D.string ""
+        |> Pipeline.optional "mastermindTwitterId" D.string ""
+        |> Pipeline.optional "protagonist1TwitterId" D.string ""
+        |> Pipeline.optional "protagonist2TwitterId" D.string ""
+        |> Pipeline.optional "protagonist3TwitterId" D.string ""
 
 
 
