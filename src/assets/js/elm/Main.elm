@@ -656,7 +656,7 @@ editRoomView { roomForm, scripts, room } =
                 Nothing ->
                     text "脚本がありません。先に作成してください"
             , Form.errors
-                [ ( "脚本を選択してください", List.member Room.ScriptRequired (Room.errors roomForm) )
+                [ ( "脚本を選択してください", List.member Room.RequiredScript (Room.errors roomForm) )
                 ]
             ]
         , Form.field
@@ -666,7 +666,9 @@ editRoomView { roomForm, scripts, room } =
             , Form.control
                 [ input [ class "input", required True, onInput (ChangeRoomTwitterScreenName Mastermind), value roomForm.mastermindTwitterScreenName ] []
                 ]
-            , Form.errors (Room.getNameError roomForm)
+            , Form.errors
+                [ ( "脚本家IDを入力してください", List.member Room.RequiredMastermindTwitterScreenName (Room.errors roomForm) )
+                ]
             ]
         , Form.field
             [ label [ class "label has-text-white" ]
@@ -675,7 +677,9 @@ editRoomView { roomForm, scripts, room } =
             , Form.control
                 [ input [ class "input", required True, onInput (ChangeRoomTwitterScreenName Protagonist1), value roomForm.protagonist1TwitterScreenName ] []
                 ]
-            , Form.errors (Room.getNameError roomForm)
+            , Form.errors
+                [ ( "主人公IDを入力してください", List.member Room.RequiredProtagonist1TwitterScreenName (Room.errors roomForm) )
+                ]
             ]
         , Form.field
             [ label [ class "label has-text-white" ]
@@ -684,7 +688,9 @@ editRoomView { roomForm, scripts, room } =
             , Form.control
                 [ input [ class "input", required True, onInput (ChangeRoomTwitterScreenName Protagonist2), value roomForm.protagonist2TwitterScreenName ] []
                 ]
-            , Form.errors (Room.getNameError roomForm)
+            , Form.errors
+                [ ( "主人公IDを入力してください", List.member Room.RequiredProtagonist2TwitterScreenName (Room.errors roomForm) )
+                ]
             ]
         , Form.field
             [ label [ class "label has-text-white" ]
@@ -693,7 +699,9 @@ editRoomView { roomForm, scripts, room } =
             , Form.control
                 [ input [ class "input", required True, onInput (ChangeRoomTwitterScreenName Protagonist3), value roomForm.protagonist3TwitterScreenName ] []
                 ]
-            , Form.errors (Room.getNameError roomForm)
+            , Form.errors
+                [ ( "主人公IDを入力してください", List.member Room.RequiredProtagonist3TwitterScreenName (Room.errors roomForm) )
+                ]
             ]
         , div [ class "control" ]
             [ button [ class "button is-primary", disabled isRoomInvalid, onClick UpdateRoom ] [ text "更新" ]

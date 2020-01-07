@@ -19,6 +19,10 @@ type alias Room =
     { id : Id
     , name : Name
     , scriptId : String
+    , mastermindTwitterScreenName : String
+    , protagonist1TwitterScreenName : String
+    , protagonist2TwitterScreenName : String
+    , protagonist3TwitterScreenName : String
     }
 
 
@@ -37,6 +41,10 @@ form =
         |> Decoder.field decoderId
         |> Decoder.field decoderName
         |> Decoder.field decoderScriptId
+        |> Decoder.field (Decoder.identity |> Decoder.assert (Decoder.minLength RequiredMastermindTwitterScreenName 1) |> Decoder.lift .mastermindTwitterScreenName)
+        |> Decoder.field (Decoder.identity |> Decoder.assert (Decoder.minLength RequiredProtagonist1TwitterScreenName 1) |> Decoder.lift .protagonist1TwitterScreenName)
+        |> Decoder.field (Decoder.identity |> Decoder.assert (Decoder.minLength RequiredProtagonist2TwitterScreenName 1) |> Decoder.lift .protagonist2TwitterScreenName)
+        |> Decoder.field (Decoder.identity |> Decoder.assert (Decoder.minLength RequiredProtagonist3TwitterScreenName 1) |> Decoder.lift .protagonist3TwitterScreenName)
 
 
 decoderName : Decoder RegisterForm Error Name
@@ -56,7 +64,7 @@ decoderId =
 decoderScriptId : Decoder RegisterForm Error String
 decoderScriptId =
     Decoder.identity
-        |> Decoder.assert (Decoder.minLength ScriptRequired 1)
+        |> Decoder.assert (Decoder.minLength RequiredScript 1)
         |> Decoder.lift .scriptId
 
 
@@ -108,7 +116,11 @@ convert f =
 type Error
     = NameError Name.Error
     | IdError Id.Error
-    | ScriptRequired
+    | RequiredScript
+    | RequiredMastermindTwitterScreenName
+    | RequiredProtagonist1TwitterScreenName
+    | RequiredProtagonist2TwitterScreenName
+    | RequiredProtagonist3TwitterScreenName
 
 
 errors : RegisterForm -> List Error
@@ -230,4 +242,8 @@ encode room =
         [ ( "id", E.string <| Id.toString room.id )
         , ( "name", E.string <| Name.toString room.name )
         , ( "scriptId", E.string room.scriptId )
+        , ( "mastermindTwitterScreenName", E.string room.mastermindTwitterScreenName )
+        , ( "protagonist1TwitterScreenName", E.string room.protagonist1TwitterScreenName )
+        , ( "protagonist2TwitterScreenName", E.string room.protagonist2TwitterScreenName )
+        , ( "protagonist3TwitterScreenName", E.string room.protagonist3TwitterScreenName )
         ]
