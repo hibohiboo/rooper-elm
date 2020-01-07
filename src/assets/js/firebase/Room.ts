@@ -52,6 +52,15 @@ export async function readRoom(db, roomId) {
   const doc = await db.collection('rooms').doc(roomId).get();
   return doc.data();
 }
+
+/**
+ * ルーム情報を更新する
+ * @param obj
+ * @param db
+ * @param timestamp
+ * @param uid
+ * @param storeUserId
+ */
 export async function updateRoom(obj, db, timestamp, uid, storeUserId) {
   const { id } = obj;
   const roomNameRef = db.collection('users').doc(storeUserId).collection('rooms').doc(id);

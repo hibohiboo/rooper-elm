@@ -620,7 +620,7 @@ mainTopContent model =
     in
     case rooms of
         Just r ->
-            RoomName.rooms r
+            div [] [ RoomName.roomEdits r, RoomName.rooms r ]
 
         Nothing ->
             text ""
