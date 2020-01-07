@@ -34,10 +34,9 @@ export async function addRoom({ name }: { name: String }, db, timestamp, uid, st
  */
 export async function readRooms(db, uid, storeUserId) {
   const querySnapshot = await db.collection('users').doc(storeUserId).collection('rooms').where("uid", "==", uid).get();
-  const rooms: { id: string, name: string }[] = [];
+  const rooms: any[] = [];
   await querySnapshot.forEach((doc) => {
-    const { id, name } = doc.data();
-    rooms.push({ id, name });
+    rooms.push(doc.data());
   });
   return rooms;
 }
@@ -62,11 +61,11 @@ export async function readRoom(db, roomId) {
  * @param storeUserId
  */
 export async function updateRoom(obj, db, timestamp, uid, storeUserId) {
-  const { id } = obj;
+  const { id, name, scriptId } = obj;
   const roomNameRef = db.collection('users').doc(storeUserId).collection('rooms').doc(id);
   const doc = await roomNameRef.get();
   const roomName = {
-    name: obj.name, uid, id, updatedAt: timestamp, createdAt: doc.data().createdAt
+    name, scriptId, id, uid, updatedAt: timestamp, createdAt: doc.data().createdAt
   };
 
   const script = {

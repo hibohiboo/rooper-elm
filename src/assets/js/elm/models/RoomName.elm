@@ -75,7 +75,7 @@ rooms : List RoomName -> Html msg
 rooms rs =
     let
         list =
-            List.map (\r -> r.scriptId /= "") rs
+            List.filter (\r -> r.scriptId /= "") rs
     in
     case list of
         [] ->
@@ -86,7 +86,7 @@ rooms rs =
                 [ class "panel" ]
             <|
                 roomsTitle
-                    :: List.map keyedRoom rs
+                    :: List.map keyedRoom list
 
 
 roomsTitle : ( String, Html msg )
