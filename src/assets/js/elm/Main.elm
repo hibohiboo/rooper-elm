@@ -117,7 +117,7 @@ type Msg
     | ReadedRooms Value
     | ReadedRoom Value
     | ChangeRoomScript String
-    | ChangeRoomTwitterId PlayerType String
+    | ChangeRoomTwitterScreenName PlayerType String
     | ChangedRoom
 
 
@@ -348,8 +348,8 @@ update msg model =
                 Just f ->
                     let
                         -- 脚本家の初期値をユーザのTwitterIDに変更
-                        mastermindTwitterId =
-                            if f.mastermindTwitterId == "" then
+                        mastermindTwitterScreenName =
+                            if f.mastermindTwitterScreenName == "" then
                                 case model.loginUser of
                                     Just user ->
                                         user.twitterScreenName
@@ -358,10 +358,10 @@ update msg model =
                                         ""
 
                             else
-                                f.mastermindTwitterId
+                                f.mastermindTwitterScreenName
 
                         newF =
-                            { f | mastermindTwitterId = mastermindTwitterId }
+                            { f | mastermindTwitterScreenName = mastermindTwitterScreenName }
                     in
                     ( { model | roomForm = newF, room = Room.convert newF }, Cmd.none )
 
@@ -371,19 +371,19 @@ update msg model =
         ChangeRoomScript s ->
             update ChangedRoom { model | roomForm = Room.setScriptId s model.roomForm }
 
-        ChangeRoomTwitterId pltype s ->
+        ChangeRoomTwitterScreenName pltype s ->
             case pltype of
                 Mastermind ->
-                    update ChangedRoom { model | roomForm = Room.setMastermindTwitterId s model.roomForm }
+                    update ChangedRoom { model | roomForm = Room.setMastermindTwitterScreenName s model.roomForm }
 
                 Protagonist1 ->
-                    update ChangedRoom { model | roomForm = Room.setProtagonist1TwitterId s model.roomForm }
+                    update ChangedRoom { model | roomForm = Room.setProtagonist1TwitterScreenName s model.roomForm }
 
                 Protagonist2 ->
-                    update ChangedRoom { model | roomForm = Room.setProtagonist2TwitterId s model.roomForm }
+                    update ChangedRoom { model | roomForm = Room.setProtagonist2TwitterScreenName s model.roomForm }
 
                 Protagonist3 ->
-                    update ChangedRoom { model | roomForm = Room.setProtagonist3TwitterId s model.roomForm }
+                    update ChangedRoom { model | roomForm = Room.setProtagonist3TwitterScreenName s model.roomForm }
 
         ChangedRoom ->
             ( { model | room = Room.convert model.roomForm }, Cmd.none )
@@ -661,37 +661,37 @@ editRoomView { roomForm, scripts, room } =
             ]
         , Form.field
             [ label [ class "label has-text-white" ]
-                [ text "脚本家TwitterId"
+                [ text "脚本家TwitterID"
                 ]
             , Form.control
-                [ input [ class "input", required True, onInput (ChangeRoomTwitterId Mastermind), value roomForm.mastermindTwitterId ] []
+                [ input [ class "input", required True, onInput (ChangeRoomTwitterScreenName Mastermind), value roomForm.mastermindTwitterScreenName ] []
                 ]
             , Form.errors (Room.getNameError roomForm)
             ]
         , Form.field
             [ label [ class "label has-text-white" ]
-                [ text "主人公1TwitterId"
+                [ text "主人公1TwitterID"
                 ]
             , Form.control
-                [ input [ class "input", required True, onInput (ChangeRoomTwitterId Protagonist1), value roomForm.protagonist1TwitterId ] []
+                [ input [ class "input", required True, onInput (ChangeRoomTwitterScreenName Protagonist1), value roomForm.protagonist1TwitterScreenName ] []
                 ]
             , Form.errors (Room.getNameError roomForm)
             ]
         , Form.field
             [ label [ class "label has-text-white" ]
-                [ text "主人公2TwitterId"
+                [ text "主人公2TwitterID"
                 ]
             , Form.control
-                [ input [ class "input", required True, onInput (ChangeRoomTwitterId Protagonist2), value roomForm.protagonist2TwitterId ] []
+                [ input [ class "input", required True, onInput (ChangeRoomTwitterScreenName Protagonist2), value roomForm.protagonist2TwitterScreenName ] []
                 ]
             , Form.errors (Room.getNameError roomForm)
             ]
         , Form.field
             [ label [ class "label has-text-white" ]
-                [ text "主人公3TwitterId"
+                [ text "主人公3TwitterID"
                 ]
             , Form.control
-                [ input [ class "input", required True, onInput (ChangeRoomTwitterId Protagonist3), value roomForm.protagonist3TwitterId ] []
+                [ input [ class "input", required True, onInput (ChangeRoomTwitterScreenName Protagonist3), value roomForm.protagonist3TwitterScreenName ] []
                 ]
             , Form.errors (Room.getNameError roomForm)
             ]

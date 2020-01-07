@@ -68,10 +68,10 @@ type alias RegisterForm =
     { id : String
     , name : String
     , scriptId : String
-    , mastermindTwitterId : String
-    , protagonist1TwitterId : String
-    , protagonist2TwitterId : String
-    , protagonist3TwitterId : String
+    , mastermindTwitterScreenName : String
+    , protagonist1TwitterScreenName : String
+    , protagonist2TwitterScreenName : String
+    , protagonist3TwitterScreenName : String
     }
 
 
@@ -80,10 +80,10 @@ init =
     { id = ""
     , name = ""
     , scriptId = ""
-    , mastermindTwitterId = ""
-    , protagonist1TwitterId = ""
-    , protagonist2TwitterId = ""
-    , protagonist3TwitterId = ""
+    , mastermindTwitterScreenName = ""
+    , protagonist1TwitterScreenName = ""
+    , protagonist2TwitterScreenName = ""
+    , protagonist3TwitterScreenName = ""
     }
 
 
@@ -145,24 +145,24 @@ setScriptId s f =
     { f | scriptId = s }
 
 
-setMastermindTwitterId : String -> RegisterForm -> RegisterForm
-setMastermindTwitterId s f =
-    { f | mastermindTwitterId = s }
+setMastermindTwitterScreenName : String -> RegisterForm -> RegisterForm
+setMastermindTwitterScreenName s f =
+    { f | mastermindTwitterScreenName = s }
 
 
-setProtagonist1TwitterId : String -> RegisterForm -> RegisterForm
-setProtagonist1TwitterId s f =
-    { f | protagonist1TwitterId = s }
+setProtagonist1TwitterScreenName : String -> RegisterForm -> RegisterForm
+setProtagonist1TwitterScreenName s f =
+    { f | protagonist1TwitterScreenName = s }
 
 
-setProtagonist2TwitterId : String -> RegisterForm -> RegisterForm
-setProtagonist2TwitterId s f =
-    { f | protagonist2TwitterId = s }
+setProtagonist2TwitterScreenName : String -> RegisterForm -> RegisterForm
+setProtagonist2TwitterScreenName s f =
+    { f | protagonist2TwitterScreenName = s }
 
 
-setProtagonist3TwitterId : String -> RegisterForm -> RegisterForm
-setProtagonist3TwitterId s f =
-    { f | protagonist3TwitterId = s }
+setProtagonist3TwitterScreenName : String -> RegisterForm -> RegisterForm
+setProtagonist3TwitterScreenName s f =
+    { f | protagonist3TwitterScreenName = s }
 
 
 
@@ -182,10 +182,10 @@ formDecoder =
         |> Pipeline.required "id" D.string
         |> Pipeline.required "name" D.string
         |> Pipeline.optional "scriptId" D.string ""
-        |> Pipeline.optional "mastermindTwitterId" D.string ""
-        |> Pipeline.optional "protagonist1TwitterId" D.string ""
-        |> Pipeline.optional "protagonist2TwitterId" D.string ""
-        |> Pipeline.optional "protagonist3TwitterId" D.string ""
+        |> Pipeline.optional "mastermindTwitterScreenName" D.string ""
+        |> Pipeline.optional "protagonist1TwitterScreenName" D.string ""
+        |> Pipeline.optional "protagonist2TwitterScreenName" D.string ""
+        |> Pipeline.optional "protagonist3TwitterScreenName" D.string ""
 
 
 
