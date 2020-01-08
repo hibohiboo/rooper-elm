@@ -723,6 +723,36 @@ incidentCulprits chgMsg scriptForm =
     Form.select "-incident-culprits" chgMsg roleKey optionList
 
 
+selectTragedySet : (String -> msg) -> RegisterForm -> Html msg
+selectTragedySet chgMsg scriptForm =
+    select [ onChange chgMsg ]
+        [ option [ value <| TragedySet.typeToString TragedySet.FirstSteps, selected (isSetFirstSteps scriptForm) ] [ text <| TragedySet.typeToName TragedySet.FirstSteps ]
+        , option [ value <| TragedySet.typeToString TragedySet.BasicTragedy, selected (isSetBasicTragedy scriptForm) ] [ text <| TragedySet.typeToName TragedySet.BasicTragedy ]
+        ]
+
+
+scriptView : Script -> Html msg
+scriptView s =
+    div []
+        [ Form.field
+            [ label [ class "label has-text-white" ]
+                [ text "脚本名"
+                ]
+            , div []
+                [ text <| Name.toString s.name
+                ]
+            ]
+        , Form.field
+            [ label [ class "label has-text-white" ]
+                [ text "使用セット"
+                ]
+            , div []
+                [ text <| TragedySet.toName s.set
+                ]
+            ]
+        ]
+
+
 
 -- ==============================================================================================
 -- エンコーダ

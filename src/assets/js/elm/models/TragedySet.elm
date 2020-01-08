@@ -811,6 +811,21 @@ decoder =
     Decoder.identity
 
 
+toName : TragedySet -> String
+toName set =
+    typeToName set.setType
+
+
+typeToName : TragedySetType -> String
+typeToName t =
+    case t of
+        BasicTragedy ->
+            "Basic Tragedy χ"
+
+        FirstSteps ->
+            "First Steps"
+
+
 toString : TragedySet -> String
 toString set =
     typeToString set.setType

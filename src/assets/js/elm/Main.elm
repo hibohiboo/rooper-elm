@@ -720,9 +720,20 @@ editRoomView { roomForm, scripts, room } =
                 [ ( "主人公IDを入力してください", List.member Room.RequiredProtagonist3TwitterScreenName (Room.errors roomForm) )
                 ]
             ]
-        , div [ class "control" ]
-            [ button [ class "button is-primary", disabled isRoomInvalid, onClick UpdateRoom ] [ text "更新" ]
+        , Form.field
+            [ div [ class "control" ]
+                [ button [ class "button is-primary", disabled isRoomInvalid, onClick UpdateRoom ] [ text "更新" ]
+                ]
             ]
+        , div []
+            [ div [] [ text "選択中の脚本" ]
+            ]
+        , case roomForm.script of
+            Just s ->
+                Script.scriptView s
+
+            Nothing ->
+                text ""
         ]
 
 
@@ -842,10 +853,7 @@ scriptFormView scriptForm =
             [ text "使用セット" ]
         , Form.control
             [ div [ class "select" ]
-                [ select [ onChange ChangeTragedySet ]
-                    [ option [ value "FistSteps", selected (Script.isSetFirstSteps scriptForm) ] [ text "First Steps" ]
-                    , option [ value "BasicTragedy", selected (Script.isSetBasicTragedy scriptForm) ] [ text "Basic Tragedy X" ]
-                    ]
+                [ Script.selectTragedySet ChangeTragedySet scriptForm
                 ]
             ]
         ]
