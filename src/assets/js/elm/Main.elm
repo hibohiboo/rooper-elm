@@ -370,10 +370,6 @@ update msg model =
                     update (OpenModal "部屋の読み込みに失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
 
         ChangeRoomScript s ->
-            let
-                _ =
-                    Debug.log "decodeUser" s
-            in
             if s == "未選択" then
                 update ChangedRoom { model | roomForm = Room.setScript Nothing <| Room.setScriptId s <| model.roomForm }
 
