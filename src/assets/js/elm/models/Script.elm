@@ -750,6 +750,50 @@ scriptView s =
                 [ text <| TragedySet.toName s.set
                 ]
             ]
+        , Form.field
+            [ label [ class "label has-text-white" ]
+                [ text "ルールY"
+                ]
+            , div []
+                [ text s.mainPlot.name
+                ]
+            ]
+        , Form.field
+            [ label [ class "label has-text-white" ]
+                [ text "ルールX1"
+                ]
+            , div []
+                [ text s.subPlot1.name
+                ]
+            ]
+        , case s.subPlot2 of
+            Just p ->
+                Form.field
+                    [ label [ class "label has-text-white" ]
+                        [ text "ルールX2"
+                        ]
+                    , div []
+                        [ text p.name
+                        ]
+                    ]
+
+            Nothing ->
+                text ""
+        , Form.field
+            [ label [ class "label has-text-white" ]
+                [ text "キャラクター"
+                ]
+            , div []
+                (s.characters
+                    |> List.reverse
+                    -- 選んだ順に表示するため並び替え
+                    |> List.map
+                        (\c ->
+                            Character.characterFormCollectionItem c
+                                [ text <| .name <| Maybe.withDefault TragedySet.person c.role ]
+                        )
+                )
+            ]
         ]
 
 
