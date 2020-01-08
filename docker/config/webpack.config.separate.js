@@ -38,7 +38,16 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       REPRACE_TEST: JSON.stringify(process.env.REPRACE_TEST)
-    })
+    }),
+    new CopyWebpackPlugin(
+      [
+        {
+          from: '**/*',
+          to: '../assets/images/',
+        },
+      ],
+      { context: 'src/assets/images' }
+    ),
   ],
   resolve: {
     modules: [opts.src, "node_modules"],
