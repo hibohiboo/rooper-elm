@@ -8,6 +8,7 @@ import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
 import Models.Room.Id as Id exposing (Id)
 import Models.Room.Name as Name exposing (Name)
+import Models.Script as Script exposing (Script)
 import Models.ScriptName as ScriptName exposing (ScriptName)
 
 
@@ -64,7 +65,8 @@ decoderId =
 decoderScriptId : Decoder RegisterForm Error String
 decoderScriptId =
     Decoder.identity
-        |> Decoder.assert (Decoder.minLength RequiredScript 1)
+        -- 未選択が選択されているときはエラー
+        |> Decoder.assert (Decoder.minLength RequiredScript 4)
         |> Decoder.lift .scriptId
 
 
@@ -80,6 +82,7 @@ type alias RegisterForm =
     , protagonist1TwitterScreenName : String
     , protagonist2TwitterScreenName : String
     , protagonist3TwitterScreenName : String
+    , script : Maybe Script
     }
 
 
@@ -92,6 +95,7 @@ init =
     , protagonist1TwitterScreenName = ""
     , protagonist2TwitterScreenName = ""
     , protagonist3TwitterScreenName = ""
+    , script = Nothing
     }
 
 
@@ -157,6 +161,11 @@ setScriptId s f =
     { f | scriptId = s }
 
 
+setScript : Maybe Script -> RegisterForm -> RegisterForm
+setScript s f =
+    { f | script = s }
+
+
 setMastermindTwitterScreenName : String -> RegisterForm -> RegisterForm
 setMastermindTwitterScreenName s f =
     { f | mastermindTwitterScreenName = s }
@@ -198,6 +207,7 @@ formDecoder =
         |> Pipeline.optional "protagonist1TwitterScreenName" D.string ""
         |> Pipeline.optional "protagonist2TwitterScreenName" D.string ""
         |> Pipeline.optional "protagonist3TwitterScreenName" D.string ""
+        |> Pipeline.optional "script" Script.scriptDecoder Nothing
 
 
 
@@ -218,16 +228,16 @@ registerForm children =
 -- Views
 
 
-script : (String -> msg) -> List ScriptName -> RegisterForm -> Html msg
-script chgMsg list f =
+scriptSelectForm : (String -> msg) -> List ScriptName -> RegisterForm -> Html msg
+scriptSelectForm chgMsg list f =
     let
         key =
             f.scriptId
 
         optionList =
-            ( "", "未選択" ) :: List.map (\item -> Tuple.pair item.id item.name) list
+            ( "未選択", "未選択" ) :: List.map (\item -> Tuple.pair item.id item.name) list
     in
-    Form.select "-main-plot" chgMsg key optionList
+    Form.select "-room-script" chgMsg key optionList
 
 
 

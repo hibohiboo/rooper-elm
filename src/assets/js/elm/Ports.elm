@@ -51,6 +51,12 @@ port readScript : String -> Cmd msg
 port readedScript : (Value -> msg) -> Sub msg
 
 
+port readScriptForRoom : String -> Cmd msg
+
+
+port readedScriptForRoom : (Value -> msg) -> Sub msg
+
+
 port deleteScript : String -> Cmd msg
 
 

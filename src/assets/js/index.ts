@@ -70,6 +70,12 @@ const initApp = async () => {
     ports.readedScript.send(script);
     hideLoader();
   });
+  ports.readScriptForRoom.subscribe(async (scriptId) => {
+    showLoader();
+    const script = await Script.readScript(firebaseBackEnd.db, user.uid, scriptId);
+    ports.readedScriptForRoom.send(script);
+    hideLoader();
+  });
 
   ports.deleteScript.subscribe(async (scriptId) => {
     showLoader();

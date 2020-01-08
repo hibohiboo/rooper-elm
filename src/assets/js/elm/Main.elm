@@ -117,6 +117,7 @@ type Msg
     | ReadedRooms Value
     | ReadedRoom Value
     | ChangeRoomScript String
+    | ChangedRoomScript Value
     | ChangeRoomTwitterScreenName PlayerType String
     | ChangedRoom
 
@@ -369,7 +370,22 @@ update msg model =
                     update (OpenModal "部屋の読み込みに失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
 
         ChangeRoomScript s ->
-            update ChangedRoom { model | roomForm = Room.setScriptId s model.roomForm }
+            let
+                _ =
+                    Debug.log "decodeUser" s
+            in
+            if s == "未選択" then
+                update ChangedRoom { model | roomForm = Room.setScript Nothing <| Room.setScriptId s <| model.roomForm }
+
+            else
+                ( { model | roomForm = Room.setScriptId s model.roomForm }, readScriptForRoom s )
+
+        ChangedRoomScript val ->
+            let
+                script =
+                    Script.decodeScriptFromJson val
+            in
+            update ChangedRoom { model | roomForm = Room.setScript script model.roomForm }
 
         ChangeRoomTwitterScreenName pltype s ->
             case pltype of
@@ -398,6 +414,7 @@ subscriptions model =
         , readedScript ReadedScript
         , deletedScript DeletedScript
         , readedRoom ReadedRoom
+        , readedScriptForRoom ChangedRoomScript
         ]
 
 
@@ -651,7 +668,7 @@ editRoomView { roomForm, scripts, room } =
             [ label [ class "label has-text-white" ] [ text "脚本" ]
             , case scripts of
                 Just list ->
-                    div [ class "select" ] [ Room.script ChangeRoomScript list roomForm ]
+                    div [ class "select" ] [ Room.scriptSelectForm ChangeRoomScript list roomForm ]
 
                 Nothing ->
                     text "脚本がありません。先に作成してください"

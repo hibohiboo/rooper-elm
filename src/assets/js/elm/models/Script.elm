@@ -144,6 +144,23 @@ characterRolesValidator =
 
 
 
+-- Decoder Script
+
+
+scriptDecoder : D.Decoder (Maybe Script)
+scriptDecoder =
+    D.map convert formDecoder
+
+
+decodeScriptFromJson : Value -> Maybe Script
+decodeScriptFromJson json =
+    json
+        |> D.decodeValue scriptDecoder
+        |> Result.toMaybe
+        |> Maybe.withDefault Nothing
+
+
+
 -- Decoder Register Form
 
 
