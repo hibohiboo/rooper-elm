@@ -790,7 +790,32 @@ scriptView s =
                     |> List.map
                         (\c ->
                             Character.characterFormCollectionItem c
-                                [ text <| .name <| Maybe.withDefault TragedySet.person c.role ]
+                                [ div []
+                                    [ -- label [ class "label has-text-white" ] [ text "役職" ]
+                                      text <| .name <| Maybe.withDefault TragedySet.person c.role
+                                    ]
+                                , case c.character.characterType of
+                                    Character.TransferStudent ->
+                                        div []
+                                            [ label [ class "label has-text-white" ] [ text "登場日" ]
+                                            , text <| String.fromInt (Maybe.withDefault 0 c.optionalNumber)
+                                            ]
+
+                                    Character.GodlyBeing ->
+                                        div []
+                                            [ label [ class "label has-text-white" ] [ text "登場ループ" ]
+                                            , text <| String.fromInt (Maybe.withDefault 0 c.optionalNumber)
+                                            ]
+
+                                    Character.Boss ->
+                                        div []
+                                            [ label [ class "label has-text-white" ] [ text "テリトリー" ]
+                                            , text <| .name <| Maybe.withDefault Board.city c.turf
+                                            ]
+
+                                    _ ->
+                                        text ""
+                                ]
                         )
                 )
             ]
