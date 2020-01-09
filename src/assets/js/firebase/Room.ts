@@ -61,19 +61,15 @@ export async function readRoom(db, roomId) {
  * @param storeUserId
  */
 export async function updateRoom(obj, db, timestamp, uid, storeUserId) {
-  const { id, name, scriptId } = obj;
+  const { id, name, script } = obj;
   const roomNameRef = db.collection('users').doc(storeUserId).collection('rooms').doc(id);
   const doc = await roomNameRef.get();
   const roomName = {
-    name, scriptId, id, uid, updatedAt: timestamp, createdAt: doc.data().createdAt
-  };
-
-  const script = {
-    ...obj, id, uid, updatedAt: timestamp, createdAt: doc.data().createdAt
+    name, scriptId: script.id, id, uid, updatedAt: timestamp, createdAt: doc.data().createdAt
   };
 
   return Promise.all([
     (await roomNameRef.set(roomName)),
-    (await db.collection('rooms').doc(id).set(script)),
+    (await db.collection('rooms').doc(id).set({ ...obj, id, uid, updatedAt: timestamp, createdAt: doc.data().createdAt })),
   ]);
 }

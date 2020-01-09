@@ -19,7 +19,7 @@ import Models.ScriptName as ScriptName exposing (ScriptName)
 type alias Room =
     { id : Id
     , name : Name
-    , scriptId : String
+    , script : Script
     , mastermindTwitterScreenName : String
     , protagonist1TwitterScreenName : String
     , protagonist2TwitterScreenName : String
@@ -41,7 +41,7 @@ form =
     Decoder.top Room
         |> Decoder.field decoderId
         |> Decoder.field decoderName
-        |> Decoder.field decoderScriptId
+        |> Decoder.field decoderScript
         |> Decoder.field (Decoder.identity |> Decoder.assert (Decoder.minLength RequiredMastermindTwitterScreenName 1) |> Decoder.lift .mastermindTwitterScreenName)
         |> Decoder.field (Decoder.identity |> Decoder.assert (Decoder.minLength RequiredProtagonist1TwitterScreenName 1) |> Decoder.lift .protagonist1TwitterScreenName)
         |> Decoder.field (Decoder.identity |> Decoder.assert (Decoder.minLength RequiredProtagonist2TwitterScreenName 1) |> Decoder.lift .protagonist2TwitterScreenName)
@@ -62,12 +62,15 @@ decoderId =
         |> Decoder.lift .id
 
 
-decoderScriptId : Decoder RegisterForm Error String
-decoderScriptId =
-    Decoder.identity
-        -- 未選択が選択されているときはエラー
-        |> Decoder.assert (Decoder.minLength RequiredScript 4)
-        |> Decoder.lift .scriptId
+decoderScript : Decoder RegisterForm Error Script
+decoderScript =
+    customScript
+        |> Decoder.lift .script
+
+
+customScript : Decoder (Maybe Script) Error Script
+customScript =
+    Decoder.custom <| Result.fromMaybe [ RequiredScript ]
 
 
 
@@ -202,7 +205,7 @@ formDecoder =
     D.succeed RegisterForm
         |> Pipeline.required "id" D.string
         |> Pipeline.required "name" D.string
-        |> Pipeline.optional "scriptId" D.string ""
+        |> Pipeline.optional "script" (D.at [ "id" ] D.string) ""
         |> Pipeline.optional "mastermindTwitterScreenName" D.string ""
         |> Pipeline.optional "protagonist1TwitterScreenName" D.string ""
         |> Pipeline.optional "protagonist2TwitterScreenName" D.string ""
@@ -251,7 +254,7 @@ encode room =
     E.object
         [ ( "id", E.string <| Id.toString room.id )
         , ( "name", E.string <| Name.toString room.name )
-        , ( "scriptId", E.string room.scriptId )
+        , ( "script", Script.encode room.script )
         , ( "mastermindTwitterScreenName", E.string room.mastermindTwitterScreenName )
         , ( "protagonist1TwitterScreenName", E.string room.protagonist1TwitterScreenName )
         , ( "protagonist2TwitterScreenName", E.string room.protagonist2TwitterScreenName )
