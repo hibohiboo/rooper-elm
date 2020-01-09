@@ -744,14 +744,6 @@ scriptView s =
             ]
         , Form.field
             [ label [ class "label has-text-white" ]
-                [ text "使用セット"
-                ]
-            , div []
-                [ text <| TragedySet.toName s.set
-                ]
-            ]
-        , Form.field
-            [ label [ class "label has-text-white" ]
                 [ text "ルールY"
                 ]
             , div []
@@ -798,13 +790,13 @@ scriptView s =
                                     Character.TransferStudent ->
                                         div []
                                             [ label [ class "label has-text-white" ] [ text "登場日" ]
-                                            , text <| String.fromInt (Maybe.withDefault 0 c.optionalNumber)
+                                            , text <| String.fromInt <| Maybe.withDefault 0 c.optionalNumber
                                             ]
 
                                     Character.GodlyBeing ->
                                         div []
                                             [ label [ class "label has-text-white" ] [ text "登場ループ" ]
-                                            , text <| String.fromInt (Maybe.withDefault 0 c.optionalNumber)
+                                            , text <| String.fromInt <| Maybe.withDefault 0 c.optionalNumber
                                             ]
 
                                     Character.Boss ->
@@ -819,6 +811,83 @@ scriptView s =
                         )
                 )
             ]
+        , Form.field [ label [ class "label" ] [ text "事件" ] ]
+        , Form.field <|
+            (s.incidents
+                |> List.sortBy .day
+                |> List.map
+                    (\data ->
+                        div [ class "media" ]
+                            [ div [ class "media-left", style "padding-left" "1rem", style "align-self" "center" ]
+                                [ text <| String.fromInt data.day ++ "日目"
+                                ]
+                            , div [ class "media-content is-flex" ]
+                                [ div [ style "text-align" "center", style "align-self" "center" ] [ text data.incident.name ]
+                                , div [ style "padding-left" "1rem" ]
+                                    [ img [ src (Character.characterToCardUrl data.culprit) ] []
+                                    , div [] [ text <| "" ++ data.culprit.name ]
+                                    ]
+                                ]
+                            ]
+                    )
+            )
+        , Form.field
+            [ label [ class "label has-text-white" ] [ text "メモ" ]
+            , Form.control
+                [ div [ style "white-space" "pre-wrap" ] [ text s.memo ]
+                ]
+            ]
+        , openSheet s
+        ]
+
+
+openSheet : Script -> Html msg
+openSheet s =
+    div [ class "box" ]
+        [ div [ class "title is-5" ]
+            [ text "公開シート"
+            ]
+        , Form.field
+            [ label [ class "label has-text-white" ]
+                [ text "使用セット"
+                ]
+            , div []
+                [ text <| TragedySet.toName s.set
+                ]
+            ]
+        , Form.field
+            [ label [ class "label has-text-white" ] [ text "ループ回数" ]
+            , div []
+                [ text <| String.fromInt s.numberOfLoops
+                ]
+            ]
+        , Form.field
+            [ label [ class "label has-text-white" ] [ text "１ループ日数" ]
+            , div []
+                [ text <| String.fromInt s.daysInOneLoop
+                ]
+            ]
+        , Form.field
+            [ label [ class "label has-text-white" ] [ text "特別ルール" ]
+            , Form.control
+                [ div [ style "white-space" "pre-wrap" ] [ text s.extra ]
+                ]
+            ]
+        , Form.field [ label [ class "label" ] [ text "事件" ] ]
+        , Form.field <|
+            (s.incidents
+                |> List.sortBy .day
+                |> List.map
+                    (\data ->
+                        div [ class "media" ]
+                            [ div [ class "media-left", style "padding-left" "1rem", style "align-self" "center" ]
+                                [ text <| String.fromInt data.day ++ "日目"
+                                ]
+                            , div [ class "media-content is-flex" ]
+                                [ div [ style "text-align" "center", style "align-self" "center" ] [ text data.incident.name ] ]
+                            ]
+                    )
+            )
         ]
 
 
