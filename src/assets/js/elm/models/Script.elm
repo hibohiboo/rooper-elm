@@ -1,6 +1,7 @@
 module Models.Script exposing (..)
 
 import Component.Form as Form
+import Component.Link
 import Form.Decoder as Decoder exposing (Decoder)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -560,6 +561,7 @@ registerForm : String -> List (Html msg) -> Html msg
 registerForm title children =
     div []
         [ h2 [] [ text title ]
+        , Component.Link.backPrevPageRight "/rooper/script/"
         , div []
             children
         ]

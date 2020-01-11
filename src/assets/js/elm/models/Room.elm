@@ -1,8 +1,10 @@
 module Models.Room exposing (..)
 
 import Component.Form as Form
+import Component.Link
 import Form.Decoder as Decoder exposing (Decoder)
 import Html exposing (..)
+import Html.Attributes as Attributes exposing (class, href, style)
 import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
@@ -222,6 +224,7 @@ registerForm : List (Html msg) -> Html msg
 registerForm children =
     div []
         [ h2 [] [ text "ルーム編集" ]
+        , Component.Link.backPrevPageRight "/rooper/"
         , div []
             children
         ]
