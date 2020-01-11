@@ -133,6 +133,7 @@ type MainAreaState
     | NothingTab
     | ScriptCreateTab
     | RoomEditTab
+    | RoomTab
 
 
 type ModalState
@@ -200,6 +201,9 @@ update msg model =
 
                 Route.RoomEdit s ->
                     ( { model | mainAreaState = RoomEditTab }, Cmd.batch [ readScriptNames (), readRoom s ] )
+
+                Route.Room s ->
+                    ( { model | mainAreaState = RoomTab }, Cmd.batch [ readRoomData s ] )
 
                 Route.NotFound ->
                     update (OpenModal ("指定されたURLが見つかりません。\nご確認お願いします。\n" ++ url)) { model | mainAreaState = NothingTab }
@@ -446,6 +450,9 @@ mainContent model =
                 MainTab ->
                     mainContentBox model
 
+                RoomTab ->
+                    text "ルーム建設予定地"
+
                 NothingTab ->
                     text ""
 
@@ -596,6 +603,9 @@ logginedMainArea model =
 
         ScriptCreateTab ->
             createScriptView model
+
+        RoomTab ->
+            text "ルーム建設予定地"
 
         RoomEditTab ->
             editRoomView model
