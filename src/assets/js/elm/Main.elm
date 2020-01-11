@@ -434,7 +434,12 @@ mainContent : Model -> Html Msg
 mainContent model =
     case model.loginUser of
         Nothing ->
-            mainContentBox model
+            case model.mainAreaState of
+                RoomTab ->
+                    notMemberRoomView model
+
+                _ ->
+                    mainContentBox model
 
         Just _ ->
             case model.mainAreaState of
@@ -609,6 +614,11 @@ logginedMainArea model =
 
         RoomEditTab ->
             editRoomView model
+
+
+notMemberRoomView : Model -> Html Msg
+notMemberRoomView model =
+    text "メンバーではありません。"
 
 
 mainScriptContent : Model -> Html Msg

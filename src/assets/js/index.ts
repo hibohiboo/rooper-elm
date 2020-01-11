@@ -17,8 +17,13 @@ const initApp = async () => {
   const { ports } = Elm.Main.init({ node: mountNode, flags: user });
   ports.errorToJs.subscribe((data: string) => console.log(data));
   ports.signOut.subscribe(() => firebaseBackEnd.signOut());
-  ports.initLoginUI.subscribe(() => firebaseBackEnd.createLoginUi());
+  ports.initLoginUI.subscribe(() => {
+    if (window.location.href.indexOf('room') !== -1 && window.location.href.indexOf('edit') === -1) { return; }// 部屋の見学の時にはログインさせない
+    firebaseBackEnd.createLoginUi()
+  });
   if (user === null) {
+    historyInit(ports);
+    hideLoader();
     return;
   }
   let rooms = await Room.readRooms(firebaseBackEnd.db, user.uid, user.storeUserId);
