@@ -7,6 +7,7 @@ import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
 import Json.Encode.Extra as ExEncode
 import Models.Room as Room exposing (Room)
+import Models.RoomData.MasterMind as MasterMind exposing (MasterMind)
 import Models.RoomData.OpenSheet as OpenSheet exposing (OpenSheet)
 import Models.RoomData.Protagonist as Protagonist exposing (Protagonist)
 import Models.Script as Script exposing (Script)
@@ -15,6 +16,7 @@ import Models.User exposing (User)
 
 type alias RoomData =
     { id : String
+    , mastermind : MasterMind
     , protagonists : List Protagonist
     , openSheet : OpenSheet
     , script : Maybe Script
@@ -29,10 +31,13 @@ init =
 initRoomData : Room -> RoomData
 initRoomData room =
     let
+        mastermind =
+            MasterMind.init room.mastermindTwitterScreenName
+
         protagonists =
             Protagonist.init room.protagonist1TwitterScreenName room.protagonist2TwitterScreenName room.protagonist3TwitterScreenName
     in
-    RoomData (Room.getId room) protagonists (Script.scriptToOpenSheet room.script) Nothing
+    RoomData (Room.getId room) mastermind protagonists (Script.scriptToOpenSheet room.script) Nothing
 
 
 
@@ -81,6 +86,7 @@ decoder : D.Decoder RoomData
 decoder =
     D.succeed RoomData
         |> Pipeline.required "id" D.string
+        |> Pipeline.required "mastermind" MasterMind.decoder
         |> Pipeline.required "protagonists" (D.list Protagonist.decoder)
         |> Pipeline.required "openSheet" OpenSheet.decoder
         |> Pipeline.optional "script" Script.scriptDecoder Nothing
@@ -96,6 +102,7 @@ encode : RoomData -> E.Value
 encode data =
     E.object
         [ ( "id", E.string data.id )
+        , ( "mastermind", MasterMind.encode data.mastermind )
         , ( "protagonists", E.list Protagonist.encode data.protagonists )
         , ( "openSheet", OpenSheet.encode data.openSheet )
         , ( "script", ExEncode.maybe Script.encode data.script )
@@ -126,20 +133,20 @@ closeSheet data =
 
 tags : Maybe RoomData -> User -> Html msg
 tags data user =
-    div []
-        (List.concat
-            [ [ if isRoomOwner data then
-                    span [ class "tag is-danger" ] [ text "脚本家" ]
+    case data of
+        Nothing ->
+            text ""
 
-                else
-                    text ""
-              ]
-            , case data of
-                Nothing ->
-                    []
+        Just d ->
+            div []
+                (List.concat
+                    [ [ if MasterMind.isMasterMind user.twitterScreenName d.mastermind then
+                            span [ class "tag is-danger" ] [ text "脚本家" ]
 
-                Just d ->
-                    d.protagonists
+                        else
+                            text ""
+                      ]
+                    , d.protagonists
                         |> Protagonist.getUserProtagonists user.twitterScreenName
                         |> List.map
                             (\p ->
@@ -156,5 +163,5 @@ tags data user =
                                     ]
                                     [ text p.name ]
                             )
-            ]
-        )
+                    ]
+                )
