@@ -1,6 +1,7 @@
 module Models.RoomData exposing (..)
 
 import Html exposing (..)
+import Html.Attributes exposing (..)
 import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
@@ -29,9 +30,7 @@ initRoomData : Room -> RoomData
 initRoomData room =
     let
         protagonists =
-            Protagonist.init 1 room.protagonist1TwitterScreenName
-                |> Maybe.map List.singleton
-                |> Maybe.withDefault []
+            Protagonist.init room.protagonist1TwitterScreenName room.protagonist2TwitterScreenName room.protagonist3TwitterScreenName
     in
     RoomData (Room.getId room) protagonists (Script.scriptToOpenSheet room.script) Nothing
 
@@ -40,13 +39,19 @@ initRoomData room =
 -- Method
 
 
+isRoomOwner : Maybe RoomData -> Bool
+isRoomOwner room =
+    case room of
+        Just _ ->
+            True
+
+        Nothing ->
+            False
+
+
 isRoomMember : RoomData -> User -> Bool
 isRoomMember data user =
-    if (List.filter (\d -> d.twitterScreenName == user.twitterScreenName) data.protagonists |> List.length) > 0 then
-        True
-
-    else
-        False
+    Protagonist.isProtagonist user.twitterScreenName data.protagonists
 
 
 
@@ -117,3 +122,39 @@ closeSheet data =
 
         Nothing ->
             text ""
+
+
+tags : Maybe RoomData -> User -> Html msg
+tags data user =
+    div []
+        (List.concat
+            [ [ if isRoomOwner data then
+                    span [ class "tag is-danger" ] [ text "脚本家" ]
+
+                else
+                    text ""
+              ]
+            , case data of
+                Nothing ->
+                    []
+
+                Just d ->
+                    d.protagonists
+                        |> Protagonist.getUserProtagonists user.twitterScreenName
+                        |> List.map
+                            (\p ->
+                                span
+                                    [ class <|
+                                        if p.number == 1 then
+                                            "tag is-info"
+
+                                        else if p.number == 2 then
+                                            "tag is-warning"
+
+                                        else
+                                            "tag is-success"
+                                    ]
+                                    [ text p.name ]
+                            )
+            ]
+        )

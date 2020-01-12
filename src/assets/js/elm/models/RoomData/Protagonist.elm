@@ -22,20 +22,31 @@ type alias Protagonist =
 -- ==============================================================================================
 
 
-init : Int -> String -> Maybe Protagonist
-init num id =
-    case num of
-        1 ->
-            Just <| Protagonist num "主人公1" id
+init : String -> String -> String -> List Protagonist
+init id1 id2 id3 =
+    [ Protagonist 1 "主人公1" id1
+    , Protagonist 2 "主人公2" id2
+    , Protagonist 3 "主人公3" id3
+    ]
 
-        2 ->
-            Just <| Protagonist num "主人公2" id
 
-        3 ->
-            Just <| Protagonist num "主人公3" id
 
-        _ ->
-            Nothing
+-- ==============================================================================================
+-- メソッド
+-- ==============================================================================================
+
+
+isProtagonist : String -> List Protagonist -> Bool
+isProtagonist s list =
+    list
+        |> getUserProtagonists s
+        |> List.length
+        |> (>) 0
+
+
+getUserProtagonists : String -> List Protagonist -> List Protagonist
+getUserProtagonists s list =
+    List.filter (\d -> d.twitterScreenName == s) list
 
 
 

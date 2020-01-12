@@ -486,7 +486,7 @@ isRoomMember { roomData, loginUser } =
                     False
 
                 Just user ->
-                    True
+                    RoomData.isRoomMember data user
 
 
 subscriptions : Model -> Sub Msg
@@ -508,11 +508,28 @@ view : Model -> Html Msg
 view model =
     div [ class "rooper-container" ]
         [ nav [ class "rooper-page-head" ]
-            [ div [ class "left" ] [ text "惨劇RoopeR online tool" ]
+            [ headNavLeft model
             , headNavRight model
             ]
         , main_ [ class "rooper-main" ] [ mainContent model ]
         , modal model
+        ]
+
+
+headNavLeft : Model -> Html msg
+headNavLeft model =
+    div [ class "left" ]
+        [ case model.roomData of
+            Nothing ->
+                text "惨劇RoopeR online tool"
+
+            Just data ->
+                case model.loginUser of
+                    Nothing ->
+                        text "惨劇RoopeR online tool"
+
+                    Just user ->
+                        RoomData.tags (Just data) user
         ]
 
 
