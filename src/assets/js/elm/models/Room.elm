@@ -34,6 +34,11 @@ initRoom =
     Nothing
 
 
+getId : Room -> String
+getId room =
+    Id.toString room.id
+
+
 
 -- Decoder
 

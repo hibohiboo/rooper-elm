@@ -125,6 +125,7 @@ type Msg
       -- ルーム
     | ReadedRoomData Value
     | ReadedRoomForRoomData Value
+    | InitRoomData
 
 
 type MenuState
@@ -426,6 +427,14 @@ update msg model =
                 Nothing ->
                     ( model, Cmd.none )
 
+        InitRoomData ->
+            case model.room of
+                Just r ->
+                    ( { model | roomData = Just <| RoomData.initRoomData r }, Cmd.none )
+
+                Nothing ->
+                    update (OpenModal "部屋の読み込みに失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
+
 
 isRoomOwner : Model -> Bool
 isRoomOwner { room } =
@@ -501,7 +510,7 @@ loginedUserRoomView model =
     if isRoomOwner model then
         case model.roomData of
             Nothing ->
-                text "ルーム作成ボタン予定"
+                Form.createButton InitRoomData "ルーム初期化"
 
             Just _ ->
                 text "ルーム"
@@ -689,7 +698,7 @@ mainScriptContent model =
     div []
         [ div [ class "columns is-mobile" ]
             [ div [ class "column is-5 is-offset-7" ]
-                [ Form.createButton (ChangeUrl "/rooper/script/create/")
+                [ Form.createButton (ChangeUrl "/rooper/script/create/") "create"
                 ]
             ]
         , case scripts of

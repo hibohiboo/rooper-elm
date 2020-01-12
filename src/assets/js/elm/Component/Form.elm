@@ -36,13 +36,13 @@ errors messages =
             messages
 
 
-createButton : msg -> Html msg
-createButton message =
+createButton : msg -> String -> Html msg
+createButton message buttonText =
     button [ class "button is-primary", onClick message ]
         [ span [ class "icon" ]
             [ i [ class "fas fa-plus" ] []
             ]
-        , span [] [ text "create" ]
+        , span [] [ text buttonText ]
         ]
 
 

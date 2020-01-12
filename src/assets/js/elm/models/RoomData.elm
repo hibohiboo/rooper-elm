@@ -4,6 +4,7 @@ import Html exposing (..)
 import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
+import Models.Room as Room exposing (Room)
 
 
 type alias RoomData =
@@ -14,6 +15,16 @@ type alias RoomData =
 init : Maybe RoomData
 init =
     Nothing
+
+
+initRoomData : Room -> RoomData
+initRoomData room =
+    RoomData (Room.getId room)
+
+
+
+-- Method
+-- Decoder
 
 
 decode : D.Value -> Maybe RoomData
