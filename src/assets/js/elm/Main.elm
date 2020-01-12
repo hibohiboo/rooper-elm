@@ -125,6 +125,7 @@ type Msg
       -- ルーム
     | ReadedRoomData Value
     | ReadedRoomForRoomData Value
+    | ConfirmInitRoomData
     | InitRoomData
     | ConfirmPublishCloseSheet
     | PublishCloseSheet
@@ -429,6 +430,9 @@ update msg model =
                 Nothing ->
                     ( model, Cmd.none )
 
+        ConfirmInitRoomData ->
+            ( { model | modalState = ConfirmModalState "初期化" InitRoomData }, Cmd.none )
+
         InitRoomData ->
             case model.room of
                 Just r ->
@@ -436,10 +440,10 @@ update msg model =
                         roomData =
                             RoomData.initRoomData r
                     in
-                    ( { model | roomData = Just roomData }, Cmd.batch [ updateRoomData (RoomData.encode roomData) ] )
+                    ( { model | roomData = Just roomData, modalState = CloseModalState }, Cmd.batch [ updateRoomData (RoomData.encode roomData) ] )
 
                 Nothing ->
-                    update (OpenModal "部屋の読み込みに失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
+                    update (OpenModal "部屋の読み込みに失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab, modalState = CloseModalState }
 
         ConfirmPublishCloseSheet ->
             ( { model | modalState = ConfirmModalState "公開" PublishCloseSheet }, Cmd.none )
@@ -590,11 +594,11 @@ ownerRoomView model =
                                 ]
                             ]
                 , Form.field
-                    [ button [ class "button is-danger", onClick InitRoomData ]
+                    [ button [ class "button is-danger", onClick ConfirmInitRoomData ]
                         [ span [ class "icon" ]
                             [ i [ class "fas fa-book" ] []
                             ]
-                        , span [] [ text "ルーム初期化" ]
+                        , span [] [ text "ルーム初期化..." ]
                         ]
                     ]
                 ]
