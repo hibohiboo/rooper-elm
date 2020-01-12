@@ -973,7 +973,7 @@ headNavRight model =
             div [ class "right", onClick clickEvent ]
                 [ div [ class menuClass ]
                     [ ul []
-                        [ li [ onClick (ChangeUrl "/rooper/") ] [ text "TOP" ]
+                        [ li [ onClick (ChangeUrl "/rooper/") ] [ text "マイページ" ]
                         , li [ onClick SignOut ] [ text "サインアウト" ]
                         ]
                     ]
