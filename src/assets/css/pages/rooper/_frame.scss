@@ -58,8 +58,8 @@
 
       .menu {
         display: none;
-        padding-top: $header-height + 2rem;
         position: absolute;
+        top: $header-height + 1rem;
 
         &.open {
           display: block;
