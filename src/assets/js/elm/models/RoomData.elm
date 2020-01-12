@@ -5,12 +5,15 @@ import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
 import Models.Room as Room exposing (Room)
+import Models.RoomData.OpenSheet as OpenSheet exposing (OpenSheet)
+import Models.Script as Script
 import Models.User exposing (User)
 
 
 type alias RoomData =
     { id : String
     , protagonist1TwitterScreenName : String
+    , openSheet : OpenSheet
     }
 
 
@@ -21,7 +24,7 @@ init =
 
 initRoomData : Room -> RoomData
 initRoomData room =
-    RoomData (Room.getId room) room.protagonist1TwitterScreenName
+    RoomData (Room.getId room) room.protagonist1TwitterScreenName (Script.scriptToOpenSheet room.script)
 
 
 isRoomMember : RoomData -> User -> Bool
@@ -51,6 +54,7 @@ decoder =
     D.succeed RoomData
         |> Pipeline.required "id" D.string
         |> Pipeline.required "protagonist1TwitterScreenName" D.string
+        |> Pipeline.required "openSheet" OpenSheet.decoder
 
 
 
@@ -64,4 +68,17 @@ encode data =
     E.object
         [ ( "id", E.string data.id )
         , ( "protagonist1TwitterScreenName", E.string data.id )
+        , ( "openSheet", OpenSheet.encode data.openSheet )
         ]
+
+
+
+-- ==============================================================================================
+-- View
+-- ==============================================================================================
+
+
+openSheet : RoomData -> Html msg
+openSheet data =
+    data.openSheet
+        |> OpenSheet.openSheetView

@@ -571,8 +571,11 @@ notLoginedUserRoomView model =
         Nothing ->
             text "まだルームが作成されていません"
 
-        Just _ ->
-            text "ログインしてないルーム"
+        Just data ->
+            div []
+                [ text "ログインしてないルーム"
+                , RoomData.openSheet data
+                ]
 
 
 mainContentBox : Model -> Html Msg
@@ -632,7 +635,7 @@ modal model =
                             ]
                         , Form.field
                             [ label [ class "label has-text-white" ] [ text "事件" ]
-                            , div [ class "select" ] [ Script.incidents ChangeIncidentCreateFormIncident model.scriptForm ]
+                            , div [ class "select" ] [ Script.incidentsSelect ChangeIncidentCreateFormIncident model.scriptForm ]
                             ]
                         , Form.field
                             [ label [ class "label has-text-white" ] [ text "犯人" ]

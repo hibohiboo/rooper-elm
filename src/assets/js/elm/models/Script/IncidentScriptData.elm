@@ -6,6 +6,7 @@ import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
 import Models.Character as Character
+import Models.RoomData.OpenSheet exposing (OpenSheetIncident)
 import Models.TragedySet as TragedySet
 
 
@@ -41,3 +42,8 @@ assignedIncidentDays list =
 assignedCulpritCharacters : List IncidentScriptData -> List Character.Character
 assignedCulpritCharacters list =
     List.map (\d -> d.culprit) list
+
+
+incidentToOpenSheetIncident : IncidentScriptData -> OpenSheetIncident
+incidentToOpenSheetIncident { incident, day } =
+    OpenSheetIncident incident day

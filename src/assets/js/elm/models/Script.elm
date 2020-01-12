@@ -15,6 +15,7 @@ import Json.Encode.Extra as ExEncode
 import List.Extra as ExList
 import Models.Board as Board
 import Models.Character as Character
+import Models.RoomData.OpenSheet as OpenSheet exposing (OpenSheet)
 import Models.Script.Id as Id exposing (Id)
 import Models.Script.IncidentScriptData as IncidentScriptData exposing (IncidentScriptData)
 import Models.Script.Name as Name exposing (Name)
@@ -599,6 +600,15 @@ getNameError f =
 
 
 
+-- Open Sheet
+
+
+scriptToOpenSheet : Script -> OpenSheet
+scriptToOpenSheet { set, numberOfLoops, daysInOneLoop, incidents, extra } =
+    OpenSheet set numberOfLoops daysInOneLoop (List.map IncidentScriptData.incidentToOpenSheetIncident incidents) extra
+
+
+
 -- View
 
 
@@ -679,8 +689,8 @@ characterRoles char chgMsg scriptForm =
     Form.select ("-character-roles-" ++ Character.characterToString char.character) chgMsg roleKey optionList
 
 
-incidents : (String -> msg) -> RegisterForm -> Html msg
-incidents chgMsg scriptForm =
+incidentsSelect : (String -> msg) -> RegisterForm -> Html msg
+incidentsSelect chgMsg scriptForm =
     let
         roleKey =
             ""
@@ -855,52 +865,9 @@ closeSheet s =
 
 openSheet : Script -> Html msg
 openSheet s =
-    div [ class "box" ]
-        [ div [ class "title is-5" ]
-            [ text "公開シート"
-            ]
-        , Form.field
-            [ label [ class "label has-text-white" ]
-                [ text "使用セット"
-                ]
-            , div []
-                [ text <| TragedySet.toName s.set
-                ]
-            ]
-        , Form.field
-            [ label [ class "label has-text-white" ] [ text "ループ回数" ]
-            , div []
-                [ text <| String.fromInt s.numberOfLoops
-                ]
-            ]
-        , Form.field
-            [ label [ class "label has-text-white" ] [ text "１ループ日数" ]
-            , div []
-                [ text <| String.fromInt s.daysInOneLoop
-                ]
-            ]
-        , Form.field
-            [ label [ class "label has-text-white" ] [ text "特別ルール" ]
-            , Form.control
-                [ div [ style "white-space" "pre-wrap" ] [ text s.extra ]
-                ]
-            ]
-        , Form.field [ label [ class "label" ] [ text "事件" ] ]
-        , Form.field <|
-            (s.incidents
-                |> List.sortBy .day
-                |> List.map
-                    (\data ->
-                        div [ class "media" ]
-                            [ div [ class "media-left", style "padding-left" "1rem", style "align-self" "center" ]
-                                [ text <| String.fromInt data.day ++ "日目"
-                                ]
-                            , div [ class "media-content is-flex" ]
-                                [ div [ style "text-align" "center", style "align-self" "center" ] [ text data.incident.name ] ]
-                            ]
-                    )
-            )
-        ]
+    s
+        |> scriptToOpenSheet
+        |> OpenSheet.openSheetView
 
 
 
