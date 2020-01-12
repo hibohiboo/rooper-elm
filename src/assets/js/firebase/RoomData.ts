@@ -1,6 +1,6 @@
 
 export async function listenRoomData(db, roomId, ports) {
-  const unsubscribe = db.collection("roomsData").doc("roomId")
+  const unsubscribe = db.collection("roomsData").doc(roomId)
     .onSnapshot(function (doc) {
       console.log("Current data: ", doc.data());
       ports.readedRoomData.send(doc.data());
@@ -13,3 +13,10 @@ export async function listenRoomData(db, roomId, ports) {
   }
 }
 
+export async function updateRoomData(obj, db, timestamp, uid) {
+  const { id } = obj;
+
+  return Promise.all([
+    (await db.collection('roomsData').doc(id).set({ ...obj, id, uid, updatedAt: timestamp })),
+  ]);
+}

@@ -430,7 +430,11 @@ update msg model =
         InitRoomData ->
             case model.room of
                 Just r ->
-                    ( { model | roomData = Just <| RoomData.initRoomData r }, Cmd.none )
+                    let
+                        roomData =
+                            RoomData.initRoomData r
+                    in
+                    ( { model | roomData = Just roomData }, Cmd.batch [ updateRoomData (RoomData.encode roomData) ] )
 
                 Nothing ->
                     update (OpenModal "部屋の読み込みに失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }

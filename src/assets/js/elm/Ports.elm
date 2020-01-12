@@ -70,3 +70,6 @@ port readedRoomData : (Value -> msg) -> Sub msg
 
 
 port readedRoomForRoomData : (Value -> msg) -> Sub msg
+
+
+port updateRoomData : Value -> Cmd msg

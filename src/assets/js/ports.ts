@@ -100,4 +100,10 @@ export async function logginedPorts(ports, firebaseBackEnd, user) {
     // /script/のように、最後の/がないとfirebaseでエラーとなる
     pushHistory(ports, `${document.location.protocol}//${document.location.hostname}${port}/rooper/`);
   });
+
+  ports.updateRoomData.subscribe(async data => {
+    showLoader();
+    await RoomData.updateRoomData(data, firebaseBackEnd.db, firebaseBackEnd.getTimestamp(), user.uid);
+    hideLoader();
+  });
 }
