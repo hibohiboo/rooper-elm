@@ -560,7 +560,7 @@ ownerRoomView model =
         Nothing ->
             Form.createButton InitRoomData "ルーム初期化"
 
-        Just _ ->
+        Just data ->
             div []
                 [ div [] [ text "脚本家" ]
                 , case model.room of
@@ -569,14 +569,26 @@ ownerRoomView model =
 
                     Nothing ->
                         text ""
-                , Form.field
-                    [ button [ class "button is-danger", onClick ConfirmPublishCloseSheet ]
-                        [ span [ class "icon" ]
-                            [ i [ class "fas fa-book" ] []
+                , case data.script of
+                    Nothing ->
+                        Form.field
+                            [ button [ class "button is-danger", onClick ConfirmPublishCloseSheet ]
+                                [ span [ class "icon" ]
+                                    [ i [ class "fas fa-book" ] []
+                                    ]
+                                , span [] [ text "非公開シートを公開..." ]
+                                ]
                             ]
-                        , span [] [ text "非公開シートを公開..." ]
-                        ]
-                    ]
+
+                    Just _ ->
+                        Form.field
+                            [ button [ class "button is-info", disabled True ]
+                                [ span [ class "icon" ]
+                                    [ i [ class "fas fa-book" ] []
+                                    ]
+                                , span [] [ text "非公開シート公開済" ]
+                                ]
+                            ]
                 , Form.field
                     [ button [ class "button is-danger", onClick InitRoomData ]
                         [ span [ class "icon" ]
