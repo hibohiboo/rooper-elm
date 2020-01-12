@@ -764,15 +764,17 @@ editRoomView { roomForm, scripts, room } =
                 [ ( "脚本を選択してください", List.member Room.RequiredScript (Room.errors roomForm) )
                 ]
             ]
-        , Form.field
-            [ label [ class "label has-text-white" ]
-                [ text "脚本家TwitterID"
-                ]
-            , Form.control
-                [ input [ class "input", required True, onInput (ChangeRoomTwitterScreenName Mastermind), value roomForm.mastermindTwitterScreenName ] []
-                ]
-            , Form.errors
-                [ ( "脚本家IDを入力してください", List.member Room.RequiredMastermindTwitterScreenName (Room.errors roomForm) )
+        , div [ style "display" "none" ]
+            [ Form.field
+                [ label [ class "label has-text-white" ]
+                    [ text "脚本家TwitterID"
+                    ]
+                , Form.control
+                    [ input [ class "input", required True, onInput (ChangeRoomTwitterScreenName Mastermind), value roomForm.mastermindTwitterScreenName ] []
+                    ]
+                , Form.errors
+                    [ ( "脚本家IDを入力してください", List.member Room.RequiredMastermindTwitterScreenName (Room.errors roomForm) )
+                    ]
                 ]
             ]
         , Form.field
