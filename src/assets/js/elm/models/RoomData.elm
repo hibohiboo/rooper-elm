@@ -5,10 +5,12 @@ import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
 import Models.Room as Room exposing (Room)
+import Models.User exposing (User)
 
 
 type alias RoomData =
     { id : String
+    , protagonist1TwitterScreenName : String
     }
 
 
@@ -19,7 +21,16 @@ init =
 
 initRoomData : Room -> RoomData
 initRoomData room =
-    RoomData (Room.getId room)
+    RoomData (Room.getId room) room.protagonist1TwitterScreenName
+
+
+isRoomMember : RoomData -> User -> Bool
+isRoomMember data user =
+    if user.twitterScreenName == data.protagonist1TwitterScreenName then
+        True
+
+    else
+        False
 
 
 
@@ -39,6 +50,7 @@ decoder : D.Decoder RoomData
 decoder =
     D.succeed RoomData
         |> Pipeline.required "id" D.string
+        |> Pipeline.required "protagonist1TwitterScreenName" D.string
 
 
 
@@ -51,4 +63,5 @@ encode : RoomData -> E.Value
 encode data =
     E.object
         [ ( "id", E.string data.id )
+        , ( "protagonist1TwitterScreenName", E.string data.id )
         ]

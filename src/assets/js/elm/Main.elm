@@ -450,6 +450,21 @@ isRoomOwner { room } =
             False
 
 
+isRoomMember : Model -> Bool
+isRoomMember { roomData, loginUser } =
+    case roomData of
+        Nothing ->
+            False
+
+        Just data ->
+            case loginUser of
+                Nothing ->
+                    False
+
+                Just user ->
+                    True
+
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
@@ -512,16 +527,37 @@ mainContent model =
 loginedUserRoomView : Model -> Html Msg
 loginedUserRoomView model =
     if isRoomOwner model then
-        case model.roomData of
-            Nothing ->
-                Form.createButton InitRoomData "ルーム初期化"
-
-            Just _ ->
-                text "ルーム"
+        ownerRoomView model
 
     else
         -- TODO: メンバーのときの見た目
         notMemberRoomView model
+
+
+ownerRoomView : Model -> Html Msg
+ownerRoomView model =
+    case model.roomData of
+        Nothing ->
+            Form.createButton InitRoomData "ルーム初期化"
+
+        Just _ ->
+            div []
+                [ div [] [ text "脚本家" ]
+                , Form.field
+                    [ button [ class "button is-primary", onClick InitRoomData ]
+                        [ span [ class "icon" ]
+                            [ i [ class "fas fa-book" ] []
+                            ]
+                        , span [] [ text "ルーム初期化" ]
+                        ]
+                    ]
+                , case model.room of
+                    Just room ->
+                        Script.scriptView room.script
+
+                    Nothing ->
+                        text ""
+                ]
 
 
 notMemberRoomView : Model -> Html Msg
@@ -536,7 +572,7 @@ notLoginedUserRoomView model =
             text "まだルームが作成されていません"
 
         Just _ ->
-            text "ルーム"
+            text "ログインしてないルーム"
 
 
 mainContentBox : Model -> Html Msg

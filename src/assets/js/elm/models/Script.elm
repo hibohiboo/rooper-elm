@@ -736,7 +736,18 @@ selectTragedySet chgMsg scriptForm =
 scriptView : Script -> Html msg
 scriptView s =
     div []
-        [ Form.field
+        [ closeSheet s
+        , openSheet s
+        ]
+
+
+closeSheet : Script -> Html msg
+closeSheet s =
+    div [ class "box" ]
+        [ div [ class "title is-5" ]
+            [ text "非公開シート"
+            ]
+        , Form.field
             [ label [ class "label has-text-white" ]
                 [ text "脚本名"
                 ]
@@ -839,7 +850,6 @@ scriptView s =
                 [ div [ style "white-space" "pre-wrap" ] [ text s.memo ]
                 ]
             ]
-        , openSheet s
         ]
 
 
