@@ -126,6 +126,8 @@ type Msg
     | ReadedRoomData Value
     | ReadedRoomForRoomData Value
     | InitRoomData
+    | ConfirmPublishCloseSheet
+    | PublishCloseSheet
 
 
 type MenuState
@@ -145,7 +147,7 @@ type MainAreaState
 type ModalState
     = OpenModalState
     | CloseModalState
-    | ConfirmModalState Msg
+    | ConfirmModalState String Msg
     | CharacterSelectModalState
     | OpenAddIncidentModalState
 
@@ -183,7 +185,7 @@ update msg model =
             ( { model | modalState = CloseModalState }, Cmd.none )
 
         OpenModalConfirmScriptDelete ->
-            ( { model | modalState = ConfirmModalState DeleteScript }, Cmd.none )
+            ( { model | modalState = ConfirmModalState "削除" DeleteScript }, Cmd.none )
 
         ChangeRoomName name ->
             ( { model | roomForm = Room.setName name model.roomForm }, Cmd.none )
@@ -439,6 +441,24 @@ update msg model =
                 Nothing ->
                     update (OpenModal "部屋の読み込みに失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
 
+        ConfirmPublishCloseSheet ->
+            ( { model | modalState = ConfirmModalState "公開" PublishCloseSheet }, Cmd.none )
+
+        PublishCloseSheet ->
+            let
+                roomData =
+                    model.roomData |> Maybe.map (model.room |> Maybe.map .script |> RoomData.setScript)
+
+                command =
+                    case roomData of
+                        Just d ->
+                            updateRoomData (RoomData.encode d)
+
+                        Nothing ->
+                            Cmd.none
+            in
+            ( { model | roomData = roomData, modalState = CloseModalState }, Cmd.batch [ command ] )
+
 
 isRoomOwner : Model -> Bool
 isRoomOwner { room } =
@@ -543,20 +563,28 @@ ownerRoomView model =
         Just _ ->
             div []
                 [ div [] [ text "脚本家" ]
-                , Form.field
-                    [ button [ class "button is-primary", onClick InitRoomData ]
-                        [ span [ class "icon" ]
-                            [ i [ class "fas fa-book" ] []
-                            ]
-                        , span [] [ text "ルーム初期化" ]
-                        ]
-                    ]
                 , case model.room of
                     Just room ->
                         Script.scriptView room.script
 
                     Nothing ->
                         text ""
+                , Form.field
+                    [ button [ class "button is-danger", onClick ConfirmPublishCloseSheet ]
+                        [ span [ class "icon" ]
+                            [ i [ class "fas fa-book" ] []
+                            ]
+                        , span [] [ text "非公開シートを公開..." ]
+                        ]
+                    ]
+                , Form.field
+                    [ button [ class "button is-danger", onClick InitRoomData ]
+                        [ span [ class "icon" ]
+                            [ i [ class "fas fa-book" ] []
+                            ]
+                        , span [] [ text "ルーム初期化" ]
+                        ]
+                    ]
                 ]
 
 
@@ -575,6 +603,7 @@ notLoginedUserRoomView model =
             div []
                 [ text "ログインしてないルーム"
                 , RoomData.openSheet data
+                , RoomData.closeSheet data
                 ]
 
 
@@ -603,14 +632,14 @@ modal model =
     Bulma.modal isActive CloseModal <|
         div [ class "box rooper-modal-message" ]
             [ case modalState of
-                ConfirmModalState message ->
+                ConfirmModalState confirmText message ->
                     div []
                         [ div [ class "columns is-mobile" ]
-                            [ text "削除します。よろしいですか？"
+                            [ text <| confirmText ++ "します。よろしいですか？"
                             ]
                         , div [ class "columns is-mobile" ]
                             [ div [ class "column  is-4  is-offset-1 control" ]
-                                [ button [ class "button is-danger", onClick message ] [ text "削除" ]
+                                [ button [ class "button is-danger", onClick message ] [ text confirmText ]
                                 ]
                             , div [ class "column  is-4 is-offset-2 control" ]
                                 [ button [ class "button is-info", onClick CloseModal ] [ text "キャンセル" ] ]
