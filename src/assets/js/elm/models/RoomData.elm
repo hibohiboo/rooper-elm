@@ -8,11 +8,10 @@ import Json.Encode as E
 
 
 type alias RoomData =
-    { id : Id
-    , name : Name
-    , scriptId : String
-    , mastermindTwitterScreenName : String
-    , protagonist1TwitterScreenName : String
-    , protagonist2TwitterScreenName : String
-    , protagonist3TwitterScreenName : String
+    { id : String
     }
+
+
+init : Maybe RoomData
+init =
+    Nothing

@@ -63,4 +63,7 @@ port deleteScript : String -> Cmd msg
 port deletedScript : (Bool -> msg) -> Sub msg
 
 
-port readRoomData : String -> Cmd msg
+port listenRoomData : String -> Cmd msg
+
+
+port readedRoomData : (Value -> msg) -> Sub msg

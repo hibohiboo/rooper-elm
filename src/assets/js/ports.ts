@@ -1,5 +1,6 @@
 import { historyInit, pushHistory } from './utils/history';
 import * as Room from './firebase/Room';
+import * as RoomData from './firebase/RoomData';
 import * as Script from './firebase/Script';
 import { hideLoader, showLoader } from './utils/spinner';
 
@@ -9,6 +10,9 @@ export function commonPorts(ports, firebaseBackEnd) {
   ports.initLoginUI.subscribe(() => {
     if (window.location.href.indexOf('room') !== -1 && window.location.href.indexOf('edit') === -1) { return; }// 部屋の見学の時にはログインさせない
     firebaseBackEnd.createLoginUi()
+  });
+  ports.listenRoomData.subscribe(roomId => {
+    RoomData.listenRoomData(firebaseBackEnd.db, roomId, ports)
   });
 }
 

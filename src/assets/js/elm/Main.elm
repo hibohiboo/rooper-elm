@@ -10,6 +10,7 @@ import Html.Events.Extra exposing (onChange)
 import Json.Encode exposing (Value)
 import Models.Character as Character exposing (Character)
 import Models.Room as Room exposing (Room)
+import Models.RoomData as RoomData exposing (RoomData)
 import Models.RoomName as RoomName exposing (RoomName)
 import Models.Script as Script exposing (Script)
 import Models.Script.IncidentScriptData exposing (IncidentScriptData)
@@ -43,6 +44,7 @@ type alias Model =
     , scriptForm : Script.RegisterForm
     , script : Maybe Script
     , scripts : Maybe (List ScriptName)
+    , roomData : Maybe RoomData
     , mainAreaState : MainAreaState
     , modalState : ModalState
     , modalMessage : String
@@ -65,7 +67,7 @@ init flags =
 
 initModel : Maybe User -> Model
 initModel flags =
-    Model flags MenuClose Room.init Room.initRoom RoomName.initRoomNames Script.initForm Script.initScript ScriptName.initScriptNames MainTab CloseModalState ""
+    Model flags MenuClose Room.init Room.initRoom RoomName.initRoomNames Script.initForm Script.initScript ScriptName.initScriptNames RoomData.init MainTab CloseModalState ""
 
 
 
@@ -120,6 +122,8 @@ type Msg
     | ChangedRoomScript Value
     | ChangeRoomTwitterScreenName PlayerType String
     | ChangedRoom
+      -- ルーム
+    | ReadedRoomData Value
 
 
 type MenuState
@@ -203,7 +207,7 @@ update msg model =
                     ( { model | mainAreaState = RoomEditTab }, Cmd.batch [ readScriptNames (), readRoom s ] )
 
                 Route.Room s ->
-                    ( { model | mainAreaState = RoomTab }, Cmd.batch [ readRoomData s ] )
+                    ( { model | mainAreaState = RoomTab }, Cmd.batch [ listenRoomData s ] )
 
                 Route.NotFound ->
                     update (OpenModal ("指定されたURLが見つかりません。\nご確認お願いします。\n" ++ url)) { model | mainAreaState = NothingTab }
@@ -404,6 +408,10 @@ update msg model =
         ChangedRoom ->
             ( { model | room = Room.convert model.roomForm }, Cmd.none )
 
+        -- ルーム
+        ReadedRoomData val ->
+            ( model, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -415,6 +423,7 @@ subscriptions model =
         , deletedScript DeletedScript
         , readedRoom ReadedRoom
         , readedScriptForRoom ChangedRoomScript
+        , readedRoomData ReadedRoomData
         ]
 
 
