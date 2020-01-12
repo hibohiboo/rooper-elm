@@ -3,16 +3,27 @@ import * as Room from './firebase/Room';
 import * as RoomData from './firebase/RoomData';
 import * as Script from './firebase/Script';
 import { hideLoader, showLoader } from './utils/spinner';
+import { userInfo } from 'os';
 
-export function commonPorts(ports, firebaseBackEnd) {
+export function commonPorts(ports, firebaseBackEnd, user) {
   ports.errorToJs.subscribe((data: string) => console.log(data));
   ports.signOut.subscribe(() => firebaseBackEnd.signOut());
   ports.initLoginUI.subscribe(() => {
     if (window.location.href.indexOf('room') !== -1 && window.location.href.indexOf('edit') === -1) { return; }// 部屋の見学の時にはログインさせない
     firebaseBackEnd.createLoginUi()
   });
-  ports.listenRoomData.subscribe(roomId => {
+  ports.listenRoomData.subscribe(async roomId => {
+    if (!user) {
+      RoomData.listenRoomData(firebaseBackEnd.db, roomId, ports);
+      return;
+    }
+    showLoader();
+    const room = await Room.readRoom(firebaseBackEnd.db, roomId);
+    if (room.uid === user.uid) {
+      ports.readedRoomForRoomData.send(room);
+    }
     RoomData.listenRoomData(firebaseBackEnd.db, roomId, ports)
+    hideLoader();
   });
 }
 

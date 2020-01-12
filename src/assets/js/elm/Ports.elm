@@ -67,3 +67,6 @@ port listenRoomData : String -> Cmd msg
 
 
 port readedRoomData : (Value -> msg) -> Sub msg
+
+
+port readedRoomForRoomData : (Value -> msg) -> Sub msg

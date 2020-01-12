@@ -247,6 +247,18 @@ scriptSelectForm chgMsg list f =
 
 
 
+-- Decoder
+
+
+decodeRoomFromJson : D.Value -> Maybe Room
+decodeRoomFromJson json =
+    json
+        |> D.decodeValue (D.map convert formDecoder)
+        |> Result.toMaybe
+        |> Maybe.withDefault Nothing
+
+
+
 -- ==============================================================================================
 -- エンコーダ
 -- ==============================================================================================

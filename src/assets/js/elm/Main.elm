@@ -124,6 +124,7 @@ type Msg
     | ChangedRoom
       -- ルーム
     | ReadedRoomData Value
+    | ReadedRoomForRoomData Value
 
 
 type MenuState
@@ -207,7 +208,7 @@ update msg model =
                     ( { model | mainAreaState = RoomEditTab }, Cmd.batch [ readScriptNames (), readRoom s ] )
 
                 Route.Room s ->
-                    ( { model | mainAreaState = RoomTab }, Cmd.batch [ listenRoomData s ] )
+                    ( { model | mainAreaState = RoomTab, room = Nothing, roomData = Nothing }, Cmd.batch [ listenRoomData s ] )
 
                 Route.NotFound ->
                     update (OpenModal ("指定されたURLが見つかりません。\nご確認お願いします。\n" ++ url)) { model | mainAreaState = NothingTab }
@@ -410,7 +411,30 @@ update msg model =
 
         -- ルーム
         ReadedRoomData val ->
-            ( model, Cmd.none )
+            case RoomData.decode val of
+                Just data ->
+                    ( { model | roomData = Just data }, Cmd.none )
+
+                Nothing ->
+                    ( model, Cmd.none )
+
+        ReadedRoomForRoomData val ->
+            case Room.decodeRoomFromJson val of
+                Just s ->
+                    ( { model | room = Just s }, Cmd.none )
+
+                Nothing ->
+                    ( model, Cmd.none )
+
+
+isRoomOwner : Model -> Bool
+isRoomOwner { room } =
+    case room of
+        Just _ ->
+            True
+
+        Nothing ->
+            False
 
 
 subscriptions : Model -> Sub Msg
@@ -424,6 +448,7 @@ subscriptions model =
         , readedRoom ReadedRoom
         , readedScriptForRoom ChangedRoomScript
         , readedRoomData ReadedRoomData
+        , readedRoomForRoomData ReadedRoomForRoomData
         ]
 
 
@@ -465,10 +490,40 @@ mainContent model =
                     mainContentBox model
 
                 RoomTab ->
-                    text "ルーム建設予定地"
+                    loginedUserRoomView model
 
                 NothingTab ->
                     text ""
+
+
+loginedUserRoomView : Model -> Html Msg
+loginedUserRoomView model =
+    if isRoomOwner model then
+        case model.roomData of
+            Nothing ->
+                text "ルーム作成ボタン予定"
+
+            Just _ ->
+                text "ルーム"
+
+    else
+        -- TODO: メンバーのときの見た目
+        notMemberRoomView model
+
+
+notMemberRoomView : Model -> Html Msg
+notMemberRoomView model =
+    notLoginedUserRoomView model
+
+
+notLoginedUserRoomView : Model -> Html Msg
+notLoginedUserRoomView model =
+    case model.roomData of
+        Nothing ->
+            text "まだルームが作成されていません"
+
+        Just _ ->
+            text "ルーム"
 
 
 mainContentBox : Model -> Html Msg
@@ -623,11 +678,6 @@ logginedMainArea model =
 
         RoomEditTab ->
             editRoomView model
-
-
-notMemberRoomView : Model -> Html Msg
-notMemberRoomView model =
-    text "メンバーではありません。"
 
 
 mainScriptContent : Model -> Html Msg

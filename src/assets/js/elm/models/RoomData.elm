@@ -1,6 +1,5 @@
 module Models.RoomData exposing (..)
 
-import Form.Decoder as Decoder exposing (Decoder)
 import Html exposing (..)
 import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
@@ -15,3 +14,15 @@ type alias RoomData =
 init : Maybe RoomData
 init =
     Nothing
+
+
+decode : D.Value -> Maybe RoomData
+decode json =
+    D.decodeValue decoder json
+        |> Result.toMaybe
+
+
+decoder : D.Decoder RoomData
+decoder =
+    D.succeed RoomData
+        |> Pipeline.required "id" D.string

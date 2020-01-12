@@ -13,7 +13,7 @@ const initApp = async () => {
 
   const mountNode: HTMLElement = document.getElementById('app')!;
   const { ports } = Elm.Main.init({ node: mountNode, flags: user });
-  commonPorts(ports, firebaseBackEnd);
+  commonPorts(ports, firebaseBackEnd, user);
   if (user === null) {
     historyInit(ports);
     hideLoader();
