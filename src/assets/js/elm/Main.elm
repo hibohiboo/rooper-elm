@@ -47,6 +47,7 @@ type alias Model =
     , script : Maybe Script
     , scripts : Maybe (List ScriptName)
     , roomData : Maybe RoomData
+    , roomState : RoomState
     , mainAreaState : MainAreaState
     , modalState : ModalState
     , modalMessage : String
@@ -69,7 +70,7 @@ init flags =
 
 initModel : Maybe User -> Model
 initModel flags =
-    Model flags MenuClose Room.init Room.initRoom RoomName.initRoomNames RoomName.initRoomNames Script.initForm Script.initScript ScriptName.initScriptNames RoomData.init MainTab CloseModalState ""
+    Model flags MenuClose Room.init Room.initRoom RoomName.initRoomNames RoomName.initRoomNames Script.initForm Script.initScript ScriptName.initScriptNames RoomData.init RoomState.init MainTab CloseModalState ""
 
 
 
@@ -133,6 +134,8 @@ type Msg
     | ConfirmPublishCloseSheet
     | PublishCloseSheet
     | ChangeRoomDataEx String
+    | OpenRoomStateBottomNav
+    | CloseRoomStateBottomNav
 
 
 type MenuState
@@ -421,6 +424,12 @@ update msg model =
             ( { model | room = Room.convert model.roomForm }, Cmd.none )
 
         -- ルーム
+        OpenRoomStateBottomNav ->
+            ( { model | roomState = RoomState.setBottomNav True model.roomState }, Cmd.none )
+
+        CloseRoomStateBottomNav ->
+            ( { model | roomState = RoomState.setBottomNav False model.roomState }, Cmd.none )
+
         ReadedRoomData val ->
             case RoomData.decode val of
                 Just data ->
@@ -623,14 +632,16 @@ ownerRoomView model =
                         [ header
                             [ class "card-header" ]
                             [ p [ class "card-header-title" ] [ text "データボード" ]
-                            , RoomState.roomDataFormHeaderIcon
+                            , RoomState.roomDataFormHeaderIcon CloseRoomStateBottomNav OpenRoomStateBottomNav model.roomState
                             ]
-                        , RoomState.roomDataFormDataBoard
-                            [ --  td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataLoop, value <| String.fromInt data.loop ] [] ]
-                              -- , td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataDate, value <| String.fromInt data.date ] [] ]
-                              td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataEx, value <| String.fromInt data.ex ] [] ]
+                        , RoomState.roomDataFormContent
+                            [ RoomState.roomDataFormDataBoard
+                                [ --  td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataLoop, value <| String.fromInt data.loop ] [] ]
+                                  -- , td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataDate, value <| String.fromInt data.date ] [] ]
+                                  td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataEx, value <| String.fromInt data.ex ] [] ]
+                                ]
                             ]
-                        , footer [ class "card-footer" ]
+                        , RoomState.roomDataFormFooter
                             [ span [ class "card-footer-item" ]
                                 [ button [ class "button is-primary" ]
                                     [ span [] [ text "Next" ]
