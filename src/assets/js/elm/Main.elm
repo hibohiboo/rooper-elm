@@ -132,7 +132,7 @@ type Msg
     | InitRoomData
     | ConfirmPublishCloseSheet
     | PublishCloseSheet
-    | ChangeRoomDataLoop String
+    | ChangeRoomDataEx String
 
 
 type MenuState
@@ -470,8 +470,8 @@ update msg model =
             in
             ( { model | roomData = roomData, modalState = CloseModalState }, Cmd.batch [ command ] )
 
-        ChangeRoomDataLoop val ->
-            ( { model | roomData = model.roomData |> Maybe.map (RoomData.setLoop val) }, Cmd.none )
+        ChangeRoomDataEx val ->
+            ( { model | roomData = model.roomData |> Maybe.map (RoomData.setEx val) }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -626,16 +626,24 @@ ownerRoomView model =
                             , RoomState.roomDataFormHeaderIcon
                             ]
                         , RoomState.roomDataFormDataBoard
-                            [ td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataLoop, value <| String.fromInt data.loop ] [] ]
-                            , td [] [ input [ class "input", type_ "number", value <| String.fromInt data.date ] [] ]
-                            , td [] [ input [ class "input", type_ "number", value <| String.fromInt data.ex ] [] ]
+                            [ --  td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataLoop, value <| String.fromInt data.loop ] [] ]
+                              -- , td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataDate, value <| String.fromInt data.date ] [] ]
+                              td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataEx, value <| String.fromInt data.ex ] [] ]
                             ]
-                        , footer [ class "card-footer", style "display" "none" ]
+                        , footer [ class "card-footer" ]
                             [ span [ class "card-footer-item" ]
-                                [ span [] [ text "キャラクター" ]
+                                [ button [ class "button is-primary" ]
+                                    [ span [] [ text "Next" ]
+                                    , span [ class "icon" ]
+                                        [ i [ class "fas fa-arrow-right" ] []
+                                        ]
+                                    ]
                                 ]
                             , span [ class "card-footer-item" ]
-                                [ span [ class "is-active" ] [ text "データボード" ]
+                                [ span [] [ text "キャラクタ" ]
+                                ]
+                            , span [ class "card-footer-item" ]
+                                [ span [] [ text "データ" ]
                                 ]
                             ]
                         ]

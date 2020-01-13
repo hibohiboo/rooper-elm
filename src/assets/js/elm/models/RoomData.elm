@@ -78,6 +78,11 @@ setLoop s f =
     { f | loop = Maybe.withDefault 0 <| String.toInt s }
 
 
+setEx : String -> RoomData -> RoomData
+setEx s f =
+    { f | ex = Maybe.withDefault 0 <| String.toInt s }
+
+
 
 -- ==============================================================================================
 -- デコーダ
@@ -187,7 +192,7 @@ infos data =
         { loop, date, openSheet, ex } =
             data
     in
-    section [ class "section" ]
+    section [ class "section", style "padding-top" "0.5rem", style "padding-bottom" "0.5rem" ]
         [ table [ class "table" ]
             [ thead []
                 [ tr []

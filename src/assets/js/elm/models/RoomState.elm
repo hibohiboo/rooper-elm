@@ -40,9 +40,10 @@ roomDataFormDataBoard children =
             [ table [ class "table" ]
                 [ thead []
                     [ tr []
-                        [ th [] [ text "Loop" ]
-                        , th [] [ text "Date" ]
-                        , th [] [ text "Ex" ]
+                        [ --   th [] [ text "Loop" ]
+                          -- , th [] [ text "Date" ]
+                          -- ,
+                          th [] [ text "Exカウンタ" ]
                         ]
                     ]
                 , tbody []
