@@ -92,20 +92,33 @@ nextRoomDataState f =
     { f | state = RoomDataState.nextState f.state }
 
 
+changeCharacterParameter : (Int -> Character -> Character) -> String -> Character -> Character -> Character
+changeCharacterParameter method val c1 c2 =
+    if c1 == c2 then
+        method (Maybe.withDefault 0 <| String.toInt val) c1
+
+    else
+        c1
+
+
+charangeCharactersParameter : (Int -> Character -> Character) -> Character -> String -> List Character -> List Character
+charangeCharactersParameter method c s list =
+    List.map (\char -> changeCharacterParameter method s char c) list
+
+
 changeCharacterGoodWill : Character -> String -> RoomData -> RoomData
 changeCharacterGoodWill c s f =
-    { f
-        | characters =
-            List.map
-                (\char ->
-                    if c == char then
-                        Character.setGoodWill (Maybe.withDefault 0 <| String.toInt s) char
+    { f | characters = charangeCharactersParameter Character.setGoodWill c s f.characters }
 
-                    else
-                        char
-                )
-                f.characters
-    }
+
+changeCharacterParanoia : Character -> String -> RoomData -> RoomData
+changeCharacterParanoia c s f =
+    { f | characters = charangeCharactersParameter Character.setParanoia c s f.characters }
+
+
+changeCharacterIntrigue : Character -> String -> RoomData -> RoomData
+changeCharacterIntrigue c s f =
+    { f | characters = charangeCharactersParameter Character.setIntrigue c s f.characters }
 
 
 
@@ -250,10 +263,10 @@ stateView data =
         ]
 
 
-charactersForm : RoomData -> (Character -> String -> msg) -> Html msg
-charactersForm data addGoodWill =
+charactersForm : RoomData -> (Character -> String -> msg) -> (Character -> String -> msg) -> (Character -> String -> msg) -> Html msg
+charactersForm data changeG changeP changeI =
     div [ class "rooper-characters-form" ]
         (data.characters
             |> List.map
-                (\c -> Character.charactersFormItem c (addGoodWill c))
+                (\c -> Character.charactersFormItem c (changeG c) (changeP c) (changeI c))
         )

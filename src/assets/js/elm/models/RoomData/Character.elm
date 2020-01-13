@@ -54,11 +54,24 @@ characterFromCharacterScriptData { character, role, optionalNumber, turf } =
 -- ==============================================================================================
 -- メソッド
 -- ==============================================================================================
+-- ==============================================================================================
+-- setter
+-- ==============================================================================================
 
 
 setGoodWill : Int -> Character -> Character
 setGoodWill v c =
     { c | goodWill = v }
+
+
+setParanoia : Int -> Character -> Character
+setParanoia v c =
+    { c | paranoia = v }
+
+
+setIntrigue : Int -> Character -> Character
+setIntrigue v c =
+    { c | intrigue = v }
 
 
 
@@ -150,8 +163,8 @@ boardListWithNothing =
 -- ==============================================================================================
 
 
-charactersFormItem : Character -> (String -> msg) -> Html msg
-charactersFormItem c addGoodWill =
+charactersFormItem : Character -> (String -> msg) -> (String -> msg) -> (String -> msg) -> Html msg
+charactersFormItem c changeG changeP changeI =
     div []
         [ div [ class "rooper-character-room-form-item" ]
             [ img [ src (characterToCardUrl c) ] []
@@ -162,23 +175,19 @@ charactersFormItem c addGoodWill =
             , div []
                 [ text "友好"
                 , div []
-                    [ input [ value <| String.fromInt c.goodWill, onChange addGoodWill, type_ "number" ] []
+                    [ input [ value <| String.fromInt c.goodWill, onChange changeG, type_ "number" ] []
                     ]
                 ]
             , div []
                 [ text "不安"
                 , div []
-                    [ span [] [ text "▼" ]
-                    , span [] [ text <| String.fromInt c.paranoia ]
-                    , span [] [ text "▲" ]
+                    [ input [ value <| String.fromInt c.paranoia, onChange changeP, type_ "number" ] []
                     ]
                 ]
             , div []
                 [ text "暗躍"
                 , div []
-                    [ span [] [ text "▼" ]
-                    , span [] [ text <| String.fromInt c.intrigue ]
-                    , span [] [ text "▲" ]
+                    [ input [ value <| String.fromInt c.intrigue, onChange changeI, type_ "number" ] []
                     ]
                 ]
             , div []
