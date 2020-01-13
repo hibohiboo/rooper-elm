@@ -165,21 +165,6 @@ filterRoleLimitHelp remaining accumulator =
                         filterRoleLimitHelp rest (first :: accumulator)
 
 
-exceptRoleList : List a -> List a -> List a
-exceptRoleList list target =
-    exceptRoleListHelp list target
-
-
-exceptRoleListHelp : List a -> List a -> List a
-exceptRoleListHelp remaining accumulator =
-    case remaining of
-        [] ->
-            accumulator
-
-        first :: rest ->
-            exceptRoleListHelp rest (ExList.remove first accumulator)
-
-
 
 -- ルール
 

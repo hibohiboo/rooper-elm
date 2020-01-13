@@ -20,6 +20,7 @@ import Models.Script.Id as Id exposing (Id)
 import Models.Script.IncidentScriptData as IncidentScriptData exposing (IncidentScriptData)
 import Models.Script.Name as Name exposing (Name)
 import Models.TragedySet as TragedySet exposing (TragedySet)
+import Models.Utility.List as UtilityList
 
 
 
@@ -300,7 +301,7 @@ unassignedRoles scriptForm =
         scriptRoleList =
             getScriptRoles scriptForm
     in
-    TragedySet.exceptRoleList characterRoleList scriptRoleList
+    UtilityList.exceptList characterRoleList scriptRoleList
 
 
 mysteryBoyRoles : RegisterForm -> List TragedySet.Role
