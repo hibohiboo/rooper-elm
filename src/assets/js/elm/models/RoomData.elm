@@ -73,6 +73,11 @@ setScript s f =
     { f | script = s }
 
 
+setLoop : String -> RoomData -> RoomData
+setLoop s f =
+    { f | loop = Maybe.withDefault 0 <| String.toInt s }
+
+
 
 -- ==============================================================================================
 -- デコーダ

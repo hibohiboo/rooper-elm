@@ -12,6 +12,7 @@ import Models.Character as Character exposing (Character)
 import Models.Room as Room exposing (Room)
 import Models.RoomData as RoomData exposing (RoomData)
 import Models.RoomName as RoomName exposing (RoomName)
+import Models.RoomState as RoomState exposing (RoomState)
 import Models.Script as Script exposing (Script)
 import Models.Script.IncidentScriptData exposing (IncidentScriptData)
 import Models.ScriptName as ScriptName exposing (ScriptName)
@@ -131,6 +132,7 @@ type Msg
     | InitRoomData
     | ConfirmPublishCloseSheet
     | PublishCloseSheet
+    | ChangeRoomDataLoop String
 
 
 type MenuState
@@ -468,6 +470,9 @@ update msg model =
             in
             ( { model | roomData = roomData, modalState = CloseModalState }, Cmd.batch [ command ] )
 
+        ChangeRoomDataLoop val ->
+            ( { model | roomData = model.roomData |> Maybe.map (RoomData.setLoop val) }, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -618,33 +623,14 @@ ownerRoomView model =
                         [ header
                             [ class "card-header" ]
                             [ p [ class "card-header-title" ] [ text "データボード" ]
-                            , span [ class "card-header-icon" ]
-                                [ span [ class "icon" ]
-                                    [ i [ class "fas fa-angle-down" ] []
-                                    ]
-                                ]
+                            , RoomState.roomDataFormHeaderIcon
                             ]
-                        , div [ class "card-content" ]
-                            [ div [ class "content" ]
-                                [ table [ class "table" ]
-                                    [ thead []
-                                        [ tr []
-                                            [ th [] [ text "Loop" ]
-                                            , th [] [ text "Date" ]
-                                            , th [] [ text "Ex" ]
-                                            ]
-                                        ]
-                                    , tbody []
-                                        [ tr []
-                                            [ td [] [ input [ class "input", type_ "number", value <| String.fromInt data.loop ] [] ]
-                                            , td [] [ input [ class "input", type_ "number", value <| String.fromInt data.date ] [] ]
-                                            , td [] [ input [ class "input", type_ "number", value <| String.fromInt data.ex ] [] ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
+                        , RoomState.roomDataFormDataBoard
+                            [ td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataLoop, value <| String.fromInt data.loop ] [] ]
+                            , td [] [ input [ class "input", type_ "number", value <| String.fromInt data.date ] [] ]
+                            , td [] [ input [ class "input", type_ "number", value <| String.fromInt data.ex ] [] ]
                             ]
-                        , footer [ class "card-footer" ]
+                        , footer [ class "card-footer", style "display" "none" ]
                             [ span [ class "card-footer-item" ]
                                 [ span [] [ text "キャラクター" ]
                                 ]
