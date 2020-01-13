@@ -144,6 +144,7 @@ type Msg
     | ChangeCharacterGoodWill RoomCharacter.Character String
     | ChangeCharacterParanoia RoomCharacter.Character String
     | ChangeCharacterIntrigue RoomCharacter.Character String
+    | ChangeCharacterLocation RoomCharacter.Character String
 
 
 type MenuState
@@ -512,6 +513,9 @@ update msg model =
         ChangeCharacterIntrigue c s ->
             ( { model | roomData = Maybe.map (RoomData.changeCharacterIntrigue c s) model.roomData }, Cmd.none )
 
+        ChangeCharacterLocation c s ->
+            ( { model | roomData = Maybe.map (RoomData.changeCharacterLocation c s) model.roomData }, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -673,7 +677,7 @@ mastermindBottomForm model data =
         , RoomState.roomDataFormContent
             [ case model.roomState.tabsState of
                 RoomState.Character ->
-                    RoomData.charactersForm data ChangeCharacterGoodWill ChangeCharacterParanoia ChangeCharacterIntrigue
+                    RoomData.charactersForm data ChangeCharacterLocation ChangeCharacterGoodWill ChangeCharacterParanoia ChangeCharacterIntrigue
 
                 RoomState.Data ->
                     RoomState.roomDataFormDataBoard

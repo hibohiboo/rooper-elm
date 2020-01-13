@@ -60,6 +60,16 @@ characterFromCharacterScriptData { character, role, optionalNumber, turf } =
 -- ==============================================================================================
 
 
+setFirstLocation : Board -> Character -> Character
+setFirstLocation b c =
+    { c | firstLocation = b }
+
+
+setLocation : String -> Character -> Character
+setLocation s c =
+    { c | location = Board.boardFromString s }
+
+
 setGoodWill : Int -> Character -> Character
 setGoodWill v c =
     { c | goodWill = v }
@@ -164,14 +174,14 @@ boardListWithNothing c =
 -- ==============================================================================================
 
 
-charactersFormItem : Character -> (String -> msg) -> (String -> msg) -> (String -> msg) -> Html msg
-charactersFormItem c changeGMsg changePMsg changeIMsg =
+charactersFormItem : Character -> (String -> msg) -> (String -> msg) -> (String -> msg) -> (String -> msg) -> Html msg
+charactersFormItem c changeLocationMsg changeGMsg changePMsg changeIMsg =
     div []
         [ div [ class "rooper-character-room-form-item" ]
             [ img [ src (characterToCardUrl c) ] []
             , div []
                 [ text "ボード"
-                , div [] [ characterLocationBoards c changeGMsg ]
+                , div [] [ characterLocationBoards c changeLocationMsg ]
                 ]
             , div []
                 [ text "友好"

@@ -92,6 +92,22 @@ nextRoomDataState f =
     { f | state = RoomDataState.nextState f.state }
 
 
+changeCharacterLocation : Character -> String -> RoomData -> RoomData
+changeCharacterLocation c s f =
+    { f
+        | characters =
+            List.map
+                (\char ->
+                    if char == c then
+                        Character.setLocation s char
+
+                    else
+                        char
+                )
+                f.characters
+    }
+
+
 changeCharacterParameter : (Int -> Character -> Character) -> String -> Character -> Character -> Character
 changeCharacterParameter method val c1 c2 =
     if c1 == c2 then
@@ -263,10 +279,10 @@ stateView data =
         ]
 
 
-charactersForm : RoomData -> (Character -> String -> msg) -> (Character -> String -> msg) -> (Character -> String -> msg) -> Html msg
-charactersForm data changeG changeP changeI =
+charactersForm : RoomData -> (Character -> String -> msg) -> (Character -> String -> msg) -> (Character -> String -> msg) -> (Character -> String -> msg) -> Html msg
+charactersForm data changeLocationMsg changeGMsg changePMsg changeIMsg =
     div [ class "rooper-characters-form" ]
         (data.characters
             |> List.map
-                (\c -> Character.charactersFormItem c (changeG c) (changeP c) (changeI c))
+                (\c -> Character.charactersFormItem c (changeLocationMsg c) (changeGMsg c) (changePMsg c) (changeIMsg c))
         )
