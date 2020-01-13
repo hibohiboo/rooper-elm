@@ -28,20 +28,25 @@ export function commonPorts(ports, firebaseBackEnd, user) {
 }
 
 export async function logginedPorts(ports, firebaseBackEnd, user) {
-  let rooms = await Room.readRooms(firebaseBackEnd.db, user.uid, user.storeUserId);
-  if (rooms.length === 0) {
+  // 初期設定
+  let myRooms = await Room.readRooms(firebaseBackEnd.db, user.uid, user.storeUserId);
+
+  if (myRooms.length === 0) {
     const room = {
       createUserId: user.storeUserId, id: '', name: `room-${user.twitterScreenName}`, uid: user.uid,
     };
     Room.addRoom(room, firebaseBackEnd.db, firebaseBackEnd.getTimestamp(), user.uid, user.storeUserId);
 
     // 再取得
-    rooms = await Room.readRooms(firebaseBackEnd.db, user.uid, user.storeUserId);
+    myRooms = await Room.readRooms(firebaseBackEnd.db, user.uid, user.storeUserId);
   }
-  ports.readedRooms.send(rooms);
+  ports.readedMyRooms.send(myRooms);
+  ports.readedRooms.send(await Room.readRoomNames(firebaseBackEnd.db, user.uid, user.twitterScreenName));
+
+  // 取得イベント時
   ports.readRooms.subscribe(async () => {
-    const readRooms = await Room.readRooms(firebaseBackEnd.db, user.uid, user.storeUserId);
-    ports.readedRooms.send(readRooms);
+    ports.readedMyRooms.send(await Room.readRooms(firebaseBackEnd.db, user.uid, user.storeUserId));
+    ports.readedRooms.send(await Room.readRoomNames(firebaseBackEnd.db, user.uid, user.twitterScreenName));
   });
 
 

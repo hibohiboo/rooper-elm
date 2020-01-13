@@ -22,8 +22,18 @@ export async function addRoom({ name }: { name: String }, db, timestamp, uid, st
 
   return Promise.all([
     (await userRef.collection('rooms').doc(id).set(userRoom)), // ユーザ画面に部屋一覧を表示するために名前のみ保持
+    (await db.collection('roomNames').doc(id).set(userRoom)),
     (await db.collection('rooms').doc(id).set(room)), // 残りの情報は専用のコレクションに保存
   ]);
+}
+
+export async function readRoomNames(db, uid, twitterScreenName) {
+  const querySnapshot = await db.collection('roomNames').where("members", "array-contains", twitterScreenName).get();
+  const rooms: any[] = [];
+  await querySnapshot.forEach((doc) => {
+    rooms.push(doc.data());
+  });
+  return rooms;
 }
 
 /**
@@ -61,7 +71,7 @@ export async function readRoom(db, roomId) {
  * @param storeUserId
  */
 export async function updateRoom(obj, db, timestamp, uid, storeUserId) {
-  const { id, name, script } = obj;
+  const { id, name, script, mastermindTwitterScreenName, protagonist1TwitterScreenName, protagonist2TwitterScreenName, protagonist3TwitterScreenName } = obj;
   const roomNameRef = db.collection('users').doc(storeUserId).collection('rooms').doc(id);
   const doc = await roomNameRef.get();
   const roomName = {
@@ -70,6 +80,7 @@ export async function updateRoom(obj, db, timestamp, uid, storeUserId) {
 
   return Promise.all([
     (await roomNameRef.set(roomName)),
+    (await db.collection('roomNames').doc(id).set({ ...roomName, members: [mastermindTwitterScreenName, protagonist1TwitterScreenName, protagonist2TwitterScreenName, protagonist3TwitterScreenName] })),
     (await db.collection('rooms').doc(id).set({ ...obj, id, uid, updatedAt: timestamp, createdAt: doc.data().createdAt })),
   ]);
 }

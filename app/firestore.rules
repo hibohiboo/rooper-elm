@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  function isSignedIn() {
+    return request.auth != null;
+  }
+
+  // 制限をしたら、クエリのほうでもその制約を意識する必要がある。 https://firebase.google.com/docs/firestore/security/rules-query?hl=ja
+  function isOwner(rsc) {
+    // データ作成した本人であることを確認
+    return isSignedIn() && request.auth.uid == rsc.data.uid;
+  }
+  match /databases/{database}/documents {
+    match /users/{document=**} {
+      allow read;
+      allow create: if isSignedIn();
+      // resouce 変数には変更前の要求されたドキュメントが格納される https://firebase.google.com/docs/firestore/security/rules-conditions?hl=ja
+      allow update: if isOwner(resource);
+    }
+    match /scripts/{scriptId} {
+      allow create: if isSignedIn();
+      allow read,  update: if isOwner(resource);
+    }
+    match /rooms/{roomId} {
+      allow read;
+      allow create: if isSignedIn();
+      allow update: if isOwner(resource);
+    }
+    match /roomNames/{roomId} {
+      allow read;
+      allow create: if isSignedIn();
+      allow update: if isOwner(resource);
+    }
+    match /roomsData/{roomId} {
+      allow read, update;
+      allow create: if isSignedIn();
+    }
+  }
+}

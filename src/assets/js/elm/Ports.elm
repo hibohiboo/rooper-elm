@@ -24,6 +24,9 @@ port readRooms : () -> Cmd msg
 port readedRooms : (Value -> msg) -> Sub msg
 
 
+port readedMyRooms : (Value -> msg) -> Sub msg
+
+
 port readRoom : String -> Cmd msg
 
 

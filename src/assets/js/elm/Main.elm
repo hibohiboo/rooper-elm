@@ -41,6 +41,7 @@ type alias Model =
     , roomForm : Room.RegisterForm
     , room : Maybe Room
     , rooms : Maybe (List RoomName)
+    , myRooms : Maybe (List RoomName)
     , scriptForm : Script.RegisterForm
     , script : Maybe Script
     , scripts : Maybe (List ScriptName)
@@ -67,7 +68,7 @@ init flags =
 
 initModel : Maybe User -> Model
 initModel flags =
-    Model flags MenuClose Room.init Room.initRoom RoomName.initRoomNames Script.initForm Script.initScript ScriptName.initScriptNames RoomData.init MainTab CloseModalState ""
+    Model flags MenuClose Room.init Room.initRoom RoomName.initRoomNames RoomName.initRoomNames Script.initForm Script.initScript ScriptName.initScriptNames RoomData.init MainTab CloseModalState ""
 
 
 
@@ -117,6 +118,7 @@ type Msg
     | ChangeRoomId String
     | UpdateRoom
     | ReadedRooms Value
+    | ReadedMyRooms Value
     | ReadedRoom Value
     | ChangeRoomScript String
     | ChangedRoomScript Value
@@ -353,6 +355,9 @@ update msg model =
         ReadedRooms val ->
             ( { model | rooms = RoomName.decodeRoomNameListFromJson val }, Cmd.none )
 
+        ReadedMyRooms val ->
+            ( { model | myRooms = RoomName.decodeRoomNameListFromJson val }, Cmd.none )
+
         ReadedRoom val ->
             let
                 registerForm =
@@ -493,6 +498,7 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
         [ readedRooms ReadedRooms
+        , readedMyRooms ReadedMyRooms
         , changedUrl ChangedUrl
         , readedScriptNames ReadedScriptNames
         , readedScript ReadedScript
@@ -821,15 +827,23 @@ mainScriptContent model =
 mainTopContent : Model -> Html Msg
 mainTopContent model =
     let
-        { rooms } =
+        { rooms, myRooms } =
             model
     in
-    case rooms of
-        Just r ->
-            div [] [ RoomName.roomEdits r, RoomName.rooms r ]
+    div []
+        [ case myRooms of
+            Just r ->
+                RoomName.roomEdits r
 
-        Nothing ->
-            text ""
+            Nothing ->
+                text ""
+        , case rooms of
+            Just r ->
+                RoomName.rooms r
+
+            Nothing ->
+                text ""
+        ]
 
 
 editRoomView : Model -> Html Msg
