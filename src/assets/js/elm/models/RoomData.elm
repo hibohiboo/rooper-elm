@@ -232,3 +232,16 @@ stateView data =
     div [ class "rooper-roomdata-state" ]
         [ div [] [ text <| RoomDataState.toName data.state ]
         ]
+
+
+charactersForm : RoomData -> Html msg
+charactersForm data =
+    div []
+        (data.characters
+            |> List.map
+                (\c ->
+                    div []
+                        [ text c.name
+                        ]
+                )
+        )

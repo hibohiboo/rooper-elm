@@ -510,9 +510,13 @@ littleGirl =
 
 characterToCardUrl : Character -> String
 characterToCardUrl c =
-    let
-        filename =
-            case c.characterType of
+    characterTypeToCardUrl c.characterType
+
+
+characterTypeToCardUrl : CharacterType -> String
+characterTypeToCardUrl t =
+    "/assets/images/characters/"
+        ++ (case t of
                 BoyStudent ->
                     "char0.png"
 
@@ -593,8 +597,7 @@ characterToCardUrl c =
 
                 LittleGirl ->
                     "silhouette.png"
-    in
-    "/assets/images/characters/" ++ filename
+           )
 
 
 

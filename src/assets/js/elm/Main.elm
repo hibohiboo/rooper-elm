@@ -138,6 +138,8 @@ type Msg
     | CloseRoomStateBottomNav
     | NextRoomDataState
     | UpdateRoomData
+    | CharacterRoomDataState
+    | DataRoomDataState
 
 
 type MenuState
@@ -491,6 +493,12 @@ update msg model =
             in
             ( model, Cmd.batch [ command ] )
 
+        CharacterRoomDataState ->
+            ( { model | roomState = RoomState.setCharacterTab model.roomState }, Cmd.none )
+
+        DataRoomDataState ->
+            ( { model | roomState = RoomState.setDataTab model.roomState }, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -637,37 +645,47 @@ ownerRoomView model =
                             ]
                         ]
                     ]
-                , RoomState.roomDataBottomForm model.roomState
-                    [ header
-                        [ class "card-header" ]
-                        [ p [ class "card-header-title" ] [ text "データボード" ]
-                        , RoomState.roomDataFormHeaderIcon CloseRoomStateBottomNav OpenRoomStateBottomNav model.roomState
+                , mastermindBottomForm model data
+                ]
+
+
+mastermindBottomForm : Model -> RoomData -> Html Msg
+mastermindBottomForm model data =
+    RoomState.roomDataBottomForm model.roomState
+        [ header
+            [ class "card-header" ]
+            [ RoomState.roomDataFormHeaderTitle model.roomState
+            , RoomState.roomDataFormHeaderIcon CloseRoomStateBottomNav OpenRoomStateBottomNav model.roomState
+            ]
+        , RoomState.roomDataFormContent
+            [ case model.roomState.tabsState of
+                RoomState.Character ->
+                    RoomData.charactersForm data
+
+                RoomState.Data ->
+                    RoomState.roomDataFormDataBoard
+                        [ --  td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataLoop, value <| String.fromInt data.loop ] [] ]
+                          -- , td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataDate, value <| String.fromInt data.date ] [] ]
+                          td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataEx, value <| String.fromInt data.ex ] [] ]
                         ]
-                    , RoomState.roomDataFormContent
-                        [ RoomState.roomDataFormDataBoard
-                            [ --  td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataLoop, value <| String.fromInt data.loop ] [] ]
-                              -- , td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataDate, value <| String.fromInt data.date ] [] ]
-                              td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataEx, value <| String.fromInt data.ex ] [] ]
-                            ]
-                        ]
-                    , RoomState.roomDataFormFooter
-                        [ span [ class "card-footer-item" ]
-                            [ button [ class "button is-primary", onClick NextRoomDataState ]
-                                [ span [] [ text "Next" ]
-                                , span [ class "icon" ]
-                                    [ i [ class "fas fa-arrow-right" ] []
-                                    ]
-                                ]
-                            ]
-                        , span [ class "card-footer-item" ]
-                            [ span [] [ text "キャラクタ" ]
-                            ]
-                        , span [ class "card-footer-item" ]
-                            [ span [] [ text "データ" ]
-                            ]
+            ]
+        , RoomState.roomDataFormFooter
+            [ span [ class "card-footer-item" ]
+                [ button [ class "button is-primary", onClick NextRoomDataState ]
+                    [ span [] [ text "Next" ]
+                    , span [ class "icon" ]
+                        [ i [ class "fas fa-arrow-right" ] []
                         ]
                     ]
                 ]
+            , span [ class "card-footer-item", onClick CharacterRoomDataState ]
+                [ span [] [ text "キャラクタ" ]
+                ]
+            , span [ class "card-footer-item", onClick DataRoomDataState ]
+                [ span [] [ text "データ" ]
+                ]
+            ]
+        ]
 
 
 isRoomMember : Model -> Bool

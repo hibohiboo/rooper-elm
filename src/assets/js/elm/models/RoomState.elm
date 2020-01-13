@@ -26,17 +26,27 @@ type alias RoomState =
 
 type TabsState
     = Character
-    | Game
+    | Data
 
 
 init : RoomState
 init =
-    RoomState Game True
+    RoomState Data True
 
 
 setBottomNav : Bool -> RoomState -> RoomState
 setBottomNav b f =
     { f | bottomNavOpen = b }
+
+
+setCharacterTab : RoomState -> RoomState
+setCharacterTab f =
+    { f | tabsState = Character }
+
+
+setDataTab : RoomState -> RoomState
+setDataTab f =
+    { f | tabsState = Data }
 
 
 
@@ -57,6 +67,19 @@ roomDataBottomForm state children =
     in
     nav [ c ]
         [ div [ class "card" ] children ]
+
+
+roomDataFormHeaderTitle : RoomState -> Html msg
+roomDataFormHeaderTitle state =
+    p [ class "card-header-title" ]
+        [ text <|
+            case state.tabsState of
+                Data ->
+                    "データボード"
+
+                Character ->
+                    "キャラクター"
+        ]
 
 
 roomDataFormContent : List (Html msg) -> Html msg
