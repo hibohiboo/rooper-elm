@@ -20,6 +20,7 @@ type alias RoomData =
     , protagonists : List Protagonist
     , openSheet : OpenSheet
     , script : Maybe Script
+    , loop : Int
     }
 
 
@@ -37,7 +38,7 @@ initRoomData room =
         protagonists =
             Protagonist.init room.protagonist1TwitterScreenName room.protagonist2TwitterScreenName room.protagonist3TwitterScreenName
     in
-    RoomData (Room.getId room) mastermind protagonists (Script.scriptToOpenSheet room.script) Nothing
+    RoomData (Room.getId room) mastermind protagonists (Script.scriptToOpenSheet room.script) Nothing 1
 
 
 
@@ -90,6 +91,7 @@ decoder =
         |> Pipeline.required "protagonists" (D.list Protagonist.decoder)
         |> Pipeline.required "openSheet" OpenSheet.decoder
         |> Pipeline.optional "script" Script.scriptDecoder Nothing
+        |> Pipeline.optional "loop" D.int 0
 
 
 
@@ -106,6 +108,7 @@ encode data =
         , ( "protagonists", E.list Protagonist.encode data.protagonists )
         , ( "openSheet", OpenSheet.encode data.openSheet )
         , ( "script", ExEncode.maybe Script.encode data.script )
+        , ( "loop", E.int data.loop )
         ]
 
 
@@ -165,3 +168,21 @@ tags data user =
                             )
                     ]
                 )
+
+
+infos : RoomData -> Html msg
+infos data =
+    section [ class "section" ]
+        [ table [ class "table" ]
+            [ thead []
+                [ tr []
+                    [ th [] [ text "Loop" ]
+                    ]
+                ]
+            , tbody []
+                [ tr []
+                    [ td [] [ text <| String.fromInt data.loop ]
+                    ]
+                ]
+            ]
+        ]

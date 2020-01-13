@@ -469,31 +469,6 @@ update msg model =
             ( { model | roomData = roomData, modalState = CloseModalState }, Cmd.batch [ command ] )
 
 
-isRoomOwner : Model -> Bool
-isRoomOwner { room } =
-    case room of
-        Just _ ->
-            True
-
-        Nothing ->
-            False
-
-
-isRoomMember : Model -> Bool
-isRoomMember { roomData, loginUser } =
-    case roomData of
-        Nothing ->
-            False
-
-        Just data ->
-            case loginUser of
-                Nothing ->
-                    False
-
-                Just user ->
-                    RoomData.isRoomMember data user
-
-
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
@@ -581,6 +556,16 @@ loginedUserRoomView model =
         notMemberRoomView model
 
 
+isRoomOwner : Model -> Bool
+isRoomOwner { room } =
+    case room of
+        Just _ ->
+            True
+
+        Nothing ->
+            False
+
+
 ownerRoomView : Model -> Html Msg
 ownerRoomView model =
     case model.roomData of
@@ -589,42 +574,61 @@ ownerRoomView model =
 
         Just data ->
             div []
-                [ div [] [ text "脚本家" ]
-                , case model.room of
-                    Just room ->
-                        Script.scriptView room.script
+                [ RoomData.infos data
+                , section [ class "section" ]
+                    [ case model.room of
+                        Just room ->
+                            Script.scriptView room.script
 
-                    Nothing ->
-                        text ""
-                , case data.script of
-                    Nothing ->
-                        Form.field
-                            [ button [ class "button is-danger", onClick ConfirmPublishCloseSheet ]
-                                [ span [ class "icon" ]
-                                    [ i [ class "fas fa-book" ] []
+                        Nothing ->
+                            text ""
+                    ]
+                , div [ class "box" ]
+                    [ case data.script of
+                        Nothing ->
+                            Form.field
+                                [ button [ class "button is-danger", onClick ConfirmPublishCloseSheet ]
+                                    [ span [ class "icon" ]
+                                        [ i [ class "fas fa-book" ] []
+                                        ]
+                                    , span [] [ text "非公開シートを公開..." ]
                                     ]
-                                , span [] [ text "非公開シートを公開..." ]
                                 ]
-                            ]
 
-                    Just _ ->
-                        Form.field
-                            [ button [ class "button is-info", disabled True ]
-                                [ span [ class "icon" ]
-                                    [ i [ class "fas fa-book" ] []
+                        Just _ ->
+                            Form.field
+                                [ button [ class "button is-info", disabled True ]
+                                    [ span [ class "icon" ]
+                                        [ i [ class "fas fa-book" ] []
+                                        ]
+                                    , span [] [ text "非公開シート公開済" ]
                                     ]
-                                , span [] [ text "非公開シート公開済" ]
                                 ]
+                    , Form.field
+                        [ button [ class "button is-danger", onClick ConfirmInitRoomData ]
+                            [ span [ class "icon" ]
+                                [ i [ class "fas fa-book" ] []
+                                ]
+                            , span [] [ text "ルーム初期化..." ]
                             ]
-                , Form.field
-                    [ button [ class "button is-danger", onClick ConfirmInitRoomData ]
-                        [ span [ class "icon" ]
-                            [ i [ class "fas fa-book" ] []
-                            ]
-                        , span [] [ text "ルーム初期化..." ]
                         ]
                     ]
                 ]
+
+
+isRoomMember : Model -> Bool
+isRoomMember { roomData, loginUser } =
+    case roomData of
+        Nothing ->
+            False
+
+        Just data ->
+            case loginUser of
+                Nothing ->
+                    False
+
+                Just user ->
+                    RoomData.isRoomMember data user
 
 
 notMemberRoomView : Model -> Html Msg
@@ -640,7 +644,7 @@ notLoginedUserRoomView model =
 
         Just data ->
             div []
-                [ text "ログインしてないルーム"
+                [ RoomData.infos data
                 , RoomData.openSheet data
                 , RoomData.closeSheet data
                 ]
