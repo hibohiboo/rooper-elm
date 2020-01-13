@@ -20,6 +20,7 @@ import Models.ScriptName as ScriptName exposing (ScriptName)
 type RoomDataState
     = InitLoop
     | PreTimeSpairal
+    | SetupCharacter
 
 
 init : RoomDataState
@@ -36,6 +37,9 @@ toString state =
         PreTimeSpairal ->
             "PreTimeSpairal"
 
+        SetupCharacter ->
+            "SetupCharacter"
+
 
 fromString : String -> Maybe RoomDataState
 fromString s =
@@ -45,6 +49,9 @@ fromString s =
 
         "PreTimeSpairal" ->
             Just PreTimeSpairal
+
+        "SetupCharacter" ->
+            Just SetupCharacter
 
         _ ->
             Nothing
@@ -59,6 +66,9 @@ toName state =
         PreTimeSpairal ->
             "時の狭間"
 
+        SetupCharacter ->
+            "キャラクターの配置"
+
 
 fromStringWithDefault : String -> RoomDataState
 fromStringWithDefault =
@@ -72,6 +82,9 @@ nextState state =
             PreTimeSpairal
 
         PreTimeSpairal ->
+            SetupCharacter
+
+        SetupCharacter ->
             InitLoop
 
 

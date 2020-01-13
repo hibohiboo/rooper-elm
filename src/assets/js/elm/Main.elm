@@ -137,6 +137,7 @@ type Msg
     | OpenRoomStateBottomNav
     | CloseRoomStateBottomNav
     | NextRoomDataState
+    | UpdateRoomData
 
 
 type MenuState
@@ -469,22 +470,26 @@ update msg model =
             let
                 roomData =
                     model.roomData |> Maybe.map (model.room |> Maybe.map .script |> RoomData.setScript)
+            in
+            update UpdateRoomData { model | roomData = roomData, modalState = CloseModalState }
 
+        ChangeRoomDataEx val ->
+            ( { model | roomData = model.roomData |> Maybe.map (RoomData.setEx val) }, Cmd.none )
+
+        NextRoomDataState ->
+            update UpdateRoomData { model | roomData = model.roomData |> Maybe.map RoomData.nextRoomDataState }
+
+        UpdateRoomData ->
+            let
                 command =
-                    case roomData of
+                    case model.roomData of
                         Just d ->
                             updateRoomData (RoomData.encode d)
 
                         Nothing ->
                             Cmd.none
             in
-            ( { model | roomData = roomData, modalState = CloseModalState }, Cmd.batch [ command ] )
-
-        ChangeRoomDataEx val ->
-            ( { model | roomData = model.roomData |> Maybe.map (RoomData.setEx val) }, Cmd.none )
-
-        NextRoomDataState ->
-            ( { model | roomData = model.roomData |> Maybe.map RoomData.nextRoomDataState }, Cmd.none )
+            ( model, Cmd.batch [ command ] )
 
 
 subscriptions : Model -> Sub Msg
