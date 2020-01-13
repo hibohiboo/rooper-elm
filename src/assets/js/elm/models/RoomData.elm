@@ -21,6 +21,7 @@ type alias RoomData =
     , openSheet : OpenSheet
     , script : Maybe Script
     , loop : Int
+    , date : Int
     }
 
 
@@ -38,7 +39,7 @@ initRoomData room =
         protagonists =
             Protagonist.init room.protagonist1TwitterScreenName room.protagonist2TwitterScreenName room.protagonist3TwitterScreenName
     in
-    RoomData (Room.getId room) mastermind protagonists (Script.scriptToOpenSheet room.script) Nothing 1
+    RoomData (Room.getId room) mastermind protagonists (Script.scriptToOpenSheet room.script) Nothing 1 1
 
 
 
@@ -92,6 +93,7 @@ decoder =
         |> Pipeline.required "openSheet" OpenSheet.decoder
         |> Pipeline.optional "script" Script.scriptDecoder Nothing
         |> Pipeline.optional "loop" D.int 0
+        |> Pipeline.optional "date" D.int 0
 
 
 
@@ -109,6 +111,7 @@ encode data =
         , ( "openSheet", OpenSheet.encode data.openSheet )
         , ( "script", ExEncode.maybe Script.encode data.script )
         , ( "loop", E.int data.loop )
+        , ( "date", E.int data.date )
         ]
 
 
@@ -118,14 +121,14 @@ encode data =
 -- ==============================================================================================
 
 
-openSheet : RoomData -> Html msg
-openSheet data =
+openSheetView : RoomData -> Html msg
+openSheetView data =
     data.openSheet
         |> OpenSheet.openSheetView
 
 
-closeSheet : RoomData -> Html msg
-closeSheet data =
+closeSheetView : RoomData -> Html msg
+closeSheetView data =
     case data.script of
         Just script ->
             Script.closeSheet script
@@ -172,16 +175,24 @@ tags data user =
 
 infos : RoomData -> Html msg
 infos data =
+    let
+        { loop, date, openSheet } =
+            data
+    in
     section [ class "section" ]
         [ table [ class "table" ]
             [ thead []
                 [ tr []
                     [ th [] [ text "Loop" ]
+                    , th [] [ text "Date" ]
+                    , th [] [ text "事件" ]
                     ]
                 ]
             , tbody []
                 [ tr []
-                    [ td [] [ text <| String.fromInt data.loop ]
+                    [ td [] [ text <| String.fromInt loop ]
+                    , td [] [ text <| String.fromInt date ]
+                    , td [] [ OpenSheet.incidentIcon date openSheet.incidents ]
                     ]
                 ]
             ]

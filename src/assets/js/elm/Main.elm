@@ -645,8 +645,8 @@ notLoginedUserRoomView model =
         Just data ->
             div []
                 [ RoomData.infos data
-                , RoomData.openSheet data
-                , RoomData.closeSheet data
+                , RoomData.openSheetView data
+                , RoomData.closeSheetView data
                 ]
 
 

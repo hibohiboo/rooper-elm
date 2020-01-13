@@ -24,6 +24,12 @@ type alias OpenSheet =
     }
 
 
+
+-- ==============================================================================================
+-- デコーダ
+-- ==============================================================================================
+
+
 decoder : D.Decoder OpenSheet
 decoder =
     D.succeed OpenSheet
@@ -120,3 +126,16 @@ openSheetView s =
                     )
             )
         ]
+
+
+incidentIcon : Int -> List OpenSheetIncident -> Html msg
+incidentIcon date list =
+    let
+        incidentDays =
+            List.map (\i -> i.day) list
+    in
+    if List.member date incidentDays then
+        text "有"
+
+    else
+        text ""
