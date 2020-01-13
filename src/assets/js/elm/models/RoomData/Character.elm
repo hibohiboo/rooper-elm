@@ -12,6 +12,7 @@ import Json.Encode.Extra as ExEncode
 import Models.Board as Board exposing (Board)
 import Models.Character exposing (CharacterScriptData, CharacterType)
 import Models.TragedySet as TragedySet exposing (Role)
+import Models.Utility.List as UtilityList
 
 
 type alias Character =
@@ -147,14 +148,14 @@ boardToName b =
             ""
 
 
-boardList : List ( String, String )
-boardList =
-    List.map (\b -> Tuple.pair (Board.boardToString b) b.name) Board.boards
+boardList : Character -> List ( String, String )
+boardList c =
+    List.map (\b -> Tuple.pair (Board.boardToString b) b.name) (UtilityList.exceptList c.forbiddenLocations Board.boards)
 
 
-boardListWithNothing : List ( String, String )
-boardListWithNothing =
-    ( "ボード外", "ボード外" ) :: boardList
+boardListWithNothing : Character -> List ( String, String )
+boardListWithNothing c =
+    ( "ボード外", "ボード外" ) :: boardList c
 
 
 
@@ -164,30 +165,30 @@ boardListWithNothing =
 
 
 charactersFormItem : Character -> (String -> msg) -> (String -> msg) -> (String -> msg) -> Html msg
-charactersFormItem c changeG changeP changeI =
+charactersFormItem c changeGMsg changePMsg changeIMsg =
     div []
         [ div [ class "rooper-character-room-form-item" ]
             [ img [ src (characterToCardUrl c) ] []
             , div []
                 [ text "ボード"
-                , div [] [ text <| boardToName c.location ]
+                , div [] [ characterLocationBoards c changeGMsg ]
                 ]
             , div []
                 [ text "友好"
                 , div []
-                    [ input [ value <| String.fromInt c.goodWill, onChange changeG, type_ "number" ] []
+                    [ input [ value <| String.fromInt c.goodWill, onChange changeGMsg, type_ "number" ] []
                     ]
                 ]
             , div []
                 [ text "不安"
                 , div []
-                    [ input [ value <| String.fromInt c.paranoia, onChange changeP, type_ "number" ] []
+                    [ input [ value <| String.fromInt c.paranoia, onChange changePMsg, type_ "number" ] []
                     ]
                 ]
             , div []
                 [ text "暗躍"
                 , div []
-                    [ input [ value <| String.fromInt c.intrigue, onChange changeI, type_ "number" ] []
+                    [ input [ value <| String.fromInt c.intrigue, onChange changeIMsg, type_ "number" ] []
                     ]
                 ]
             , div []
@@ -213,15 +214,15 @@ characterLocationBoards char chgMsg =
         optionList =
             case char.characterType of
                 Models.Character.Illusion ->
-                    boardListWithNothing
+                    boardListWithNothing char
 
                 Models.Character.GodlyBeing ->
-                    boardListWithNothing
+                    boardListWithNothing char
 
                 Models.Character.TransferStudent ->
-                    boardListWithNothing
+                    boardListWithNothing char
 
                 _ ->
-                    boardList
+                    boardList char
     in
     Form.select ("bottom-form-character-board-" ++ toString char) chgMsg boardKey optionList
