@@ -136,6 +136,7 @@ type Msg
     | ChangeRoomDataEx String
     | OpenRoomStateBottomNav
     | CloseRoomStateBottomNav
+    | NextRoomDataState
 
 
 type MenuState
@@ -482,6 +483,9 @@ update msg model =
         ChangeRoomDataEx val ->
             ( { model | roomData = model.roomData |> Maybe.map (RoomData.setEx val) }, Cmd.none )
 
+        NextRoomDataState ->
+            ( { model | roomData = model.roomData |> Maybe.map RoomData.nextRoomDataState }, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -590,7 +594,6 @@ ownerRoomView model =
             div []
                 [ RoomData.infos data
                 , RoomData.stateView data
-
                 , section [ class "section" ]
                     [ case model.room of
                         Just room ->
@@ -644,7 +647,7 @@ ownerRoomView model =
                         ]
                     , RoomState.roomDataFormFooter
                         [ span [ class "card-footer-item" ]
-                            [ button [ class "button is-primary" ]
+                            [ button [ class "button is-primary", onClick NextRoomDataState ]
                                 [ span [] [ text "Next" ]
                                 , span [ class "icon" ]
                                     [ i [ class "fas fa-arrow-right" ] []
@@ -691,6 +694,7 @@ notLoginedUserRoomView model =
         Just data ->
             div []
                 [ RoomData.infos data
+                , RoomData.stateView data
                 , RoomData.openSheetView data
                 , RoomData.closeSheetView data
                 ]

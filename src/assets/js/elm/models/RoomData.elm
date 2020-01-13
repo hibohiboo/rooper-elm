@@ -10,9 +10,10 @@ import Models.Room as Room exposing (Room)
 import Models.RoomData.MasterMind as MasterMind exposing (MasterMind)
 import Models.RoomData.OpenSheet as OpenSheet exposing (OpenSheet)
 import Models.RoomData.Protagonist as Protagonist exposing (Protagonist)
+import Models.RoomData.RoomDataState as RoomDataState exposing (RoomDataState)
 import Models.Script as Script exposing (Script)
 import Models.User exposing (User)
-import Models.RoomData.RoomDataState as RoomDataState exposing (RoomDataState)
+
 
 type alias RoomData =
     { id : String
@@ -23,7 +24,7 @@ type alias RoomData =
     , loop : Int
     , date : Int
     , ex : Int
-    , state: RoomDataState
+    , state : RoomDataState
     }
 
 
@@ -84,6 +85,11 @@ setEx s f =
     { f | ex = Maybe.withDefault 0 <| String.toInt s }
 
 
+nextRoomDataState : RoomData -> RoomData
+nextRoomDataState f =
+    { f | state = RoomDataState.nextState f.state }
+
+
 
 -- ==============================================================================================
 -- デコーダ
@@ -108,6 +114,7 @@ decoder =
         |> Pipeline.optional "date" D.int 0
         |> Pipeline.optional "ex" D.int 0
         |> Pipeline.optional "state" RoomDataState.decoder RoomDataState.init
+
 
 
 -- ==============================================================================================
@@ -215,8 +222,9 @@ infos data =
             ]
         ]
 
+
 stateView : RoomData -> Html msg
 stateView data =
-  div[class "rooper-roomdata-state"][
-                  div[][ text <| RoomDataState.toName data.state]
-            ]
+    div [ class "rooper-roomdata-state" ]
+        [ div [] [ text <| RoomDataState.toName data.state ]
+        ]

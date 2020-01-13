@@ -9,7 +9,6 @@ import Html.Events exposing (onClick)
 import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
-
 import Models.Script as Script exposing (Script)
 import Models.ScriptName as ScriptName exposing (ScriptName)
 
@@ -19,7 +18,8 @@ import Models.ScriptName as ScriptName exposing (ScriptName)
 
 
 type RoomDataState
-    = InitLoop | PreTimeSpairal
+    = InitLoop
+    | PreTimeSpairal
 
 
 init : RoomDataState
@@ -32,6 +32,7 @@ toString state =
     case state of
         InitLoop ->
             "InitLoop"
+
         PreTimeSpairal ->
             "PreTimeSpairal"
 
@@ -41,6 +42,7 @@ fromString s =
     case s of
         "InitLoop" ->
             Just InitLoop
+
         "PreTimeSpairal" ->
             Just PreTimeSpairal
 
@@ -53,6 +55,7 @@ toName state =
     case state of
         InitLoop ->
             "ループの準備"
+
         PreTimeSpairal ->
             "時の狭間"
 
@@ -60,6 +63,16 @@ toName state =
 fromStringWithDefault : String -> RoomDataState
 fromStringWithDefault =
     fromString >> Maybe.withDefault PreTimeSpairal
+
+
+nextState : RoomDataState -> RoomDataState
+nextState state =
+    case state of
+        InitLoop ->
+            PreTimeSpairal
+
+        PreTimeSpairal ->
+            InitLoop
 
 
 decoder : D.Decoder RoomDataState

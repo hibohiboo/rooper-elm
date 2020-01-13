@@ -24,6 +24,10 @@
   }
 
   &-bottom-form {
+    .card {
+      width: 100%;
+    }
+
     .card-content {
       display: none;
     }
