@@ -7,6 +7,7 @@ import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
 import Json.Encode.Extra as ExEncode
 import Models.Room as Room exposing (Room)
+import Models.RoomData.Character as Character exposing (Character)
 import Models.RoomData.MasterMind as MasterMind exposing (MasterMind)
 import Models.RoomData.OpenSheet as OpenSheet exposing (OpenSheet)
 import Models.RoomData.Protagonist as Protagonist exposing (Protagonist)
@@ -25,6 +26,7 @@ type alias RoomData =
     , date : Int
     , ex : Int
     , state : RoomDataState
+    , characters : List Character
     }
 
 
@@ -42,7 +44,7 @@ initRoomData room =
         protagonists =
             Protagonist.init room.protagonist1TwitterScreenName room.protagonist2TwitterScreenName room.protagonist3TwitterScreenName
     in
-    RoomData (Room.getId room) mastermind protagonists (Script.scriptToOpenSheet room.script) Nothing 1 1 0 RoomDataState.init
+    RoomData (Room.getId room) mastermind protagonists (Script.scriptToOpenSheet room.script) Nothing 1 1 0 RoomDataState.init (Character.charactersFromCharacterScriptDataList room.script.characters)
 
 
 
@@ -114,6 +116,7 @@ decoder =
         |> Pipeline.optional "date" D.int 0
         |> Pipeline.optional "ex" D.int 0
         |> Pipeline.optional "state" RoomDataState.decoder RoomDataState.init
+        |> Pipeline.optional "characters" (D.list Character.decoder) []
 
 
 
@@ -134,6 +137,7 @@ encode data =
         , ( "date", E.int data.date )
         , ( "ex", E.int data.ex )
         , ( "state", RoomDataState.encode data.state )
+        , ( "characters", E.list Character.encode data.characters )
         ]
 
 

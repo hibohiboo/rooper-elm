@@ -16,6 +16,11 @@ type BoardType
     | City
 
 
+decode : D.Decoder Board
+decode =
+    D.map (\b -> Maybe.withDefault shrine b) decodeBoard
+
+
 decodeBoard : D.Decoder (Maybe Board)
 decodeBoard =
     D.map boardFromString D.string

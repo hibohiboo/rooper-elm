@@ -48,6 +48,7 @@ type alias Character =
     , name : String
     , paranoiaLimit : Int
     , firstLocation : Board
+    , forbiddenLocations : List Board -- 禁止エリア
     }
 
 
@@ -95,7 +96,12 @@ characterScriptDataFromCharacter c =
 
 characterToString : Character -> String
 characterToString c =
-    case c.characterType of
+    characterTypeToString c.characterType
+
+
+characterTypeToString : CharacterType -> String
+characterTypeToString t =
+    case t of
         BoyStudent ->
             "BoyStudent"
 
@@ -266,6 +272,11 @@ characterFromString s =
             Nothing
 
 
+characterTypeFromString : String -> Maybe CharacterType
+characterTypeFromString s =
+    characterFromString s |> Maybe.map .characterType
+
+
 characters : List Character
 characters =
     [ boyStudent
@@ -360,137 +371,137 @@ encodeCharacterScriptData data =
 
 boyStudent : Character
 boyStudent =
-    Character BoyStudent "男子学生" 2 Board.school
+    Character BoyStudent "男子学生" 2 Board.school []
 
 
 girlStudent : Character
 girlStudent =
-    Character GirlStudent "女子学生" 3 Board.school
+    Character GirlStudent "女子学生" 3 Board.school []
 
 
 richMansDaughter : Character
 richMansDaughter =
-    Character RichMansDaughter "お嬢様" 1 Board.school
+    Character RichMansDaughter "お嬢様" 1 Board.school []
 
 
 shrineMaiden : Character
 shrineMaiden =
-    Character ShrineMaiden "巫女" 2 Board.shrine
+    Character ShrineMaiden "巫女" 2 Board.shrine [ Board.city ]
 
 
 policeOfficer : Character
 policeOfficer =
-    Character PoliceOfficer "刑事" 2 Board.city
+    Character PoliceOfficer "刑事" 2 Board.city []
 
 
 officeWorker : Character
 officeWorker =
-    Character OfficeWorker "サラリーマン" 2 Board.city
+    Character OfficeWorker "サラリーマン" 2 Board.city [ Board.school ]
 
 
 informer : Character
 informer =
-    Character Informer "情報屋" 3 Board.city
+    Character Informer "情報屋" 3 Board.city []
 
 
 doctor : Character
 doctor =
-    Character Doctor "医者" 2 Board.hospital
+    Character Doctor "医者" 2 Board.hospital []
 
 
 patient : Character
 patient =
-    Character Patient "患者" 2 Board.hospital
+    Character Patient "患者" 2 Board.hospital [ Board.school, Board.shrine, Board.city ]
 
 
 classRep : Character
 classRep =
-    Character ClassRep "委員長" 2 Board.school
+    Character ClassRep "委員長" 2 Board.school []
 
 
 mysteryBoy : Character
 mysteryBoy =
-    Character MysteryBoy "イレギュラー" 3 Board.school
+    Character MysteryBoy "イレギュラー" 3 Board.school []
 
 
 alien : Character
 alien =
-    Character Alien "異世界人" 2 Board.shrine
+    Character Alien "異世界人" 2 Board.shrine [ Board.hospital ]
 
 
 godlyBeing : Character
 godlyBeing =
-    Character GodlyBeing "神格" 3 Board.shrine
+    Character GodlyBeing "神格" 3 Board.shrine []
 
 
 popIdol : Character
 popIdol =
-    Character PopIdol "アイドル" 2 Board.city
+    Character PopIdol "アイドル" 2 Board.city []
 
 
 journalist : Character
 journalist =
-    Character Journalist "マスコミ" 2 Board.city
+    Character Journalist "マスコミ" 2 Board.city []
 
 
 boss : Character
 boss =
-    Character Boss "大物" 4 Board.city
+    Character Boss "大物" 4 Board.city []
 
 
 nurse : Character
 nurse =
-    Character Nurse "ナース" 2 Board.hospital
+    Character Nurse "ナース" 2 Board.hospital []
 
 
 henchman : Character
 henchman =
-    Character Henchman "手先" 1 Board.shrine
+    Character Henchman "手先" 1 Board.shrine []
 
 
 illusion : Character
 illusion =
-    Character Illusion "幻想" 3 Board.shrine
+    Character Illusion "幻想" 3 Board.shrine []
 
 
 scientist : Character
 scientist =
-    Character Scientist "学者" 2 Board.hospital
+    Character Scientist "学者" 2 Board.hospital []
 
 
 forensicSpecialist : Character
 forensicSpecialist =
-    Character ForensicSpecialist "鑑識官" 3 Board.city
+    Character ForensicSpecialist "鑑識官" 3 Board.city []
 
 
 ai : Character
 ai =
-    Character AI "A.I." 4 Board.city
+    Character AI "A.I." 4 Board.city []
 
 
 teacher : Character
 teacher =
-    Character Teacher "教師" 2 Board.school
+    Character Teacher "教師" 2 Board.school []
 
 
 transferStudent : Character
 transferStudent =
-    Character TransferStudent "転校生" 2 Board.school
+    Character TransferStudent "転校生" 2 Board.school []
 
 
 soldier : Character
 soldier =
-    Character Soldier "軍人" 3 Board.hospital
+    Character Soldier "軍人" 3 Board.hospital []
 
 
 blackCat : Character
 blackCat =
-    Character BlackCat "黒猫" 0 Board.shrine
+    Character BlackCat "黒猫" 0 Board.shrine []
 
 
 littleGirl : Character
 littleGirl =
-    Character LittleGirl "女の子" 1 Board.school
+    Character LittleGirl "女の子" 1 Board.school [ Board.shrine, Board.hospital, Board.city ]
 
 
 
