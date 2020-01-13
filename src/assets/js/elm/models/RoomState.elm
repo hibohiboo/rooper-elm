@@ -39,6 +39,12 @@ setBottomNav b f =
     { f | bottomNavOpen = b }
 
 
+
+-- ==============================================================================================
+-- View
+-- ==============================================================================================
+
+
 roomDataBottomForm : RoomState -> List (Html msg) -> Html msg
 roomDataBottomForm state children =
     let

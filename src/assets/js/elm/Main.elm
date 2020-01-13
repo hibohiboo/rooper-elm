@@ -589,6 +589,8 @@ ownerRoomView model =
         Just data ->
             div []
                 [ RoomData.infos data
+                , RoomData.stateView data
+
                 , section [ class "section" ]
                     [ case model.room of
                         Just room ->

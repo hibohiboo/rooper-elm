@@ -12,7 +12,7 @@ import Models.RoomData.OpenSheet as OpenSheet exposing (OpenSheet)
 import Models.RoomData.Protagonist as Protagonist exposing (Protagonist)
 import Models.Script as Script exposing (Script)
 import Models.User exposing (User)
-
+import Models.RoomData.RoomDataState as RoomDataState exposing (RoomDataState)
 
 type alias RoomData =
     { id : String
@@ -23,6 +23,7 @@ type alias RoomData =
     , loop : Int
     , date : Int
     , ex : Int
+    , state: RoomDataState
     }
 
 
@@ -40,7 +41,7 @@ initRoomData room =
         protagonists =
             Protagonist.init room.protagonist1TwitterScreenName room.protagonist2TwitterScreenName room.protagonist3TwitterScreenName
     in
-    RoomData (Room.getId room) mastermind protagonists (Script.scriptToOpenSheet room.script) Nothing 1 1 0
+    RoomData (Room.getId room) mastermind protagonists (Script.scriptToOpenSheet room.script) Nothing 1 1 0 RoomDataState.init
 
 
 
@@ -106,7 +107,7 @@ decoder =
         |> Pipeline.optional "loop" D.int 0
         |> Pipeline.optional "date" D.int 0
         |> Pipeline.optional "ex" D.int 0
-
+        |> Pipeline.optional "state" RoomDataState.decoder RoomDataState.init
 
 
 -- ==============================================================================================
@@ -125,6 +126,7 @@ encode data =
         , ( "loop", E.int data.loop )
         , ( "date", E.int data.date )
         , ( "ex", E.int data.ex )
+        , ( "state", RoomDataState.encode data.state )
         ]
 
 
@@ -212,3 +214,9 @@ infos data =
                 ]
             ]
         ]
+
+stateView : RoomData -> Html msg
+stateView data =
+  div[class "rooper-roomdata-state"][
+                  div[][ text <| RoomDataState.toName data.state]
+            ]
