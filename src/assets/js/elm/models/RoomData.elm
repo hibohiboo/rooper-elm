@@ -236,12 +236,8 @@ stateView data =
 
 charactersForm : RoomData -> Html msg
 charactersForm data =
-    div []
+    div [ class "rooper-characters-form" ]
         (data.characters
             |> List.map
-                (\c ->
-                    div []
-                        [ text c.name
-                        ]
-                )
+                Character.charactersFormItem
         )

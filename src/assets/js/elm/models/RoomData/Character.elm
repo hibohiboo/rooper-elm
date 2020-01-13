@@ -102,5 +102,56 @@ encode { characterType, name, paranoiaLimit, firstLocation, role, optionalNumber
 
 
 -- ==============================================================================================
+-- Method
+-- ==============================================================================================
+
+
+characterToCardUrl : Character -> String
+characterToCardUrl c =
+    Models.Character.characterTypeToCardUrl c.characterType
+
+
+boardToName : Maybe Board -> String
+boardToName b =
+    case b of
+        Just board ->
+            board.name
+
+        Nothing ->
+            ""
+
+
+
+-- ==============================================================================================
 -- View
 -- ==============================================================================================
+
+
+charactersFormItem : Character -> Html msg
+charactersFormItem c =
+    div []
+        [ div [ class "rooper-character-room-form-item" ]
+            [ img [ src (characterToCardUrl c) ] []
+            , div []
+                [ text "ボード"
+                , div [] [ text <| boardToName c.location ]
+                ]
+            , div []
+                [ text "友好"
+                , div [] [ text <| String.fromInt c.goodWill ]
+                ]
+            , div []
+                [ text "不安"
+                , div [] [ text <| String.fromInt c.paranoia ]
+                ]
+            , div []
+                [ text "暗躍"
+                , div [] [ text <| String.fromInt c.intrigue ]
+                ]
+            , div []
+                [ text "死亡"
+                , div [] [ input [ type_ "checkbox" ] [] ]
+                ]
+            ]
+        , div [] [ text c.name ]
+        ]

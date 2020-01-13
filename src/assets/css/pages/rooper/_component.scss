@@ -30,6 +30,8 @@
 
     .card-content {
       display: none;
+      max-height: 40vh;
+      overflow: scroll;
     }
 
     .card-footer {
@@ -55,6 +57,19 @@
       font-size: 1.5rem;
       padding: 0.5rem;
       text-align: center;
+    }
+  }
+
+  &-characters-form {
+    margin-left: -1rem;
+
+    .rooper-character-room-form-item {
+      display: grid;
+      grid-template-columns: 45px 1fr 1fr 1fr 1fr 1fr;
+
+      + div {
+        padding-bottom: 10px;
+      }
     }
   }
 }
