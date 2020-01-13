@@ -22,4 +22,24 @@
       outline: solid 1px #ff0;
     }
   }
+
+  &-bottom-form {
+    .card-content {
+      display: none;
+    }
+
+    .card-footer {
+      display: none;
+    }
+
+    &.is-active {
+      .card-content {
+        display: block;
+      }
+
+      .card-footer {
+        display: flex;
+      }
+    }
+  }
 }

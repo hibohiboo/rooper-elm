@@ -627,35 +627,33 @@ ownerRoomView model =
                             ]
                         ]
                     ]
-                , nav [ class "navbar is-fixed-bottom" ]
-                    [ div [ class "card" ]
-                        [ header
-                            [ class "card-header" ]
-                            [ p [ class "card-header-title" ] [ text "データボード" ]
-                            , RoomState.roomDataFormHeaderIcon CloseRoomStateBottomNav OpenRoomStateBottomNav model.roomState
+                , RoomState.roomDataBottomForm model.roomState
+                    [ header
+                        [ class "card-header" ]
+                        [ p [ class "card-header-title" ] [ text "データボード" ]
+                        , RoomState.roomDataFormHeaderIcon CloseRoomStateBottomNav OpenRoomStateBottomNav model.roomState
+                        ]
+                    , RoomState.roomDataFormContent
+                        [ RoomState.roomDataFormDataBoard
+                            [ --  td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataLoop, value <| String.fromInt data.loop ] [] ]
+                              -- , td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataDate, value <| String.fromInt data.date ] [] ]
+                              td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataEx, value <| String.fromInt data.ex ] [] ]
                             ]
-                        , RoomState.roomDataFormContent
-                            [ RoomState.roomDataFormDataBoard
-                                [ --  td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataLoop, value <| String.fromInt data.loop ] [] ]
-                                  -- , td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataDate, value <| String.fromInt data.date ] [] ]
-                                  td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataEx, value <| String.fromInt data.ex ] [] ]
-                                ]
-                            ]
-                        , RoomState.roomDataFormFooter
-                            [ span [ class "card-footer-item" ]
-                                [ button [ class "button is-primary" ]
-                                    [ span [] [ text "Next" ]
-                                    , span [ class "icon" ]
-                                        [ i [ class "fas fa-arrow-right" ] []
-                                        ]
+                        ]
+                    , RoomState.roomDataFormFooter
+                        [ span [ class "card-footer-item" ]
+                            [ button [ class "button is-primary" ]
+                                [ span [] [ text "Next" ]
+                                , span [ class "icon" ]
+                                    [ i [ class "fas fa-arrow-right" ] []
                                     ]
                                 ]
-                            , span [ class "card-footer-item" ]
-                                [ span [] [ text "キャラクタ" ]
-                                ]
-                            , span [ class "card-footer-item" ]
-                                [ span [] [ text "データ" ]
-                                ]
+                            ]
+                        , span [ class "card-footer-item" ]
+                            [ span [] [ text "キャラクタ" ]
+                            ]
+                        , span [ class "card-footer-item" ]
+                            [ span [] [ text "データ" ]
                             ]
                         ]
                     ]

@@ -39,6 +39,20 @@ setBottomNav b f =
     { f | bottomNavOpen = b }
 
 
+roomDataBottomForm : RoomState -> List (Html msg) -> Html msg
+roomDataBottomForm state children =
+    let
+        c =
+            if state.bottomNavOpen then
+                class "navbar is-fixed-bottom rooper-bottom-form is-active"
+
+            else
+                class "navbar is-fixed-bottom rooper-bottom-form"
+    in
+    nav [ c ]
+        [ div [ class "card" ] children ]
+
+
 roomDataFormContent : List (Html msg) -> Html msg
 roomDataFormContent children =
     div [ class "card-content" ]
@@ -81,9 +95,9 @@ roomDataFormHeaderIcon close open state =
         ]
         [ span [ class "icon" ]
             [ if state.bottomNavOpen then
-                text "▲"
+                text "▼"
 
               else
-                text "▼"
+                text "▲"
             ]
         ]
