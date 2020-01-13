@@ -58,7 +58,7 @@ characterFromCharacterScriptData { character, role, optionalNumber, turf } =
 
 setGoodWill : Int -> Character -> Character
 setGoodWill v c =
-    { c | goodWill = c.goodWill + v }
+    { c | goodWill = v }
 
 
 
@@ -150,7 +150,7 @@ boardListWithNothing =
 -- ==============================================================================================
 
 
-charactersFormItem : Character -> msg -> Html msg
+charactersFormItem : Character -> (String -> msg) -> Html msg
 charactersFormItem c addGoodWill =
     div []
         [ div [ class "rooper-character-room-form-item" ]
@@ -162,9 +162,7 @@ charactersFormItem c addGoodWill =
             , div []
                 [ text "友好"
                 , div []
-                    [ span [] [ text "▼" ]
-                    , span [] [ text <| String.fromInt c.goodWill ]
-                    , span [ onClick addGoodWill ] [ text "▲" ]
+                    [ input [ value <| String.fromInt c.goodWill, onChange addGoodWill, type_ "number" ] []
                     ]
                 ]
             , div []

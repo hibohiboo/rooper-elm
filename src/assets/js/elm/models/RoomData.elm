@@ -92,14 +92,14 @@ nextRoomDataState f =
     { f | state = RoomDataState.nextState f.state }
 
 
-addCharacterGoodWill : Character -> RoomData -> RoomData
-addCharacterGoodWill c f =
+changeCharacterGoodWill : Character -> String -> RoomData -> RoomData
+changeCharacterGoodWill c s f =
     { f
         | characters =
             List.map
                 (\char ->
                     if c == char then
-                        Character.setGoodWill 1 char
+                        Character.setGoodWill (Maybe.withDefault 0 <| String.toInt s) char
 
                     else
                         char
@@ -250,7 +250,7 @@ stateView data =
         ]
 
 
-charactersForm : RoomData -> (Character -> msg) -> Html msg
+charactersForm : RoomData -> (Character -> String -> msg) -> Html msg
 charactersForm data addGoodWill =
     div [ class "rooper-characters-form" ]
         (data.characters
