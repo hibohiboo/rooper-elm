@@ -22,6 +22,7 @@ type alias RoomData =
     , script : Maybe Script
     , loop : Int
     , date : Int
+    , ex : Int
     }
 
 
@@ -39,7 +40,7 @@ initRoomData room =
         protagonists =
             Protagonist.init room.protagonist1TwitterScreenName room.protagonist2TwitterScreenName room.protagonist3TwitterScreenName
     in
-    RoomData (Room.getId room) mastermind protagonists (Script.scriptToOpenSheet room.script) Nothing 1 1
+    RoomData (Room.getId room) mastermind protagonists (Script.scriptToOpenSheet room.script) Nothing 1 1 0
 
 
 
@@ -94,6 +95,7 @@ decoder =
         |> Pipeline.optional "script" Script.scriptDecoder Nothing
         |> Pipeline.optional "loop" D.int 0
         |> Pipeline.optional "date" D.int 0
+        |> Pipeline.optional "ex" D.int 0
 
 
 
@@ -112,6 +114,7 @@ encode data =
         , ( "script", ExEncode.maybe Script.encode data.script )
         , ( "loop", E.int data.loop )
         , ( "date", E.int data.date )
+        , ( "ex", E.int data.ex )
         ]
 
 
@@ -176,7 +179,7 @@ tags data user =
 infos : RoomData -> Html msg
 infos data =
     let
-        { loop, date, openSheet } =
+        { loop, date, openSheet, ex } =
             data
     in
     section [ class "section" ]
@@ -186,6 +189,7 @@ infos data =
                     [ th [] [ text "Loop" ]
                     , th [] [ text "Date" ]
                     , th [] [ text "事件" ]
+                    , th [] [ text "Ex" ]
                     ]
                 ]
             , tbody []
@@ -193,6 +197,7 @@ infos data =
                     [ td [] [ text <| String.fromInt loop ]
                     , td [] [ text <| String.fromInt date ]
                     , td [] [ OpenSheet.incidentIcon date openSheet.incidents ]
+                    , td [] [ text <| String.fromInt ex ]
                     ]
                 ]
             ]
