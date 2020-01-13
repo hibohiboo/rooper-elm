@@ -54,6 +54,14 @@ characterFromCharacterScriptData { character, role, optionalNumber, turf } =
 -- ==============================================================================================
 -- メソッド
 -- ==============================================================================================
+
+
+setGoodWill : Int -> Character -> Character
+setGoodWill v c =
+    { c | goodWill = c.goodWill + v }
+
+
+
 -- ==============================================================================================
 -- デコーダ
 -- ==============================================================================================
@@ -106,6 +114,11 @@ encode { characterType, name, paranoiaLimit, firstLocation, role, optionalNumber
 -- ==============================================================================================
 
 
+toString : Character -> String
+toString c =
+    Models.Character.characterTypeToString c.characterType
+
+
 characterToCardUrl : Character -> String
 characterToCardUrl c =
     Models.Character.characterTypeToCardUrl c.characterType
@@ -121,14 +134,24 @@ boardToName b =
             ""
 
 
+boardList : List ( String, String )
+boardList =
+    List.map (\b -> Tuple.pair (Board.boardToString b) b.name) Board.boards
+
+
+boardListWithNothing : List ( String, String )
+boardListWithNothing =
+    ( "ボード外", "ボード外" ) :: boardList
+
+
 
 -- ==============================================================================================
 -- View
 -- ==============================================================================================
 
 
-charactersFormItem : Character -> Html msg
-charactersFormItem c =
+charactersFormItem : Character -> msg -> Html msg
+charactersFormItem c addGoodWill =
     div []
         [ div [ class "rooper-character-room-form-item" ]
             [ img [ src (characterToCardUrl c) ] []
@@ -138,20 +161,60 @@ charactersFormItem c =
                 ]
             , div []
                 [ text "友好"
-                , div [] [ text <| String.fromInt c.goodWill ]
+                , div []
+                    [ span [] [ text "▼" ]
+                    , span [] [ text <| String.fromInt c.goodWill ]
+                    , span [ onClick addGoodWill ] [ text "▲" ]
+                    ]
                 ]
             , div []
                 [ text "不安"
-                , div [] [ text <| String.fromInt c.paranoia ]
+                , div []
+                    [ span [] [ text "▼" ]
+                    , span [] [ text <| String.fromInt c.paranoia ]
+                    , span [] [ text "▲" ]
+                    ]
                 ]
             , div []
                 [ text "暗躍"
-                , div [] [ text <| String.fromInt c.intrigue ]
+                , div []
+                    [ span [] [ text "▼" ]
+                    , span [] [ text <| String.fromInt c.intrigue ]
+                    , span [] [ text "▲" ]
+                    ]
                 ]
             , div []
-                [ text "死亡"
+                [ text "死"
                 , div [] [ input [ type_ "checkbox" ] [] ]
                 ]
             ]
         , div [] [ text c.name ]
         ]
+
+
+characterLocationBoards : Character -> (String -> msg) -> Html msg
+characterLocationBoards char chgMsg =
+    let
+        boardKey =
+            case char.location of
+                Just b ->
+                    Board.boardToString b
+
+                Nothing ->
+                    "ボード外"
+
+        optionList =
+            case char.characterType of
+                Models.Character.Illusion ->
+                    boardListWithNothing
+
+                Models.Character.GodlyBeing ->
+                    boardListWithNothing
+
+                Models.Character.TransferStudent ->
+                    boardListWithNothing
+
+                _ ->
+                    boardList
+    in
+    Form.select ("bottom-form-character-board-" ++ toString char) chgMsg boardKey optionList

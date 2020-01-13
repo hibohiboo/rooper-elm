@@ -11,6 +11,7 @@ import Json.Encode exposing (Value)
 import Models.Character as Character exposing (Character)
 import Models.Room as Room exposing (Room)
 import Models.RoomData as RoomData exposing (RoomData)
+import Models.RoomData.Character as RoomCharacter
 import Models.RoomName as RoomName exposing (RoomName)
 import Models.RoomState as RoomState exposing (RoomState)
 import Models.Script as Script exposing (Script)
@@ -140,6 +141,7 @@ type Msg
     | UpdateRoomData
     | CharacterRoomDataState
     | DataRoomDataState
+    | AddCharacterGoodWill RoomCharacter.Character
 
 
 type MenuState
@@ -499,6 +501,9 @@ update msg model =
         DataRoomDataState ->
             ( { model | roomState = RoomState.setDataTab model.roomState }, Cmd.none )
 
+        AddCharacterGoodWill c ->
+            ( { model | roomData = Maybe.map (RoomData.addCharacterGoodWill c) model.roomData }, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -660,7 +665,7 @@ mastermindBottomForm model data =
         , RoomState.roomDataFormContent
             [ case model.roomState.tabsState of
                 RoomState.Character ->
-                    RoomData.charactersForm data
+                    RoomData.charactersForm data AddCharacterGoodWill
 
                 RoomState.Data ->
                     RoomState.roomDataFormDataBoard

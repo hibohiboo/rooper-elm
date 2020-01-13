@@ -92,6 +92,22 @@ nextRoomDataState f =
     { f | state = RoomDataState.nextState f.state }
 
 
+addCharacterGoodWill : Character -> RoomData -> RoomData
+addCharacterGoodWill c f =
+    { f
+        | characters =
+            List.map
+                (\char ->
+                    if c == char then
+                        Character.setGoodWill 1 char
+
+                    else
+                        char
+                )
+                f.characters
+    }
+
+
 
 -- ==============================================================================================
 -- デコーダ
@@ -234,10 +250,10 @@ stateView data =
         ]
 
 
-charactersForm : RoomData -> Html msg
-charactersForm data =
+charactersForm : RoomData -> (Character -> msg) -> Html msg
+charactersForm data addGoodWill =
     div [ class "rooper-characters-form" ]
         (data.characters
             |> List.map
-                Character.charactersFormItem
+                (\c -> Character.charactersFormItem c (addGoodWill c))
         )
