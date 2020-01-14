@@ -86,6 +86,11 @@ setIntrigue v c =
     { c | intrigue = v }
 
 
+setIsDead : Bool -> Character -> Character
+setIsDead b c =
+    { c | isDead = b }
+
+
 
 -- ==============================================================================================
 -- デコーダ
@@ -177,8 +182,8 @@ boardListWithNothing c =
 -- ==============================================================================================
 
 
-charactersFormItem : Character -> (String -> msg) -> (String -> msg) -> (String -> msg) -> (String -> msg) -> Html msg
-charactersFormItem c changeLocationMsg changeGMsg changePMsg changeIMsg =
+charactersFormItem : Character -> (String -> msg) -> (String -> msg) -> (String -> msg) -> (String -> msg) -> msg -> Html msg
+charactersFormItem c changeLocationMsg changeGMsg changePMsg changeIMsg toggleIsDeadMsg =
     div []
         [ div [ class "rooper-character-room-form-item" ]
             [ img [ src (characterToCardUrl c) ] []
@@ -206,7 +211,7 @@ charactersFormItem c changeLocationMsg changeGMsg changePMsg changeIMsg =
                 ]
             , div []
                 [ text "死"
-                , div [] [ input [ type_ "checkbox" ] [] ]
+                , div [] [ input [ type_ "checkbox", checked c.isDead, onClick toggleIsDeadMsg ] [] ]
                 ]
             ]
         , div [] [ text c.name ]

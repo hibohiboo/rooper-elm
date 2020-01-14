@@ -137,6 +137,22 @@ changeCharacterIntrigue c s f =
     { f | characters = charangeCharactersParameter Character.setIntrigue c s f.characters }
 
 
+toggleCharacterIsDead : Character -> RoomData -> RoomData
+toggleCharacterIsDead c f =
+    { f
+        | characters =
+            List.map
+                (\char ->
+                    if char == c then
+                        Character.setIsDead (not char.isDead) char
+
+                    else
+                        char
+                )
+                f.characters
+    }
+
+
 
 -- ==============================================================================================
 -- デコーダ
@@ -279,10 +295,10 @@ stateView data =
         ]
 
 
-charactersForm : RoomData -> (Character -> String -> msg) -> (Character -> String -> msg) -> (Character -> String -> msg) -> (Character -> String -> msg) -> Html msg
-charactersForm data changeLocationMsg changeGMsg changePMsg changeIMsg =
+charactersForm : RoomData -> (Character -> String -> msg) -> (Character -> String -> msg) -> (Character -> String -> msg) -> (Character -> String -> msg) -> (Character -> msg) -> Html msg
+charactersForm data changeLocationMsg changeGMsg changePMsg changeIMsg toggleIsDeadMsg =
     div [ class "rooper-characters-form" ]
         (data.characters
             |> List.map
-                (\c -> Character.charactersFormItem c (changeLocationMsg c) (changeGMsg c) (changePMsg c) (changeIMsg c))
+                (\c -> Character.charactersFormItem c (changeLocationMsg c) (changeGMsg c) (changePMsg c) (changeIMsg c) (toggleIsDeadMsg c))
         )
