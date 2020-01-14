@@ -28,6 +28,7 @@ type alias Character =
     , intrigue : Int -- 暗躍
     , location : Maybe Board -- 現在のボード
     , forbiddenLocations : List Board -- 禁止エリア
+    , isDead : Bool -- 死亡
     }
 
 
@@ -48,7 +49,7 @@ characterFromCharacterScriptData { character, role, optionalNumber, turf } =
         { characterType, name, paranoiaLimit, firstLocation, forbiddenLocations } =
             character
     in
-    Character characterType name paranoiaLimit firstLocation role optionalNumber turf 0 0 0 (Just firstLocation) forbiddenLocations
+    Character characterType name paranoiaLimit firstLocation role optionalNumber turf 0 0 0 (Just firstLocation) forbiddenLocations False
 
 
 
@@ -106,6 +107,7 @@ decoder =
         |> Pipeline.required "intrigue" D.int
         |> Pipeline.optional "location" Board.decodeBoard Nothing
         |> Pipeline.required "forbiddenLocations" (D.list Board.decode)
+        |> Pipeline.optional "isDead" D.bool False
 
 
 
@@ -115,7 +117,7 @@ decoder =
 
 
 encode : Character -> E.Value
-encode { characterType, name, paranoiaLimit, firstLocation, role, optionalNumber, turf, goodWill, paranoia, intrigue, location, forbiddenLocations } =
+encode { characterType, name, paranoiaLimit, firstLocation, role, optionalNumber, turf, goodWill, paranoia, intrigue, location, forbiddenLocations, isDead } =
     E.object
         [ ( "name", E.string name )
         , ( "characterType", E.string <| Models.Character.characterTypeToString characterType )
@@ -129,6 +131,7 @@ encode { characterType, name, paranoiaLimit, firstLocation, role, optionalNumber
         , ( "intrigue", E.int intrigue )
         , ( "location", ExEncode.maybe E.string <| Maybe.map Board.boardToString location )
         , ( "forbiddenLocations", E.list (E.string << Board.boardToString) forbiddenLocations )
+        , ( "isDead", E.bool isDead )
         ]
 
 
