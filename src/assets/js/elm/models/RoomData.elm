@@ -153,6 +153,22 @@ toggleCharacterIsDead c f =
     }
 
 
+deleteForbiddenLocation : Character -> RoomData -> RoomData
+deleteForbiddenLocation c f =
+    { f
+        | characters =
+            List.map
+                (\char ->
+                    if char == c then
+                        Character.setForbiddenLocations [] char
+
+                    else
+                        char
+                )
+                f.characters
+    }
+
+
 
 -- ==============================================================================================
 -- デコーダ
@@ -295,11 +311,11 @@ stateView data =
         ]
 
 
-charactersForm : RoomData -> (Character -> String -> msg) -> (Character -> String -> msg) -> (Character -> String -> msg) -> (Character -> String -> msg) -> (Character -> msg) -> Html msg
-charactersForm data changeLocationMsg changeGMsg changePMsg changeIMsg toggleIsDeadMsg =
+charactersForm : RoomData -> (Character -> String -> msg) -> (Character -> String -> msg) -> (Character -> String -> msg) -> (Character -> String -> msg) -> (Character -> msg) -> (Character -> msg) -> Html msg
+charactersForm data changeLocationMsg changeGMsg changePMsg changeIMsg toggleIsDeadMsg deleteForbiddenLocationMsg =
     div [ class "rooper-characters-form" ]
         (data.characters
             |> List.reverse
             |> List.map
-                (\c -> Character.charactersFormItem c (changeLocationMsg c) (changeGMsg c) (changePMsg c) (changeIMsg c) (toggleIsDeadMsg c))
+                (\c -> Character.charactersFormItem c (changeLocationMsg c) (changeGMsg c) (changePMsg c) (changeIMsg c) (toggleIsDeadMsg c) (deleteForbiddenLocationMsg c))
         )

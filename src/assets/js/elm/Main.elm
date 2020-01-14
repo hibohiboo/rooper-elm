@@ -146,6 +146,7 @@ type Msg
     | ChangeCharacterIntrigue RoomCharacter.Character String
     | ChangeCharacterLocation RoomCharacter.Character String
     | ToggleCharacterIsDead RoomCharacter.Character
+    | DeleteCharacterForbiddenLocationMsg RoomCharacter.Character
 
 
 type MenuState
@@ -520,6 +521,9 @@ update msg model =
         ToggleCharacterIsDead c ->
             ( { model | roomData = Maybe.map (RoomData.toggleCharacterIsDead c) model.roomData }, Cmd.none )
 
+        DeleteCharacterForbiddenLocationMsg c ->
+            ( { model | roomData = Maybe.map (RoomData.deleteForbiddenLocation c) model.roomData }, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -681,7 +685,7 @@ mastermindBottomForm model data =
         , RoomState.roomDataFormContent
             [ case model.roomState.tabsState of
                 RoomState.Character ->
-                    RoomData.charactersForm data ChangeCharacterLocation ChangeCharacterGoodWill ChangeCharacterParanoia ChangeCharacterIntrigue ToggleCharacterIsDead
+                    RoomData.charactersForm data ChangeCharacterLocation ChangeCharacterGoodWill ChangeCharacterParanoia ChangeCharacterIntrigue ToggleCharacterIsDead DeleteCharacterForbiddenLocationMsg
 
                 RoomState.Data ->
                     RoomState.roomDataFormDataBoard

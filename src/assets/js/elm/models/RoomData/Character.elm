@@ -91,6 +91,11 @@ setIsDead b c =
     { c | isDead = b }
 
 
+setForbiddenLocations : List Board -> Character -> Character
+setForbiddenLocations b c =
+    { c | forbiddenLocations = b }
+
+
 
 -- ==============================================================================================
 -- デコーダ
@@ -210,8 +215,8 @@ characterCardChip i s =
             ]
 
 
-charactersFormItem : Character -> (String -> msg) -> (String -> msg) -> (String -> msg) -> (String -> msg) -> msg -> Html msg
-charactersFormItem c changeLocationMsg changeGMsg changePMsg changeIMsg toggleIsDeadMsg =
+charactersFormItem : Character -> (String -> msg) -> (String -> msg) -> (String -> msg) -> (String -> msg) -> msg -> msg -> Html msg
+charactersFormItem c changeLocationMsg changeGMsg changePMsg changeIMsg toggleIsDeadMsg deleteForbiddenLocationMsg =
     div []
         [ div [ class "rooper-character-room-form-item" ]
             [ characterCard c
@@ -242,7 +247,17 @@ charactersFormItem c changeLocationMsg changeGMsg changePMsg changeIMsg toggleIs
                 , div [] [ input [ type_ "checkbox", checked c.isDead, onClick toggleIsDeadMsg ] [] ]
                 ]
             ]
-        , div [] [ text c.name ]
+        , div []
+            [ text c.name
+            , if c.characterType == Models.Character.Patient && List.length c.forbiddenLocations /= 0 then
+                button [ style "margin-left" "1rem", onClick deleteForbiddenLocationMsg ] [ text "退院" ]
+
+              else if c.characterType == Models.Character.LittleGirl && List.length c.forbiddenLocations /= 0 then
+                button [ style "margin-left" "1rem", onClick deleteForbiddenLocationMsg ] [ text "下校" ]
+
+              else
+                text ""
+            ]
         ]
 
 
