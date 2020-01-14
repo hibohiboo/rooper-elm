@@ -299,6 +299,7 @@ charactersForm : RoomData -> (Character -> String -> msg) -> (Character -> Strin
 charactersForm data changeLocationMsg changeGMsg changePMsg changeIMsg toggleIsDeadMsg =
     div [ class "rooper-characters-form" ]
         (data.characters
+            |> List.reverse
             |> List.map
                 (\c -> Character.charactersFormItem c (changeLocationMsg c) (changeGMsg c) (changePMsg c) (changeIMsg c) (toggleIsDeadMsg c))
         )
