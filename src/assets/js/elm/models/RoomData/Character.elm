@@ -186,6 +186,11 @@ characterCard : Character -> Html msg
 characterCard c =
     div [ class "rooper-roomdata-character-card" ]
         [ img [ src (characterToCardUrl c) ] []
+        , if c.isDead then
+            img [ src "/assets/images/others/x.png" ] []
+
+          else
+            text ""
         , characterCardChip c.goodWill "goodwill"
         , characterCardChip c.paranoia "paranoia"
         , characterCardChip c.intrigue "intrigue"
