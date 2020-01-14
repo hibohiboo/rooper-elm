@@ -182,11 +182,34 @@ boardListWithNothing c =
 -- ==============================================================================================
 
 
+characterCard : Character -> Html msg
+characterCard c =
+    div [ class "rooper-roomdata-character-card" ]
+        [ img [ src (characterToCardUrl c) ] []
+        , characterCardChip c.goodWill "goodwill"
+        , characterCardChip c.paranoia "paranoia"
+        , characterCardChip c.intrigue "intrigue"
+        ]
+
+
+characterCardChip : Int -> String -> Html msg
+characterCardChip i s =
+    div [ class "rooper-roomdata-character-parameter" ] <|
+        List.concat
+            [ List.map
+                (\_ -> span [ class <| "chip big " ++ s ] [ text "3" ])
+                (List.range 1 (i // 3))
+            , List.map
+                (\_ -> span [ class <| "chip " ++ s ] [ text "" ])
+                (List.range 1 (modBy 3 i))
+            ]
+
+
 charactersFormItem : Character -> (String -> msg) -> (String -> msg) -> (String -> msg) -> (String -> msg) -> msg -> Html msg
 charactersFormItem c changeLocationMsg changeGMsg changePMsg changeIMsg toggleIsDeadMsg =
     div []
         [ div [ class "rooper-character-room-form-item" ]
-            [ img [ src (characterToCardUrl c) ] []
+            [ characterCard c
             , div []
                 [ text "ボード"
                 , div [] [ characterLocationBoards c changeLocationMsg ]

@@ -76,4 +76,49 @@
       }
     }
   }
+
+  &-roomdata-character-card {
+    height: 50px;
+    position: relative;
+    width: 35px;
+
+    img {
+      position: absolute;
+    }
+
+    .rooper-roomdata-character-parameter {
+      display: flex;
+      flex-wrap: wrap;
+
+      .chip {
+        border-radius: 0.4rem;
+        display: block;
+        height: 0.8rem;
+        position: relative;
+        width: 0.8rem;
+      }
+
+      .big {
+        border-radius: 0.6rem;
+        height: 1.2rem;
+        text-align: center;
+        width: 1.2rem;
+      }
+
+      .goodwill {
+        background-color: #ffa200;
+        color: #000;
+      }
+
+      .paranoia {
+        background-color: #00f;
+        color: #fff;
+      }
+
+      .intrigue {
+        background-color: #f00;
+        color: #fff;
+      }
+    }
+  }
 }
