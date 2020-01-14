@@ -173,7 +173,7 @@ boardList c =
 
 boardListWithNothing : Character -> List ( String, String )
 boardListWithNothing c =
-    ( "ボード外", "ボード外" ) :: boardList c
+    ( "除外", "除外" ) :: boardList c
 
 
 
@@ -255,7 +255,7 @@ characterLocationBoards char chgMsg =
                     Board.boardToString b
 
                 Nothing ->
-                    "ボード外"
+                    "除外"
 
         optionList =
             case char.characterType of
