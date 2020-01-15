@@ -38,6 +38,17 @@ init =
 
 
 -- ==============================================================================================
+-- setter
+-- ==============================================================================================
+
+
+setIntrigue : Int -> Board -> Board
+setIntrigue v c =
+    { c | intrigue = v }
+
+
+
+-- ==============================================================================================
 -- デコーダ
 -- ==============================================================================================
 
@@ -95,8 +106,8 @@ boardCardChip i s =
             ]
 
 
-boardsFormItem : Board -> Html msg
-boardsFormItem b =
+boardsFormItem : Board -> (String -> msg) -> Html msg
+boardsFormItem b changeIMsg =
     div []
         [ div [ class "rooper-board-room-form-item" ]
             [ div []
@@ -106,7 +117,7 @@ boardsFormItem b =
             , div []
                 [ text "暗躍"
                 , div []
-                    [ input [ value <| String.fromInt b.intrigue, type_ "number" ] []
+                    [ input [ value <| String.fromInt b.intrigue, onChange changeIMsg, type_ "number" ] []
                     ]
                 ]
             ]

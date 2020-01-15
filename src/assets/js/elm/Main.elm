@@ -11,6 +11,7 @@ import Json.Encode exposing (Value)
 import Models.Character as Character exposing (Character)
 import Models.Room as Room exposing (Room)
 import Models.RoomData as RoomData exposing (RoomData)
+import Models.RoomData.Board as RoomBoard
 import Models.RoomData.Character as RoomCharacter
 import Models.RoomName as RoomName exposing (RoomName)
 import Models.RoomState as RoomState exposing (RoomState)
@@ -147,6 +148,7 @@ type Msg
     | ChangeCharacterLocation RoomCharacter.Character String
     | ToggleCharacterIsDead RoomCharacter.Character
     | DeleteCharacterForbiddenLocationMsg RoomCharacter.Character
+    | ChangeBoardIntrigue RoomBoard.Board String
 
 
 type MenuState
@@ -524,6 +526,9 @@ update msg model =
         DeleteCharacterForbiddenLocationMsg c ->
             ( { model | roomData = Maybe.map (RoomData.deleteForbiddenLocation c) model.roomData }, Cmd.none )
 
+        ChangeBoardIntrigue b s ->
+            ( { model | roomData = Maybe.map (RoomData.changeBoardIntrigue b s) model.roomData }, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -686,7 +691,7 @@ mastermindBottomForm model data =
             [ case model.roomState.tabsState of
                 RoomState.Character ->
                     div []
-                        [ RoomData.boardsForm data
+                        [ RoomData.boardsForm data ChangeBoardIntrigue
                         , RoomData.charactersForm data ChangeCharacterLocation ChangeCharacterGoodWill ChangeCharacterParanoia ChangeCharacterIntrigue ToggleCharacterIsDead DeleteCharacterForbiddenLocationMsg
                         ]
 

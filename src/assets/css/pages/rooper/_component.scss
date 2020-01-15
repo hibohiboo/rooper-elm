@@ -91,7 +91,8 @@
     }
   }
 
-  &-roomdata-character-card {
+  &-roomdata-character-card,
+  &-roomdata-board-card {
     height: 50px;
     position: relative;
     width: 35px;
@@ -100,7 +101,8 @@
       position: absolute;
     }
 
-    .rooper-roomdata-character-parameter {
+    .rooper-roomdata-character-parameter,
+    .rooper-roomdata-board-parameter {
       $chip-size: 12px;
       $big-chip-size: 18px;
 

@@ -171,6 +171,22 @@ deleteForbiddenLocation c f =
     }
 
 
+changeBoardIntrigue : Board -> String -> RoomData -> RoomData
+changeBoardIntrigue b s f =
+    { f
+        | boards =
+            List.map
+                (\board ->
+                    if board == b then
+                        Board.setIntrigue (String.toInt s |> Maybe.withDefault 0) board
+
+                    else
+                        board
+                )
+                f.boards
+    }
+
+
 
 -- ==============================================================================================
 -- デコーダ
@@ -325,11 +341,10 @@ charactersForm data changeLocationMsg changeGMsg changePMsg changeIMsg toggleIsD
         )
 
 
-boardsForm : RoomData -> Html msg
-boardsForm data =
+boardsForm : RoomData -> (Board -> String -> msg) -> Html msg
+boardsForm data changeIMsg =
     div [ class "rooper-boards-form" ]
         (data.boards
-            |> List.reverse
             |> List.map
-                (\b -> Board.boardsFormItem b)
+                (\b -> Board.boardsFormItem b (changeIMsg b))
         )
