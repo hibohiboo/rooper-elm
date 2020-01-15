@@ -28,7 +28,12 @@ decodeBoard =
 
 boardToString : Board -> String
 boardToString board =
-    case board.boardType of
+    boardTypeToString board.boardType
+
+
+boardTypeToString : BoardType -> String
+boardTypeToString t =
+    case t of
         Shrine ->
             "Shrine"
 
@@ -59,6 +64,11 @@ boardFromString s =
 
         _ ->
             Nothing
+
+
+boardTypeFromString : String -> Maybe BoardType
+boardTypeFromString s =
+    boardFromString s |> Maybe.map .boardType
 
 
 shrine : Board
