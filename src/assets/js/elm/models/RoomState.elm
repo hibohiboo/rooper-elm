@@ -27,6 +27,7 @@ type alias RoomState =
 type TabsState
     = Character
     | Data
+    | Hand
 
 
 init : RoomState
@@ -47,6 +48,11 @@ setCharacterTab f =
 setDataTab : RoomState -> RoomState
 setDataTab f =
     { f | tabsState = Data }
+
+
+setHandTab : RoomState -> RoomState
+setHandTab f =
+    { f | tabsState = Hand }
 
 
 
@@ -79,6 +85,9 @@ roomDataFormHeaderTitle state =
 
                 Character ->
                     "キャラクター"
+
+                Hand ->
+                    "手札"
         ]
 
 

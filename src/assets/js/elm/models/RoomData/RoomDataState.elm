@@ -105,7 +105,7 @@ toName state =
             "キャラクターの配置"
 
         SetupCounter ->
-            "カウンターの除去・配置"
+            "カウンタの除去・配置"
 
         SetupHand ->
             "手札の分配"

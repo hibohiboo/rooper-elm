@@ -142,6 +142,7 @@ type Msg
     | UpdateRoomData
     | CharacterRoomDataState
     | DataRoomDataState
+    | HandRoomDataState
     | ChangeCharacterGoodWill RoomCharacter.Character String
     | ChangeCharacterParanoia RoomCharacter.Character String
     | ChangeCharacterIntrigue RoomCharacter.Character String
@@ -508,6 +509,9 @@ update msg model =
         DataRoomDataState ->
             ( { model | roomState = RoomState.setDataTab model.roomState }, Cmd.none )
 
+        HandRoomDataState ->
+            ( { model | roomState = RoomState.setHandTab model.roomState }, Cmd.none )
+
         ChangeCharacterGoodWill c s ->
             ( { model | roomData = Maybe.map (RoomData.changeCharacterGoodWill c s) model.roomData }, Cmd.none )
 
@@ -717,15 +721,24 @@ mastermindBottomForm model data =
                           -- , td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataDate, value <| String.fromInt data.date ] [] ]
                           td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataEx, value <| String.fromInt data.ex ] [] ]
                         ]
+
+                RoomState.Hand ->
+                    div [] [ text "準備中" ]
             ]
         , RoomState.roomDataFormFooter
             [ span [ class "card-footer-item" ]
-                [ button [ class "button is-primary", onClick NextRoomDataState ]
-                    [ span [] [ text "Next" ]
-                    , span [ class "icon" ]
-                        [ i [ class "fas fa-arrow-right" ] []
+                [ if RoomData.isMastermindPlaysCards model.roomData then
+                    span [ class "card-footer-item", onClick HandRoomDataState ]
+                        [ span [] [ text "手札" ]
                         ]
-                    ]
+
+                  else
+                    button [ class "button is-primary", onClick NextRoomDataState ]
+                        [ span [] [ text "Next" ]
+                        , span [ class "icon" ]
+                            [ i [ class "fas fa-arrow-right" ] []
+                            ]
+                        ]
                 ]
             , span [ class "card-footer-item", onClick CharacterRoomDataState ]
                 [ span [] [ text "キャラクタ" ]
