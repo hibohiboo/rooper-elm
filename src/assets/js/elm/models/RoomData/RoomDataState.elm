@@ -21,6 +21,11 @@ type RoomDataState
     = InitLoop
     | PreTimeSpairal
     | SetupCharacter
+    | SetupCounter
+    | SetupHand
+    | Morning
+    | MastermindPlaysCards
+    | ProtagonistsPlaysCard
 
 
 init : RoomDataState
@@ -40,6 +45,21 @@ toString state =
         SetupCharacter ->
             "SetupCharacter"
 
+        SetupCounter ->
+            "SetupCounter"
+
+        SetupHand ->
+            "SetupHand"
+
+        Morning ->
+            "Morning"
+
+        MastermindPlaysCards ->
+            "MastermindPlaysCards"
+
+        ProtagonistsPlaysCard ->
+            "ProtagonistsPlaysCard"
+
 
 fromString : String -> Maybe RoomDataState
 fromString s =
@@ -52,6 +72,21 @@ fromString s =
 
         "SetupCharacter" ->
             Just SetupCharacter
+
+        "SetupCounter" ->
+            Just SetupCounter
+
+        "SetupHand" ->
+            Just SetupHand
+
+        "Morning" ->
+            Just Morning
+
+        "MastermindPlaysCards" ->
+            Just MastermindPlaysCards
+
+        "ProtagonistsPlaysCard" ->
+            Just ProtagonistsPlaysCard
 
         _ ->
             Nothing
@@ -69,6 +104,21 @@ toName state =
         SetupCharacter ->
             "キャラクターの配置"
 
+        SetupCounter ->
+            "カウンターの除去・配置"
+
+        SetupHand ->
+            "手札の分配"
+
+        Morning ->
+            "ターン開始フェイズ"
+
+        MastermindPlaysCards ->
+            "脚本家行動フェイズ"
+
+        ProtagonistsPlaysCard ->
+            "主人公行動フェイズ"
+
 
 fromStringWithDefault : String -> RoomDataState
 fromStringWithDefault =
@@ -85,6 +135,21 @@ nextState state =
             SetupCharacter
 
         SetupCharacter ->
+            SetupCounter
+
+        SetupCounter ->
+            SetupHand
+
+        SetupHand ->
+            Morning
+
+        Morning ->
+            MastermindPlaysCards
+
+        MastermindPlaysCards ->
+            ProtagonistsPlaysCard
+
+        ProtagonistsPlaysCard ->
             InitLoop
 
 
