@@ -348,3 +348,43 @@ boardsForm data changeIMsg =
             |> List.map
                 (\b -> Board.boardsFormItem b (changeIMsg b))
         )
+
+
+roomBoard : RoomData -> Html msg
+roomBoard data =
+    div [ class "rooper-roomdata-main-board-wrapper" ]
+        [ div [ class "rooper-roomdata-main-board" ]
+            [ boardHospital data
+            , boardShrine data
+            , boardCity data
+            , boardSchool data
+            ]
+        ]
+
+
+boardHospital : RoomData -> Html msg
+boardHospital data =
+    div [ class "rooper-main-board-hospital" ]
+        [ Board.boardCard (Board.getHospital data.boards)
+        ]
+
+
+boardCity : RoomData -> Html msg
+boardCity data =
+    div [ class "rooper-main-board-city" ]
+        [ Board.boardCard (Board.getCity data.boards)
+        ]
+
+
+boardShrine : RoomData -> Html msg
+boardShrine data =
+    div [ class "rooper-main-board-shrine" ]
+        [ Board.boardCard (Board.getShrine data.boards)
+        ]
+
+
+boardSchool : RoomData -> Html msg
+boardSchool data =
+    div [ class "rooper-main-board-school" ]
+        [ Board.boardCard (Board.getSchool data.boards)
+        ]

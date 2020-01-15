@@ -9,6 +9,7 @@ import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
 import Json.Encode.Extra as ExEncode
+import List.Extra as ExList
 import Models.Board as Board exposing (BoardType)
 import Models.TragedySet as TragedySet exposing (Role)
 import Models.Utility.List as UtilityList
@@ -29,11 +30,16 @@ type alias Board =
 
 init : List Board
 init =
-    [ Board Board.shrine.boardType Board.shrine.name 0
+    [ shrine
     , Board Board.school.boardType Board.school.name 0
     , Board Board.hospital.boardType Board.hospital.name 0
     , Board Board.city.boardType Board.city.name 0
     ]
+
+
+shrine : Board
+shrine =
+    Board Board.shrine.boardType Board.shrine.name 0
 
 
 
@@ -45,6 +51,38 @@ init =
 setIntrigue : Int -> Board -> Board
 setIntrigue v c =
     { c | intrigue = v }
+
+
+
+-- ==============================================================================================
+-- getter
+-- ==============================================================================================
+
+
+getBoard : BoardType -> List Board -> Board
+getBoard t list =
+    ExList.find (\b -> b.boardType == t) list
+        |> Maybe.withDefault shrine
+
+
+getHospital : List Board -> Board
+getHospital list =
+    getBoard Board.Hospital list
+
+
+getCity : List Board -> Board
+getCity list =
+    getBoard Board.City list
+
+
+getShrine : List Board -> Board
+getShrine list =
+    getBoard Board.Shrine list
+
+
+getSchool : List Board -> Board
+getSchool list =
+    getBoard Board.School list
 
 
 

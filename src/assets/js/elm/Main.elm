@@ -646,14 +646,7 @@ ownerRoomView model =
 
 roomBoard : Model -> RoomData -> Html Msg
 roomBoard model data =
-    div [ class "rooper-roomdata-main-board-wrapper" ]
-        [ div [ class "rooper-roomdata-main-board" ]
-            [ div [ class "rooper-main-board-hospital" ] []
-            , div [ class "rooper-main-board-shrine" ] []
-            , div [ class "rooper-main-board-city" ] []
-            , div [ class "rooper-main-board-school" ] []
-            ]
-        ]
+    RoomData.roomBoard data
 
 
 mastermindSheets : Model -> Html msg
