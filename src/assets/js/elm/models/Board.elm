@@ -71,6 +71,24 @@ boardTypeFromString s =
     boardFromString s |> Maybe.map .boardType
 
 
+boardToCardUrl : BoardType -> String
+boardToCardUrl t =
+    "/assets/images/boards/cards/"
+        ++ (case t of
+                City ->
+                    "city.png"
+
+                Shrine ->
+                    "shrine.png"
+
+                School ->
+                    "school.png"
+
+                Hospital ->
+                    "hospital.png"
+           )
+
+
 shrine : Board
 shrine =
     Board Shrine "神社"

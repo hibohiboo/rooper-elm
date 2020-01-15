@@ -685,7 +685,10 @@ mastermindBottomForm model data =
         , RoomState.roomDataFormContent
             [ case model.roomState.tabsState of
                 RoomState.Character ->
-                    RoomData.charactersForm data ChangeCharacterLocation ChangeCharacterGoodWill ChangeCharacterParanoia ChangeCharacterIntrigue ToggleCharacterIsDead DeleteCharacterForbiddenLocationMsg
+                    div []
+                        [ RoomData.boardsForm data
+                        , RoomData.charactersForm data ChangeCharacterLocation ChangeCharacterGoodWill ChangeCharacterParanoia ChangeCharacterIntrigue ToggleCharacterIsDead DeleteCharacterForbiddenLocationMsg
+                        ]
 
                 RoomState.Data ->
                     RoomState.roomDataFormDataBoard

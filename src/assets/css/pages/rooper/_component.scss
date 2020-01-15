@@ -77,6 +77,20 @@
     }
   }
 
+  &-boards-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    padding-bottom: 1rem;
+
+    .rooper-board-room-form-item {
+      padding-right: 2rem;
+    }
+
+    [type='number'] {
+      width: 30px;
+    }
+  }
+
   &-roomdata-character-card {
     height: 50px;
     position: relative;

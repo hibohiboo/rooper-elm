@@ -63,3 +63,51 @@ encode { boardType, name, intrigue } =
         , ( "boardType", E.string <| Board.boardTypeToString boardType )
         , ( "intrigue", E.int intrigue )
         ]
+
+
+
+-- ==============================================================================================
+-- View
+-- ==============================================================================================
+-- ==============================================================================================
+-- View
+-- ==============================================================================================
+
+
+boardCard : Board -> Html msg
+boardCard b =
+    div [ class "rooper-roomdata-board-card" ]
+        [ img [ src (Board.boardToCardUrl b.boardType) ] []
+        , boardCardChip b.intrigue "intrigue"
+        ]
+
+
+boardCardChip : Int -> String -> Html msg
+boardCardChip i s =
+    div [ class "rooper-roomdata-board-parameter" ] <|
+        List.concat
+            [ List.map
+                (\_ -> span [ class <| "chip big " ++ s ] [ text "3" ])
+                (List.range 1 (i // 3))
+            , List.map
+                (\_ -> span [ class <| "chip " ++ s ] [ text "" ])
+                (List.range 1 (modBy 3 i))
+            ]
+
+
+boardsFormItem : Board -> Html msg
+boardsFormItem b =
+    div []
+        [ div [ class "rooper-board-room-form-item" ]
+            [ div []
+                [ boardCard b
+                , div [] [ text b.name ]
+                ]
+            , div []
+                [ text "暗躍"
+                , div []
+                    [ input [ value <| String.fromInt b.intrigue, type_ "number" ] []
+                    ]
+                ]
+            ]
+        ]

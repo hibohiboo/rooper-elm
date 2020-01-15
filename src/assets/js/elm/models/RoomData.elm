@@ -323,3 +323,13 @@ charactersForm data changeLocationMsg changeGMsg changePMsg changeIMsg toggleIsD
             |> List.map
                 (\c -> Character.charactersFormItem c (changeLocationMsg c) (changeGMsg c) (changePMsg c) (changeIMsg c) (toggleIsDeadMsg c) (deleteForbiddenLocationMsg c))
         )
+
+
+boardsForm : RoomData -> Html msg
+boardsForm data =
+    div [ class "rooper-boards-form" ]
+        (data.boards
+            |> List.reverse
+            |> List.map
+                (\b -> Board.boardsFormItem b)
+        )
