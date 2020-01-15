@@ -87,22 +87,26 @@
     }
 
     .rooper-roomdata-character-parameter {
+      $chip-size: 12px;
+      $big-chip-size: 18px;
+
       display: flex;
       flex-wrap: wrap;
 
       .chip {
-        border-radius: 0.4rem;
+        border-radius: $chip-size/2;
         display: block;
-        height: 0.8rem;
+        height: $chip-size;
         position: relative;
-        width: 0.8rem;
+        width: $chip-size;
       }
 
       .big {
-        border-radius: 0.6rem;
-        height: 1.2rem;
+        border-radius: $big-chip-size/2;
+        font-size: 14px;
+        height: $big-chip-size;
         text-align: center;
-        width: 1.2rem;
+        width: $big-chip-size;
       }
 
       .goodwill {
