@@ -635,48 +635,71 @@ ownerRoomView model =
 
         Just data ->
             div []
-                [ RoomData.infos data
-                , RoomData.stateView data
-                , section [ class "section" ]
-                    [ case model.room of
-                        Just room ->
-                            Script.scriptView room.script
-
-                        Nothing ->
-                            text ""
-                    ]
-                , div [ class "box" ]
-                    [ case data.script of
-                        Nothing ->
-                            Form.field
-                                [ button [ class "button is-danger", onClick ConfirmPublishCloseSheet ]
-                                    [ span [ class "icon" ]
-                                        [ i [ class "fas fa-book" ] []
-                                        ]
-                                    , span [] [ text "非公開シートを公開..." ]
-                                    ]
-                                ]
-
-                        Just _ ->
-                            Form.field
-                                [ button [ class "button is-info", disabled True ]
-                                    [ span [ class "icon" ]
-                                        [ i [ class "fas fa-book" ] []
-                                        ]
-                                    , span [] [ text "非公開シート公開済" ]
-                                    ]
-                                ]
-                    , Form.field
-                        [ button [ class "button is-danger", onClick ConfirmInitRoomData ]
-                            [ span [ class "icon" ]
-                                [ i [ class "fas fa-book" ] []
-                                ]
-                            , span [] [ text "ルーム初期化..." ]
-                            ]
-                        ]
-                    ]
+                [ RoomData.stateView data
+                , roomBoard model data
+                , RoomData.infos data
+                , mastermindSheets model
+                , mastermindScriptButtons model data
                 , mastermindBottomForm model data
                 ]
+
+
+roomBoard : Model -> RoomData -> Html Msg
+roomBoard model data =
+    div [ class "rooper-roomdata-main-board-wrapper" ]
+        [ div [ class "rooper-roomdata-main-board" ]
+            [ div [ class "rooper-main-board-hospital" ] []
+            , div [ class "rooper-main-board-shrine" ] []
+            , div [ class "rooper-main-board-city" ] []
+            , div [ class "rooper-main-board-school" ] []
+            ]
+        ]
+
+
+mastermindSheets : Model -> Html msg
+mastermindSheets model =
+    section [ class "section" ]
+        [ case model.room of
+            Just room ->
+                Script.scriptView room.script
+
+            Nothing ->
+                text ""
+        ]
+
+
+mastermindScriptButtons : Model -> RoomData -> Html Msg
+mastermindScriptButtons model data =
+    div [ class "box" ]
+        [ case data.script of
+            Nothing ->
+                Form.field
+                    [ button [ class "button is-danger", onClick ConfirmPublishCloseSheet ]
+                        [ span [ class "icon" ]
+                            [ i [ class "fas fa-book" ] []
+                            ]
+                        , span [] [ text "非公開シートを公開..." ]
+                        ]
+                    ]
+
+            Just _ ->
+                Form.field
+                    [ button [ class "button is-info", disabled True ]
+                        [ span [ class "icon" ]
+                            [ i [ class "fas fa-book" ] []
+                            ]
+                        , span [] [ text "非公開シート公開済" ]
+                        ]
+                    ]
+        , Form.field
+            [ button [ class "button is-danger", onClick ConfirmInitRoomData ]
+                [ span [ class "icon" ]
+                    [ i [ class "fas fa-book" ] []
+                    ]
+                , span [] [ text "ルーム初期化..." ]
+                ]
+            ]
+        ]
 
 
 mastermindBottomForm : Model -> RoomData -> Html Msg

@@ -141,4 +141,46 @@
       }
     }
   }
+
+  &-roomdata-main-board-wrapper {
+    position: relative;
+    width: 100%;
+
+    &::before {
+      content: '';
+      display: block;
+      padding-top: 71%; // 画像は1:1.4の縦横比。10/14=0.71×100で71%
+    }
+
+    .rooper-roomdata-main-board {
+      bottom: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+
+      > div {
+        background-size: cover;
+      }
+
+      .rooper-main-board-shrine {
+        background-image: url('/assets/images/boards/shrine.png');
+      }
+
+      .rooper-main-board-school {
+        background-image: url('/assets/images/boards/school.png');
+      }
+
+      .rooper-main-board-hospital {
+        background-image: url('/assets/images/boards/hospital.png');
+      }
+
+      .rooper-main-board-city {
+        background-image: url('/assets/images/boards/city.png');
+      }
+    }
+  }
 }
