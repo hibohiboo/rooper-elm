@@ -98,6 +98,50 @@ setForbiddenLocations b c =
 
 
 -- ==============================================================================================
+-- getter
+-- ==============================================================================================
+
+
+getCharactersOnBoard : Board.BoardType -> List Character -> List Character
+getCharactersOnBoard t list =
+    list
+        |> List.filter
+            (\c ->
+                case c.location of
+                    Just l ->
+                        if l.boardType == t then
+                            True
+
+                        else
+                            False
+
+                    Nothing ->
+                        False
+            )
+
+
+getCharactersOnCity : List Character -> List Character
+getCharactersOnCity list =
+    getCharactersOnBoard Board.City list
+
+
+getCharactersOnShrine : List Character -> List Character
+getCharactersOnShrine list =
+    getCharactersOnBoard Board.Shrine list
+
+
+getCharactersOnHospital : List Character -> List Character
+getCharactersOnHospital list =
+    getCharactersOnBoard Board.Hospital list
+
+
+getCharactersOnSchool : List Character -> List Character
+getCharactersOnSchool list =
+    getCharactersOnBoard Board.School list
+
+
+
+-- ==============================================================================================
 -- デコーダ
 -- ==============================================================================================
 

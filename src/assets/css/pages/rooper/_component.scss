@@ -164,6 +164,9 @@
 
       > div {
         background-size: cover;
+        display: flex;
+        flex-wrap: wrap;
+        overflow: hidden;
       }
 
       .rooper-main-board-shrine {
