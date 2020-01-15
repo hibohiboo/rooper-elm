@@ -140,6 +140,42 @@ getCharactersOnSchool list =
     getCharactersOnBoard Board.School list
 
 
+isTurf : Board.BoardType -> List Character -> Bool
+isTurf t list =
+    list
+        |> List.filter
+            (\c ->
+                case c.turf of
+                    Just turf ->
+                        turf.boardType == t
+
+                    Nothing ->
+                        False
+            )
+        |> List.length
+        |> (/=) 0
+
+
+isTurfHospital : List Character -> Bool
+isTurfHospital list =
+    isTurf Board.Hospital list
+
+
+isTurfCity : List Character -> Bool
+isTurfCity list =
+    isTurf Board.City list
+
+
+isTurfShrine : List Character -> Bool
+isTurfShrine list =
+    isTurf Board.Shrine list
+
+
+isTurfSchool : List Character -> Bool
+isTurfSchool list =
+    isTurf Board.School list
+
+
 
 -- ==============================================================================================
 -- デコーダ

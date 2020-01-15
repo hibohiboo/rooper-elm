@@ -118,15 +118,19 @@ encode { boardType, name, intrigue } =
 -- ==============================================================================================
 -- View
 -- ==============================================================================================
--- ==============================================================================================
--- View
--- ==============================================================================================
 
 
-boardCard : Board -> Html msg
-boardCard b =
+boardCard : Board -> Bool -> Html msg
+boardCard b isTurf =
     div [ class "rooper-roomdata-board-card" ]
         [ img [ src (Board.boardToCardUrl b.boardType) ] []
+        , if isTurf then
+            div [ style "height" "30px" ]
+                [ img [ src "/assets/images/others/turf.png", style "transform" "scale(0.8)" ] []
+                ]
+
+          else
+            text ""
         , boardCardChip b.intrigue "intrigue"
         ]
 
@@ -149,7 +153,7 @@ boardsFormItem b changeIMsg =
     div []
         [ div [ class "rooper-board-room-form-item" ]
             [ div []
-                [ boardCard b
+                [ boardCard b False
                 , div [] [ text b.name ]
                 ]
             , div []

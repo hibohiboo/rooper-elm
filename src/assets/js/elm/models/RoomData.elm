@@ -365,7 +365,7 @@ roomBoard data =
 boardHospital : RoomData -> Html msg
 boardHospital data =
     div [ class "rooper-main-board-hospital" ] <|
-        Board.boardCard (Board.getHospital data.boards)
+        Board.boardCard (Board.getHospital data.boards) (Character.isTurfHospital data.characters)
             :: List.map (\c -> Character.characterCard c)
                 (Character.getCharactersOnHospital data.characters)
 
@@ -373,8 +373,7 @@ boardHospital data =
 boardCity : RoomData -> Html msg
 boardCity data =
     div [ class "rooper-main-board-city" ] <|
-        Board.boardCard
-            (Board.getCity data.boards)
+        Board.boardCard (Board.getCity data.boards) (Character.isTurfCity data.characters)
             :: List.map (\c -> Character.characterCard c)
                 (Character.getCharactersOnCity data.characters)
 
@@ -382,7 +381,7 @@ boardCity data =
 boardShrine : RoomData -> Html msg
 boardShrine data =
     div [ class "rooper-main-board-shrine" ] <|
-        Board.boardCard (Board.getShrine data.boards)
+        Board.boardCard (Board.getShrine data.boards) (Character.isTurfShrine data.characters)
             :: List.map (\c -> Character.characterCard c)
                 (Character.getCharactersOnShrine data.characters)
 
@@ -390,6 +389,6 @@ boardShrine data =
 boardSchool : RoomData -> Html msg
 boardSchool data =
     div [ class "rooper-main-board-school" ] <|
-        Board.boardCard (Board.getSchool data.boards)
+        Board.boardCard (Board.getSchool data.boards) (Character.isTurfSchool data.characters)
             :: List.map (\c -> Character.characterCard c)
                 (Character.getCharactersOnSchool data.characters)
