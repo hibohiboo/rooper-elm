@@ -150,6 +150,7 @@ type Msg
     | ToggleCharacterIsDead RoomCharacter.Character
     | DeleteCharacterForbiddenLocationMsg RoomCharacter.Character
     | ChangeBoardIntrigue RoomBoard.Board String
+    | SetMasterMindHand Int String
 
 
 type MenuState
@@ -541,6 +542,9 @@ update msg model =
         ChangeBoardIntrigue b s ->
             ( { model | roomData = Maybe.map (RoomData.changeBoardIntrigue b s) model.roomData }, Cmd.none )
 
+        SetMasterMindHand i s ->
+            ( { model | roomData = Maybe.map (RoomData.changeMasterMindHand i s) model.roomData }, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -732,10 +736,9 @@ mastermindBottomForm model data =
 
                 RoomState.Hand ->
                     div []
-                        [ text "準備中"
-                        , RoomData.handsForm 1 data ChangeRoomDataEx
-                        , RoomData.handsForm 2 data ChangeRoomDataEx
-                        , RoomData.handsForm 3 data ChangeRoomDataEx
+                        [ RoomData.handsForm 1 data (SetMasterMindHand 1)
+                        , RoomData.handsForm 2 data (SetMasterMindHand 2)
+                        , RoomData.handsForm 3 data (SetMasterMindHand 3)
                         ]
             ]
         , RoomState.roomDataFormFooter

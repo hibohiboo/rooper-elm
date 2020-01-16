@@ -187,6 +187,11 @@ changeBoardIntrigue b s f =
     }
 
 
+changeMasterMindHand : Int -> String -> RoomData -> RoomData
+changeMasterMindHand i s f =
+    { f | mastermind = MasterMind.changeMasterMindHand i s f.mastermind }
+
+
 
 -- ==============================================================================================
 -- getter
