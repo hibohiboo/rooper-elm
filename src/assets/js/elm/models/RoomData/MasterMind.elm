@@ -6,12 +6,14 @@ import Html.Attributes exposing (class, href, style)
 import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
+import Models.RoomData.Hand as Hand exposing (Hand)
 import Models.TragedySet as TragedySet exposing (Incident, TragedySet)
 
 
 type alias MasterMind =
     { name : String
     , twitterScreenName : String
+    , hands : List Hand
     }
 
 
@@ -23,7 +25,7 @@ type alias MasterMind =
 
 init : String -> MasterMind
 init id =
-    MasterMind "脚本家" id
+    MasterMind "脚本家" id Hand.initMastermind
 
 
 
@@ -48,6 +50,7 @@ decoder =
     D.succeed MasterMind
         |> Pipeline.required "name" D.string
         |> Pipeline.required "twitterScreenName" D.string
+        |> Pipeline.required "hands" (D.list Hand.decoder)
 
 
 
@@ -57,10 +60,11 @@ decoder =
 
 
 encode : MasterMind -> E.Value
-encode p =
+encode { name, twitterScreenName, hands } =
     E.object
-        [ ( "name", E.string p.name )
-        , ( "twitterScreenName", E.string p.twitterScreenName )
+        [ ( "name", E.string name )
+        , ( "twitterScreenName", E.string twitterScreenName )
+        , ( "hands", E.list Hand.encode hands )
         ]
 
 
