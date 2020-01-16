@@ -53,6 +53,11 @@ isMasterMind s m =
     m.twitterScreenName == s
 
 
+getSelectedHandComponentKey : Int -> MasterMind -> String
+getSelectedHandComponentKey i m =
+    Hand.getSelectedHandComponentKey i m.hands
+
+
 
 -- ==============================================================================================
 -- デコーダ

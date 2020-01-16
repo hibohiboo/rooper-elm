@@ -85,6 +85,12 @@ getSchool list =
     getBoard Board.School list
 
 
+getFormOptionList : List Board -> List ( String, String )
+getFormOptionList list =
+    list
+        |> List.map (\b -> ( Board.boardTypeToString b.boardType, b.name ))
+
+
 
 -- ==============================================================================================
 -- デコーダ

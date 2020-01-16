@@ -361,7 +361,7 @@ encodeCharacterScriptData data =
         [ ( "character", encodeCharacter data.character )
         , ( "role", ExEncode.maybe E.string <| Maybe.map TragedySet.roleToString data.role )
         , ( "optionalNumber", ExEncode.maybe E.int data.optionalNumber )
-        , ( "turf", ExEncode.maybe E.string <| Maybe.map Board.boardToString data.turf )
+        , ( "turf", ExEncode.maybe E.string <| Maybe.map Board.toString data.turf )
         ]
 
 
@@ -637,9 +637,9 @@ characterTurfBoards : CharacterScriptData -> (String -> msg) -> Html msg
 characterTurfBoards char chgMsg =
     let
         boardKey =
-            Board.boardToString (Maybe.withDefault Board.city char.turf)
+            Board.toString (Maybe.withDefault Board.city char.turf)
 
         optionList =
-            List.map (\b -> Tuple.pair (Board.boardToString b) b.name) Board.boards
+            List.map (\b -> Tuple.pair (Board.toString b) b.name) Board.boards
     in
     Form.select ("-character-board-" ++ characterToString char.character) chgMsg boardKey optionList

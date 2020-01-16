@@ -1,5 +1,6 @@
 module Models.RoomData exposing (..)
 
+import Component.Form as Form
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Json.Decode as D
@@ -423,4 +424,17 @@ handsForm i d chgMsg =
             , img [ src "/assets/images/hands/Unselected.png" ] []
             ]
         , div [ style "padding-bottom" "20px" ] [ MasterMind.handsForm i d.mastermind chgMsg ]
+        , handsOnComponentForm i d chgMsg
         ]
+
+
+handsOnComponentForm : Int -> RoomData -> (String -> msg) -> Html msg
+handsOnComponentForm i data chgMsg =
+    let
+        key =
+            MasterMind.getSelectedHandComponentKey i data.mastermind
+
+        optionList =
+            Board.getFormOptionList data.boards
+    in
+    Form.select ("form-mastermind-hand-" ++ String.fromInt i) chgMsg key optionList

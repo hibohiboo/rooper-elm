@@ -297,6 +297,21 @@ getSelectedHand i list =
         |> List.head
 
 
+getSelectedHandComponentKey : Int -> List Hand -> String
+getSelectedHandComponentKey i list =
+    case getSelectedHand i list of
+        Just h ->
+            case h.onBoard of
+                Just b ->
+                    Board.boardTypeToString b
+
+                Nothing ->
+                    "未選択"
+
+        Nothing ->
+            "未選択"
+
+
 getFormHandList : Int -> List Hand -> List Hand
 getFormHandList i list =
     list

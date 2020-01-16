@@ -26,8 +26,8 @@ decodeBoard =
     D.map boardFromString D.string
 
 
-boardToString : Board -> String
-boardToString board =
+toString : Board -> String
+toString board =
     boardTypeToString board.boardType
 
 

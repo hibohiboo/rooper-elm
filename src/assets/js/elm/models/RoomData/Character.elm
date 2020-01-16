@@ -212,15 +212,15 @@ encode { characterType, name, paranoiaLimit, firstLocation, role, optionalNumber
         [ ( "name", E.string name )
         , ( "characterType", E.string <| Models.Character.characterTypeToString characterType )
         , ( "paranoiaLimit", E.int paranoiaLimit )
-        , ( "firstLocation", E.string <| Board.boardToString firstLocation )
+        , ( "firstLocation", E.string <| Board.toString firstLocation )
         , ( "role", ExEncode.maybe E.string <| Maybe.map TragedySet.roleToString role )
         , ( "optionalNumber", ExEncode.maybe E.int optionalNumber )
-        , ( "turf", ExEncode.maybe E.string <| Maybe.map Board.boardToString turf )
+        , ( "turf", ExEncode.maybe E.string <| Maybe.map Board.toString turf )
         , ( "goodWill", E.int goodWill )
         , ( "paranoia", E.int paranoia )
         , ( "intrigue", E.int intrigue )
-        , ( "location", ExEncode.maybe E.string <| Maybe.map Board.boardToString location )
-        , ( "forbiddenLocations", E.list (E.string << Board.boardToString) forbiddenLocations )
+        , ( "location", ExEncode.maybe E.string <| Maybe.map Board.toString location )
+        , ( "forbiddenLocations", E.list (E.string << Board.toString) forbiddenLocations )
         , ( "isDead", E.bool isDead )
         ]
 
@@ -253,7 +253,7 @@ boardToName b =
 
 boardList : Character -> List ( String, String )
 boardList c =
-    List.map (\b -> Tuple.pair (Board.boardToString b) b.name) (UtilityList.exceptList c.forbiddenLocations Board.boards)
+    List.map (\b -> Tuple.pair (Board.toString b) b.name) (UtilityList.exceptList c.forbiddenLocations Board.boards)
 
 
 boardListWithNothing : Character -> List ( String, String )
@@ -347,7 +347,7 @@ characterLocationBoards char chgMsg =
         boardKey =
             case char.location of
                 Just b ->
-                    Board.boardToString b
+                    Board.toString b
 
                 Nothing ->
                     "除外"
