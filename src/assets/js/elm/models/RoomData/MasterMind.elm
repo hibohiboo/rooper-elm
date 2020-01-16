@@ -2,7 +2,7 @@ module Models.RoomData.MasterMind exposing (..)
 
 import Component.Form as Form
 import Html exposing (..)
-import Html.Attributes exposing (class, href, style)
+import Html.Attributes exposing (class, href, src, style)
 import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
@@ -103,3 +103,13 @@ handsForm i master chgMsg =
             Hand.getFormOptionList i master.hands
     in
     Form.select ("form-mastermind-hand-" ++ String.fromInt i) chgMsg key optionList
+
+
+selectedCard : Int -> MasterMind -> Html msg
+selectedCard i master =
+    case Hand.getSelectedHand i master.hands of
+        Just h ->
+            img [ src <| Hand.toCardUrl h ] []
+
+        Nothing ->
+            text ""

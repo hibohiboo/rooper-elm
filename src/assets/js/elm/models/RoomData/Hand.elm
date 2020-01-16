@@ -103,14 +103,14 @@ initMastermind =
 
 initProtagonist : List Hand
 initProtagonist =
-    [ Hand "p1" 1 ParanoiaPlus1 True Nothing Nothing Nothing
-    , Hand "p2" 0 ParanoiaMinus1 False Nothing Nothing (Just False)
-    , Hand "p3" 0 GoodwillPlus1 False Nothing Nothing Nothing
-    , Hand "p4" 0 GoodwillPlus2 False Nothing Nothing (Just False)
-    , Hand "p5" 0 ForbidIntrigue False Nothing Nothing Nothing
-    , Hand "p6" 0 MovementVertical False Nothing Nothing Nothing
-    , Hand "p7" 0 MovementHorizontal False Nothing Nothing Nothing
-    , Hand "p8" 0 ForbidMovement False Nothing Nothing (Just False)
+    [ Hand "p0" 1 ParanoiaPlus1 True Nothing Nothing Nothing
+    , Hand "p1" 0 ParanoiaMinus1 False Nothing Nothing (Just False)
+    , Hand "p2" 0 GoodwillPlus1 False Nothing Nothing Nothing
+    , Hand "p3" 0 GoodwillPlus2 False Nothing Nothing (Just False)
+    , Hand "p4" 0 ForbidIntrigue False Nothing Nothing Nothing
+    , Hand "p5" 0 MovementVertical False Nothing Nothing Nothing
+    , Hand "p6" 0 MovementHorizontal False Nothing Nothing Nothing
+    , Hand "p7" 0 ForbidMovement False Nothing Nothing (Just False)
     ]
 
 
@@ -275,6 +275,19 @@ typeFromString s =
 
         _ ->
             Nothing
+
+
+toCardUrl : Hand -> String
+toCardUrl h =
+    "/assets/images/hands/"
+        ++ (case h.id of
+                "p1" ->
+                    "p1"
+
+                _ ->
+                    typeToString h.handType
+           )
+        ++ ".png"
 
 
 getSelectedHand : Int -> List Hand -> Maybe Hand

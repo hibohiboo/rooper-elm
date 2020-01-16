@@ -735,7 +735,7 @@ mastermindBottomForm model data =
                         ]
 
                 RoomState.Hand ->
-                    div []
+                    div [ class "rooper-mastermind-form-hands" ]
                         [ RoomData.handsForm 1 data (SetMasterMindHand 1)
                         , RoomData.handsForm 2 data (SetMasterMindHand 2)
                         , RoomData.handsForm 3 data (SetMasterMindHand 3)

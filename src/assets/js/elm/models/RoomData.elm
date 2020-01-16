@@ -417,4 +417,7 @@ boardSchool data =
 
 handsForm : Int -> RoomData -> (String -> msg) -> Html msg
 handsForm i d chgMsg =
-    MasterMind.handsForm i d.mastermind chgMsg
+    div []
+        [ MasterMind.selectedCard i d.mastermind
+        , MasterMind.handsForm i d.mastermind chgMsg
+        ]
