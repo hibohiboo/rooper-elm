@@ -731,7 +731,12 @@ mastermindBottomForm model data =
                         ]
 
                 RoomState.Hand ->
-                    div [] [ text "準備中" ]
+                    div []
+                        [ text "準備中"
+                        , RoomData.handsForm 1 data ChangeRoomDataEx
+                        , RoomData.handsForm 2 data ChangeRoomDataEx
+                        , RoomData.handsForm 3 data ChangeRoomDataEx
+                        ]
             ]
         , RoomState.roomDataFormFooter
             [ span [ class "card-footer-item" ]

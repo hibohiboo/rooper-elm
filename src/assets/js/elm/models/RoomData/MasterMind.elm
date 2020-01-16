@@ -72,3 +72,20 @@ encode { name, twitterScreenName, hands } =
 -- ==============================================================================================
 -- View
 -- ==============================================================================================
+
+
+handsForm : Int -> MasterMind -> (String -> msg) -> Html msg
+handsForm i master chgMsg =
+    let
+        key =
+            case Hand.getSelectedHand i master.hands of
+                Just h ->
+                    h.id
+
+                Nothing ->
+                    ""
+
+        optionList =
+            Hand.getFormOptionList i master.hands
+    in
+    Form.select ("form-mastermind-hand-" ++ String.fromInt i) chgMsg key optionList

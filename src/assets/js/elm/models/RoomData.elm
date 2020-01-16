@@ -408,3 +408,8 @@ boardSchool data =
         Board.boardCard (Board.getSchool data.boards) (Character.isTurfSchool data.characters)
             :: List.map (\c -> Character.characterCard c)
                 (Character.getCharactersOnSchool data.characters)
+
+
+handsForm : Int -> RoomData -> (String -> msg) -> Html msg
+handsForm i d chgMsg =
+    MasterMind.handsForm i d.mastermind chgMsg
