@@ -48,6 +48,11 @@ initScript =
     Nothing
 
 
+getId : Script -> String
+getId s =
+    Id.toString s.id
+
+
 
 -- Decoder
 

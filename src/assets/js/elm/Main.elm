@@ -400,8 +400,16 @@ update msg model =
 
                         newF =
                             { f | mastermindTwitterScreenName = mastermindTwitterScreenName }
+
+                        newCmd =
+                            case f.script of
+                                Just s ->
+                                    readScriptForRoom <| Script.getId s
+
+                                Nothing ->
+                                    Cmd.none
                     in
-                    ( { model | roomForm = newF, room = Room.convert newF }, Cmd.none )
+                    ( { model | roomForm = newF, room = Room.convert newF }, newCmd )
 
                 Nothing ->
                     update (OpenModal "部屋の読み込みに失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab }
