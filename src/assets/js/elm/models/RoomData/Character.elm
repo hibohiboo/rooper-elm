@@ -261,6 +261,12 @@ boardListWithNothing c =
     ( "除外", "除外" ) :: boardList c
 
 
+getFormOptionList : List Character -> List ( String, String )
+getFormOptionList list =
+    list
+        |> List.map (\c -> ( Models.Character.characterTypeToString c.characterType, c.name ))
+
+
 
 -- ==============================================================================================
 -- View
