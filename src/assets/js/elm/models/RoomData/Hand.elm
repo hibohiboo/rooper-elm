@@ -16,13 +16,17 @@ import Models.TragedySet as TragedySet exposing (Role)
 import Models.Utility.List as UtilityList
 
 
+type ComponentType
+    = CharacterComponentType CharacterType
+    | BoardComponentType BoardType
+
+
 type alias Hand =
     { id : String
     , formId : Int -- 選択された手札の番号
     , handType : HandType
     , isSelected : Bool
-    , onCharacter : Maybe CharacterType
-    , onBoard : Maybe BoardType
+    , onComponent : Maybe ComponentType
     , isUsed : Maybe Bool
     }
 
@@ -56,8 +60,7 @@ decoder =
         |> Pipeline.required "id" D.int
         |> Pipeline.required "handType" (D.map (typeFromString >> Maybe.withDefault ParanoiaPlus1) D.string)
         |> Pipeline.required "isSelected" D.bool
-        |> Pipeline.optional "onCharacter" (D.map Models.Character.characterTypeFromString D.string) Nothing
-        |> Pipeline.optional "onBoard" (D.map Board.boardTypeFromString D.string) Nothing
+        |> Pipeline.optional "onComponent" (D.map componentTypeFromString D.string) Nothing
         |> Pipeline.optional "isUsed" (D.maybe D.bool) Nothing
 
 
@@ -68,14 +71,13 @@ decoder =
 
 
 encode : Hand -> E.Value
-encode { id, formId, handType, isSelected, onCharacter, onBoard, isUsed } =
+encode { id, formId, handType, isSelected, onComponent, isUsed } =
     E.object
         [ ( "id", E.string id )
         , ( "formId", E.int formId )
         , ( "handType", E.string <| typeToString handType )
         , ( "isSelected", E.bool isSelected )
-        , ( "onCharacter", ExEncode.maybe (E.string << Models.Character.characterTypeToString) onCharacter )
-        , ( "onBoard", ExEncode.maybe (E.string << Board.boardTypeToString) onBoard )
+        , ( "onComponent", ExEncode.maybe (E.string << componentTypeToString) onComponent )
         , ( "isUsed", ExEncode.maybe E.bool isUsed )
         ]
 
@@ -88,29 +90,29 @@ encode { id, formId, handType, isSelected, onCharacter, onBoard, isUsed } =
 
 initMastermind : List Hand
 initMastermind =
-    [ Hand "m0" 1 ParanoiaPlus1 True Nothing Nothing Nothing
-    , Hand "m1" 2 ParanoiaPlus1 True Nothing Nothing Nothing
-    , Hand "m2" 3 ParanoiaMinus1 True Nothing Nothing Nothing
-    , Hand "m3" 0 ForbidParanoia False Nothing Nothing Nothing
-    , Hand "m4" 0 ForbidGoodwill False Nothing Nothing Nothing
-    , Hand "m5" 0 IntriguePlus1 False Nothing Nothing Nothing
-    , Hand "m6" 0 IntriguePlus2 False Nothing Nothing (Just False)
-    , Hand "m7" 0 MovementVertical False Nothing Nothing Nothing
-    , Hand "m8" 0 MovementHorizontal False Nothing Nothing Nothing
-    , Hand "m9" 0 MovementDiagonal False Nothing Nothing (Just False)
+    [ Hand "m0" 1 ParanoiaPlus1 True Nothing Nothing
+    , Hand "m1" 2 ParanoiaPlus1 True Nothing Nothing
+    , Hand "m2" 3 ParanoiaMinus1 True Nothing Nothing
+    , Hand "m3" 0 ForbidParanoia False Nothing Nothing
+    , Hand "m4" 0 ForbidGoodwill False Nothing Nothing
+    , Hand "m5" 0 IntriguePlus1 False Nothing Nothing
+    , Hand "m6" 0 IntriguePlus2 False Nothing (Just False)
+    , Hand "m7" 0 MovementVertical False Nothing Nothing
+    , Hand "m8" 0 MovementHorizontal False Nothing Nothing
+    , Hand "m9" 0 MovementDiagonal False Nothing (Just False)
     ]
 
 
 initProtagonist : List Hand
 initProtagonist =
-    [ Hand "p0" 1 ParanoiaPlus1 True Nothing Nothing Nothing
-    , Hand "p1" 0 ParanoiaMinus1 False Nothing Nothing (Just False)
-    , Hand "p2" 0 GoodwillPlus1 False Nothing Nothing Nothing
-    , Hand "p3" 0 GoodwillPlus2 False Nothing Nothing (Just False)
-    , Hand "p4" 0 ForbidIntrigue False Nothing Nothing Nothing
-    , Hand "p5" 0 MovementVertical False Nothing Nothing Nothing
-    , Hand "p6" 0 MovementHorizontal False Nothing Nothing Nothing
-    , Hand "p7" 0 ForbidMovement False Nothing Nothing (Just False)
+    [ Hand "p0" 1 ParanoiaPlus1 True Nothing Nothing
+    , Hand "p1" 0 ParanoiaMinus1 False Nothing (Just False)
+    , Hand "p2" 0 GoodwillPlus1 False Nothing Nothing
+    , Hand "p3" 0 GoodwillPlus2 False Nothing (Just False)
+    , Hand "p4" 0 ForbidIntrigue False Nothing Nothing
+    , Hand "p5" 0 MovementVertical False Nothing Nothing
+    , Hand "p6" 0 MovementHorizontal False Nothing Nothing
+    , Hand "p7" 0 ForbidMovement False Nothing (Just False)
     ]
 
 
@@ -129,7 +131,7 @@ changeMasterMindHand i s list =
         |> List.map
             (\h ->
                 if h.formId == i then
-                    { h | formId = 0, onBoard = Nothing, onCharacter = Nothing }
+                    { h | formId = 0, onComponent = Nothing }
 
                 else if h.id == s then
                     { h | formId = i }
@@ -290,6 +292,31 @@ toCardUrl h =
         ++ ".png"
 
 
+componentTypeFromString : String -> Maybe ComponentType
+componentTypeFromString s =
+    case Models.Character.characterTypeFromString s of
+        Just ct ->
+            Just (CharacterComponentType ct)
+
+        Nothing ->
+            case Board.boardTypeFromString s of
+                Just bt ->
+                    Just (BoardComponentType bt)
+
+                Nothing ->
+                    Nothing
+
+
+componentTypeToString : ComponentType -> String
+componentTypeToString t =
+    case t of
+        CharacterComponentType ct ->
+            Models.Character.characterTypeToString ct
+
+        BoardComponentType bt ->
+            Board.boardTypeToString bt
+
+
 getSelectedHand : Int -> List Hand -> Maybe Hand
 getSelectedHand i list =
     list
@@ -301,9 +328,9 @@ getSelectedHandComponentKey : Int -> List Hand -> String
 getSelectedHandComponentKey i list =
     case getSelectedHand i list of
         Just h ->
-            case h.onBoard of
-                Just b ->
-                    Board.boardTypeToString b
+            case h.onComponent of
+                Just c ->
+                    componentTypeToString c
 
                 Nothing ->
                     "未選択"
