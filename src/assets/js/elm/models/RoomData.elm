@@ -193,6 +193,11 @@ changeMasterMindHand i s f =
     { f | mastermind = MasterMind.changeMasterMindHand i s f.mastermind }
 
 
+changeMasterMindComponent : Int -> String -> RoomData -> RoomData
+changeMasterMindComponent i s f =
+    { f | mastermind = MasterMind.changeMasterMindComponent i s f.mastermind }
+
+
 
 -- ==============================================================================================
 -- getter
@@ -416,15 +421,15 @@ boardSchool data =
                 (Character.getCharactersOnSchool data.characters)
 
 
-handsForm : Int -> RoomData -> (String -> msg) -> Html msg
-handsForm i d chgMsg =
+handsForm : Int -> RoomData -> (String -> msg) -> (String -> msg) -> Html msg
+handsForm i d handChangeMsg componentChangeMsg =
     div []
         [ div [ style "display" "flex" ]
             [ MasterMind.selectedCard i d.mastermind
-            , img [ src "/assets/images/hands/Unselected.png" ] []
+            , MasterMind.selectedComponentCard i d.mastermind
             ]
-        , div [ style "padding-bottom" "20px" ] [ MasterMind.handsForm i d.mastermind chgMsg ]
-        , handsOnComponentForm i d chgMsg
+        , div [ style "padding-bottom" "20px" ] [ MasterMind.handsForm i d.mastermind handChangeMsg ]
+        , handsOnComponentForm i d componentChangeMsg
         ]
 
 

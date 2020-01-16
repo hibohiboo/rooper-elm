@@ -42,6 +42,11 @@ changeMasterMindHand i s f =
     { f | hands = Hand.changeMasterMindHand i s f.hands }
 
 
+changeMasterMindComponent : Int -> String -> MasterMind -> MasterMind
+changeMasterMindComponent i s f =
+    { f | hands = Hand.changeMasterMindComponent i s f.hands }
+
+
 
 -- ==============================================================================================
 -- getter
@@ -117,4 +122,14 @@ selectedCard i master =
             img [ src <| Hand.toCardUrl h ] []
 
         Nothing ->
-            text ""
+            img [ src "/assets/images/hands/Unselected.png" ] []
+
+
+selectedComponentCard : Int -> MasterMind -> Html msg
+selectedComponentCard i master =
+    case Hand.getSelectedHand i master.hands of
+        Just h ->
+            img [ src <| Hand.toComponentCardUrl h ] []
+
+        Nothing ->
+            img [ src "/assets/images/hands/Unselected.png" ] []

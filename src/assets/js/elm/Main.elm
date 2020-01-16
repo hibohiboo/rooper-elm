@@ -151,6 +151,7 @@ type Msg
     | DeleteCharacterForbiddenLocationMsg RoomCharacter.Character
     | ChangeBoardIntrigue RoomBoard.Board String
     | SetMasterMindHand Int String
+    | SetMasterMindOnComponent Int String
 
 
 type MenuState
@@ -545,6 +546,9 @@ update msg model =
         SetMasterMindHand i s ->
             ( { model | roomData = Maybe.map (RoomData.changeMasterMindHand i s) model.roomData }, Cmd.none )
 
+        SetMasterMindOnComponent i s ->
+            ( { model | roomData = Maybe.map (RoomData.changeMasterMindComponent i s) model.roomData }, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -736,9 +740,9 @@ mastermindBottomForm model data =
 
                 RoomState.Hand ->
                     div [ class "rooper-mastermind-form-hands" ]
-                        [ RoomData.handsForm 1 data (SetMasterMindHand 1)
-                        , RoomData.handsForm 2 data (SetMasterMindHand 2)
-                        , RoomData.handsForm 3 data (SetMasterMindHand 3)
+                        [ RoomData.handsForm 1 data (SetMasterMindHand 1) (SetMasterMindOnComponent 1)
+                        , RoomData.handsForm 2 data (SetMasterMindHand 2) (SetMasterMindOnComponent 2)
+                        , RoomData.handsForm 3 data (SetMasterMindHand 3) (SetMasterMindOnComponent 3)
                         ]
             ]
         , RoomState.roomDataFormFooter

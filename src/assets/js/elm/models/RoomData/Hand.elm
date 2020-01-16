@@ -11,7 +11,7 @@ import Json.Encode as E
 import Json.Encode.Extra as ExEncode
 import List.Extra as ExList
 import Models.Board as Board exposing (BoardType)
-import Models.Character exposing (CharacterType)
+import Models.Character as Character exposing (CharacterType)
 import Models.TragedySet as TragedySet exposing (Role)
 import Models.Utility.List as UtilityList
 
@@ -135,6 +135,19 @@ changeMasterMindHand i s list =
 
                 else if h.id == s then
                     { h | formId = i }
+
+                else
+                    h
+            )
+
+
+changeMasterMindComponent : Int -> String -> List Hand -> List Hand
+changeMasterMindComponent i s list =
+    list
+        |> List.map
+            (\h ->
+                if h.formId == i then
+                    { h | onComponent = componentTypeFromString s }
 
                 else
                     h
@@ -292,9 +305,22 @@ toCardUrl h =
         ++ ".png"
 
 
+toComponentCardUrl : Hand -> String
+toComponentCardUrl h =
+    case h.onComponent of
+        Just (BoardComponentType b) ->
+            Board.boardToCardUrl b
+
+        Just (CharacterComponentType c) ->
+            Character.characterTypeToCardUrl c
+
+        Nothing ->
+            "/assets/images/hands/Unselected.png"
+
+
 componentTypeFromString : String -> Maybe ComponentType
 componentTypeFromString s =
-    case Models.Character.characterTypeFromString s of
+    case Character.characterTypeFromString s of
         Just ct ->
             Just (CharacterComponentType ct)
 
@@ -311,7 +337,7 @@ componentTypeToString : ComponentType -> String
 componentTypeToString t =
     case t of
         CharacterComponentType ct ->
-            Models.Character.characterTypeToString ct
+            Character.characterTypeToString ct
 
         BoardComponentType bt ->
             Board.boardTypeToString bt
