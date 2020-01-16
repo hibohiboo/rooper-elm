@@ -56,8 +56,8 @@ type HandType
 decoder : D.Decoder Hand
 decoder =
     D.succeed Hand
-        |> Pipeline.required "formId" D.string
-        |> Pipeline.required "id" D.int
+        |> Pipeline.required "id" D.string
+        |> Pipeline.required "formId" D.int
         |> Pipeline.required "handType" (D.map (typeFromString >> Maybe.withDefault ParanoiaPlus1) D.string)
         |> Pipeline.required "isSelected" D.bool
         |> Pipeline.optional "onComponent" (D.map componentTypeFromString D.string) Nothing
