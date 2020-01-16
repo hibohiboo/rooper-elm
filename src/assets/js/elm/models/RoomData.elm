@@ -418,6 +418,9 @@ boardSchool data =
 handsForm : Int -> RoomData -> (String -> msg) -> Html msg
 handsForm i d chgMsg =
     div []
-        [ MasterMind.selectedCard i d.mastermind
-        , MasterMind.handsForm i d.mastermind chgMsg
+        [ div [ style "display" "flex" ]
+            [ MasterMind.selectedCard i d.mastermind
+            , img [ src "/assets/images/hands/Unselected.png" ] []
+            ]
+        , div [ style "padding-bottom" "20px" ] [ MasterMind.handsForm i d.mastermind chgMsg ]
         ]
