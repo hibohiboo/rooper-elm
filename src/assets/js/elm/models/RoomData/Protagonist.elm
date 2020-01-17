@@ -48,7 +48,17 @@ isProtagonist s list =
 
 getUserProtagonists : String -> List Protagonist -> List Protagonist
 getUserProtagonists s list =
-    List.filter (\d -> d.twitterScreenName == s) list
+    List.filter (\p -> p.twitterScreenName == s) list
+
+
+isLeader : String -> List Protagonist -> Bool
+isLeader s list =
+    case List.head list of
+        Just p ->
+            s == p.twitterScreenName
+
+        Nothing ->
+            False
 
 
 

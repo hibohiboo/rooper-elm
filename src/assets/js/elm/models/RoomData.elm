@@ -244,6 +244,11 @@ getAppearedCharacters data =
         |> Character.filterGodlyBeing data.loop
 
 
+isLeader : User -> RoomData -> Bool
+isLeader user data =
+    Protagonist.isLeader user.twitterScreenName data.protagonists
+
+
 
 -- ==============================================================================================
 -- デコーダ

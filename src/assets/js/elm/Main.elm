@@ -671,8 +671,11 @@ ownerRoomView user model =
                 , if RoomData.isDisplayMastermindBottomForm user data then
                     mastermindBottomForm model data
 
-                  else
+                  else if RoomData.isLeader user data then
                     protagonistsBottomForm model data
+
+                  else
+                    text ""
                 ]
 
 
