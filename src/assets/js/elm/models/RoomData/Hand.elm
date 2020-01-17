@@ -128,18 +128,23 @@ initProtagonist =
 
 changeMasterMindHand : Int -> String -> List Hand -> List Hand
 changeMasterMindHand i s list =
-    list
-        |> List.map
-            (\h ->
-                if h.formId == i then
-                    { h | formId = 0, onComponent = Nothing }
+    case getSelectedHand i list of
+        Just hand ->
+            list
+                |> List.map
+                    (\h ->
+                        if h.formId == i then
+                            { h | formId = 0, onComponent = Nothing }
 
-                else if h.id == s then
-                    { h | formId = i }
+                        else if h.id == s then
+                            { h | formId = i, onComponent = hand.onComponent }
 
-                else
-                    h
-            )
+                        else
+                            h
+                    )
+
+        Nothing ->
+            list
 
 
 changeMasterMindComponent : Int -> String -> List Hand -> List Hand
