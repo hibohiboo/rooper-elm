@@ -672,7 +672,7 @@ ownerRoomView user model =
                     mastermindBottomForm model data
 
                   else
-                    text ""
+                    protagonistsBottomForm model data
                 ]
 
 
@@ -779,6 +779,30 @@ mastermindBottomForm model data =
 
           else
             text ""
+        ]
+
+
+protagonistsBottomForm : Model -> RoomData -> Html Msg
+protagonistsBottomForm model data =
+    RoomState.roomDataBottomForm model.roomState
+        [ header
+            [ class "card-header" ]
+            [ RoomState.roomDataFormHeaderTitle model.roomState
+            , RoomState.roomDataFormHeaderIcon CloseRoomStateBottomNav OpenRoomStateBottomNav model.roomState
+            ]
+        , RoomState.roomDataFormContent
+            [ div [ class "rooper-mastermind-form-hands" ]
+                [ RoomData.handsForm 1 data (SetMasterMindHand 1) (SetMasterMindOnComponent 1)
+                ]
+            ]
+        , RoomState.roomDataFormFooter
+            [ span [ class "card-footer-item" ]
+                [ span [ class "card-footer-item", onClick HandRoomDataState ]
+                    [ span [] [ text "手札" ]
+                    ]
+                ]
+            ]
+        , RoomState.roomDataFormFooter [ span [ class "card-footer-item" ] [ nextStateButton ] ]
         ]
 
 
