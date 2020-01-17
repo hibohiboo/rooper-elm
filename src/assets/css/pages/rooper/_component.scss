@@ -32,6 +32,7 @@
       display: none;
       max-height: 40vh;
       overflow: scroll;
+      padding: 1.5rem 0.5rem;
     }
 
     .card-footer {
@@ -61,8 +62,6 @@
   }
 
   &-characters-form {
-    margin-left: -1rem;
-
     .rooper-character-room-form-item {
       display: grid;
       grid-template-columns: 45px 1fr 1fr 1fr 1fr 20px;
