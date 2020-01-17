@@ -402,12 +402,6 @@ characterLocationBoards char chgMsg =
                 Models.Character.Illusion ->
                     boardListWithNothing char
 
-                Models.Character.GodlyBeing ->
-                    boardListWithNothing char
-
-                Models.Character.TransferStudent ->
-                    boardListWithNothing char
-
                 _ ->
                     boardList char
     in
