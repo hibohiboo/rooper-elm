@@ -394,3 +394,21 @@ getSelectedBoardComponentType i list =
         |> List.filter ExMaybe.isJust
         |> ExMaybe.combine
         |> Maybe.withDefault []
+
+
+getSelectedCharacterComponentType : Int -> List Hand -> List CharacterType
+getSelectedCharacterComponentType i list =
+    list
+        |> List.filter (\h -> h.formId /= i)
+        |> List.map
+            (\h ->
+                case h.onComponent of
+                    Just (CharacterComponentType t) ->
+                        Just t
+
+                    _ ->
+                        Nothing
+            )
+        |> List.filter ExMaybe.isJust
+        |> ExMaybe.combine
+        |> Maybe.withDefault []

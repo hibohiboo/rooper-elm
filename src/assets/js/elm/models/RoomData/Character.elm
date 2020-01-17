@@ -261,9 +261,10 @@ boardListWithNothing c =
     ( "除外", "除外" ) :: boardList c
 
 
-getFormOptionList : List Character -> List ( String, String )
-getFormOptionList list =
+getFormOptionList : List CharacterType -> List Character -> List ( String, String )
+getFormOptionList slectedTypes list =
     list
+        |> List.filter (\c -> not <| List.member c.characterType slectedTypes)
         |> List.map (\c -> ( Models.Character.characterTypeToString c.characterType, c.name ))
 
 

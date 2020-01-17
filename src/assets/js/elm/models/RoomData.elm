@@ -444,7 +444,7 @@ handsOnComponentForm i data chgMsg =
             ( "未選択", "未選択" )
                 :: List.concat
                     [ Board.getFormOptionList (Hand.getSelectedBoardComponentType i data.mastermind.hands) data.boards
-                    , Character.getFormOptionList data.characters
+                    , Character.getFormOptionList (Hand.getSelectedCharacterComponentType i data.mastermind.hands) data.characters
                     ]
     in
     Form.select ("form-mastermind-hand-" ++ String.fromInt i) chgMsg key optionList
