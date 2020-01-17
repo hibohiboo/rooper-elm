@@ -499,7 +499,15 @@ update msg model =
             ( { model | roomData = model.roomData |> Maybe.map (RoomData.setEx val) }, Cmd.none )
 
         NextRoomDataState ->
-            update UpdateRoomData { model | roomData = model.roomData |> Maybe.map RoomData.nextRoomDataState }
+            let
+                roomState =
+                    if RoomData.isRoomStateHand model.roomData then
+                        RoomState.setHandTab model.roomState
+
+                    else
+                        model.roomState
+            in
+            update UpdateRoomData { model | roomData = model.roomData |> Maybe.map RoomData.nextRoomDataState, roomState = roomState }
 
         UpdateRoomData ->
             let

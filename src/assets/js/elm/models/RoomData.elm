@@ -199,6 +199,13 @@ changeMasterMindComponent i s f =
     { f | mastermind = MasterMind.changeMasterMindComponent i s f.mastermind }
 
 
+isRoomStateHand : Maybe RoomData -> Bool
+isRoomStateHand data =
+    data
+        |> Maybe.map (\d -> d.state == RoomDataState.MastermindPlaysCards)
+        |> Maybe.withDefault False
+
+
 
 -- ==============================================================================================
 -- getter
