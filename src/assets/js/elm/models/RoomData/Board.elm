@@ -85,9 +85,10 @@ getSchool list =
     getBoard Board.School list
 
 
-getFormOptionList : List Board -> List ( String, String )
-getFormOptionList list =
+getFormOptionList : List BoardType -> List Board -> List ( String, String )
+getFormOptionList slectedTypes list =
     list
+        |> List.filter (\b -> not <| List.member b.boardType slectedTypes)
         |> List.map (\b -> ( Board.boardTypeToString b.boardType, b.name ))
 
 

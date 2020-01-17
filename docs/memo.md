@@ -9,3 +9,11 @@ mainContent =
         ]
 ```
 
+## 便利なelmやつ
+https://package.elm-lang.org/packages/elm-community/maybe-extra/5.1.0/Maybe-Extra
+
+```
+combine : List (Maybe a) -> Maybe (List a)
+```
+
+Maybeのリストを扱うときに便利。

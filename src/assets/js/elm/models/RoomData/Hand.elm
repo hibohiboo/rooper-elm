@@ -10,6 +10,7 @@ import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
 import Json.Encode.Extra as ExEncode
 import List.Extra as ExList
+import Maybe.Extra as ExMaybe
 import Models.Board as Board exposing (BoardType)
 import Models.Character as Character exposing (CharacterType)
 import Models.TragedySet as TragedySet exposing (Role)
@@ -375,3 +376,21 @@ getFormOptionList : Int -> List Hand -> List ( String, String )
 getFormOptionList i list =
     getFormHandList i list
         |> List.map (\h -> ( h.id, toName h ))
+
+
+getSelectedBoardComponentType : Int -> List Hand -> List BoardType
+getSelectedBoardComponentType i list =
+    list
+        |> List.filter (\h -> h.formId /= i)
+        |> List.map
+            (\h ->
+                case h.onComponent of
+                    Just (BoardComponentType t) ->
+                        Just t
+
+                    _ ->
+                        Nothing
+            )
+        |> List.filter ExMaybe.isJust
+        |> ExMaybe.combine
+        |> Maybe.withDefault []

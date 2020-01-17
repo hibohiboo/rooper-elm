@@ -10,6 +10,7 @@ import Json.Encode.Extra as ExEncode
 import Models.Room as Room exposing (Room)
 import Models.RoomData.Board as Board exposing (Board)
 import Models.RoomData.Character as Character exposing (Character)
+import Models.RoomData.Hand as Hand
 import Models.RoomData.MasterMind as MasterMind exposing (MasterMind)
 import Models.RoomData.OpenSheet as OpenSheet exposing (OpenSheet)
 import Models.RoomData.Protagonist as Protagonist exposing (Protagonist)
@@ -442,7 +443,7 @@ handsOnComponentForm i data chgMsg =
         optionList =
             ( "未選択", "未選択" )
                 :: List.concat
-                    [ Board.getFormOptionList data.boards
+                    [ Board.getFormOptionList (Hand.getSelectedBoardComponentType i data.mastermind.hands) data.boards
                     , Character.getFormOptionList data.characters
                     ]
     in
