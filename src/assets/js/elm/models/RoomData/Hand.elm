@@ -382,6 +382,12 @@ getSelectedBoardComponentType : Int -> List Hand -> List BoardType
 getSelectedBoardComponentType i list =
     list
         |> List.filter (\h -> h.formId /= i)
+        |> getSelectedBoardComponentTypeAll
+
+
+getSelectedBoardComponentTypeAll : List Hand -> List BoardType
+getSelectedBoardComponentTypeAll list =
+    list
         |> List.map
             (\h ->
                 case h.onComponent of
@@ -400,6 +406,12 @@ getSelectedCharacterComponentType : Int -> List Hand -> List CharacterType
 getSelectedCharacterComponentType i list =
     list
         |> List.filter (\h -> h.formId /= i)
+        |> getSelectedCharacterComponentTypeAll
+
+
+getSelectedCharacterComponentTypeAll : List Hand -> List CharacterType
+getSelectedCharacterComponentTypeAll list =
+    list
         |> List.map
             (\h ->
                 case h.onComponent of
@@ -425,3 +437,9 @@ isMastermindHandsSelected list =
         |> List.filter ExMaybe.isJust
         |> List.length
         |> (==) 3
+
+
+isCharacterSelected : CharacterType -> List Hand -> Bool
+isCharacterSelected t list =
+    getSelectedCharacterComponentTypeAll list
+        |> List.member t

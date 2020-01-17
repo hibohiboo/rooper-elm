@@ -447,8 +447,20 @@ boardSchool : RoomData -> Html msg
 boardSchool data =
     div [ class "rooper-main-board-school" ] <|
         Board.boardCard (Board.getSchool data.boards) (Character.isTurfSchool data.characters)
-            :: List.map (\c -> Character.characterCard c)
+            :: List.map (\c -> characterCard data c)
                 (Character.getCharactersOnSchool <| getAppearedCharacters data)
+
+
+characterCard : RoomData -> Character -> Html msg
+characterCard data char =
+    div [ class "rooper-roomdata-character-card-wrapper" ]
+        [ Character.characterCard char
+        , if Hand.isCharacterSelected char.characterType data.mastermind.hands then
+            img [ class "mastermind-hand", src "/assets/images/hands/mastermind.png" ] []
+
+          else
+            text ""
+        ]
 
 
 handsForm : Int -> RoomData -> (String -> msg) -> (String -> msg) -> Html msg

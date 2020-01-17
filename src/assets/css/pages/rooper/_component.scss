@@ -96,6 +96,23 @@
     position: relative;
     width: 35px;
 
+    &-wrapper {
+      overflow: visible;
+      position: relative;
+
+      .mastermind-hand {
+        left: 15px;
+        position: absolute;
+        top: 5px;
+        z-index: 1;
+
+        // 下が見えないので、ホバーで見えるように。
+        &:hover {
+          opacity: 0.2;
+        }
+      }
+    }
+
     img {
       position: absolute;
     }
