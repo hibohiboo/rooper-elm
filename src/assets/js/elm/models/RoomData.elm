@@ -205,14 +205,14 @@ changeMasterMindComponent i s f =
 -- ==============================================================================================
 
 
-isMastermindPlaysCards : Maybe RoomData -> Bool
-isMastermindPlaysCards data =
-    case data of
-        Just d ->
-            d.state == RoomDataState.MastermindPlaysCards
+isMastermindPlaysCards : RoomData -> Bool
+isMastermindPlaysCards d =
+    d.state == RoomDataState.MastermindPlaysCards
 
-        Nothing ->
-            False
+
+isProtagonistsPlaysCard : RoomData -> Bool
+isProtagonistsPlaysCard d =
+    d.state == RoomDataState.ProtagonistsPlaysCard
 
 
 isRoomStateHand : Maybe RoomData -> Bool

@@ -755,7 +755,7 @@ mastermindBottomForm model data =
             ]
         , RoomState.roomDataFormFooter
             [ span [ class "card-footer-item" ]
-                [ if RoomData.isMastermindPlaysCards model.roomData then
+                [ if RoomData.isMastermindPlaysCards data || RoomData.isProtagonistsPlaysCard data then
                     span [ class "card-footer-item", onClick HandRoomDataState ]
                         [ span [] [ text "手札" ]
                         ]
