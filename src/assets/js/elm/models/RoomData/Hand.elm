@@ -412,3 +412,16 @@ getSelectedCharacterComponentType i list =
         |> List.filter ExMaybe.isJust
         |> ExMaybe.combine
         |> Maybe.withDefault []
+
+
+
+--
+
+
+isMastermindHandsSelected : List Hand -> Bool
+isMastermindHandsSelected list =
+    list
+        |> List.map (\h -> h.onComponent)
+        |> List.filter ExMaybe.isJust
+        |> List.length
+        |> (==) 3

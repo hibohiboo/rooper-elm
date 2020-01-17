@@ -215,6 +215,13 @@ isMastermindPlaysCards data =
             False
 
 
+isMastermindHandsSelected : Maybe RoomData -> Bool
+isMastermindHandsSelected data =
+    data
+        |> Maybe.map (\d -> Hand.isMastermindHandsSelected d.mastermind.hands && d.state == RoomDataState.ProtagonistsPlaysCard)
+        |> Maybe.withDefault False
+
+
 
 -- ==============================================================================================
 -- デコーダ
