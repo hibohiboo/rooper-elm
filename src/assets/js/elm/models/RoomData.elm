@@ -430,7 +430,7 @@ boardHospital data =
 boardCity : RoomData -> Html msg
 boardCity data =
     div [ class "rooper-main-board-city" ] <|
-        Board.boardCard (Board.getCity data.boards) (Character.isTurfCity data.characters)
+        boardCard data (Board.getCity data.boards) Character.isTurfCity
             :: List.map (\c -> characterCard data c)
                 (Character.getCharactersOnCity <| getAppearedCharacters data)
 
@@ -446,9 +446,21 @@ boardShrine data =
 boardSchool : RoomData -> Html msg
 boardSchool data =
     div [ class "rooper-main-board-school" ] <|
-        Board.boardCard (Board.getSchool data.boards) (Character.isTurfSchool data.characters)
+        boardCard data (Board.getSchool data.boards) Character.isTurfSchool
             :: List.map (\c -> characterCard data c)
                 (Character.getCharactersOnSchool <| getAppearedCharacters data)
+
+
+boardCard : RoomData -> Board -> (List Character -> Bool) -> Html msg
+boardCard data board isTurf =
+    div [ class "rooper-roomdata-board-card-wrapper" ]
+        [ Board.boardCard board (isTurf data.characters)
+        , if Hand.isBoardSelected board.boardType data.mastermind.hands then
+            img [ class "mastermind-hand", src "/assets/images/hands/mastermind.png" ] []
+
+          else
+            text ""
+        ]
 
 
 characterCard : RoomData -> Character -> Html msg

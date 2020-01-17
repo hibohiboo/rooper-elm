@@ -443,3 +443,9 @@ isCharacterSelected : CharacterType -> List Hand -> Bool
 isCharacterSelected t list =
     getSelectedCharacterComponentTypeAll list
         |> List.member t
+
+
+isBoardSelected : BoardType -> List Hand -> Bool
+isBoardSelected t list =
+    getSelectedBoardComponentTypeAll list
+        |> List.member t
