@@ -199,13 +199,6 @@ changeMasterMindComponent i s f =
     { f | mastermind = MasterMind.changeMasterMindComponent i s f.mastermind }
 
 
-isRoomStateHand : Maybe RoomData -> Bool
-isRoomStateHand data =
-    data
-        |> Maybe.map (\d -> d.state == RoomDataState.MastermindPlaysCards)
-        |> Maybe.withDefault False
-
-
 
 -- ==============================================================================================
 -- getter
@@ -220,6 +213,13 @@ isMastermindPlaysCards data =
 
         Nothing ->
             False
+
+
+isRoomStateHand : Maybe RoomData -> Bool
+isRoomStateHand data =
+    data
+        |> Maybe.map (\d -> d.state == RoomDataState.MastermindPlaysCards)
+        |> Maybe.withDefault False
 
 
 isMastermindHandsSelected : RoomData -> Bool
@@ -441,8 +441,14 @@ handsForm i d handChangeMsg componentChangeMsg =
             [ MasterMind.selectedCard i d.mastermind
             , MasterMind.selectedComponentCard i d.mastermind
             ]
-        , div [ style "padding-bottom" "20px" ] [ MasterMind.handsForm i d.mastermind handChangeMsg ]
-        , handsOnComponentForm i d componentChangeMsg
+        , if d.state == RoomDataState.MastermindPlaysCards then
+            div []
+                [ div [ style "padding-bottom" "20px" ] [ MasterMind.handsForm i d.mastermind handChangeMsg ]
+                , handsOnComponentForm i d componentChangeMsg
+                ]
+
+          else
+            text ""
         ]
 
 
