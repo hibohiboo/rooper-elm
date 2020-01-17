@@ -231,6 +231,42 @@ encode { characterType, name, paranoiaLimit, firstLocation, role, optionalNumber
 -- ==============================================================================================
 
 
+filterTransferStudent : Int -> List Character -> List Character
+filterTransferStudent i list =
+    list
+        |> List.filter
+            (\c ->
+                if c.characterType == Models.Character.TransferStudent then
+                    case c.optionalNumber of
+                        Just y ->
+                            i >= y
+
+                        Nothing ->
+                            False
+
+                else
+                    True
+            )
+
+
+filterGodlyBeing : Int -> List Character -> List Character
+filterGodlyBeing i list =
+    list
+        |> List.filter
+            (\c ->
+                if c.characterType == Models.Character.GodlyBeing then
+                    case c.optionalNumber of
+                        Just y ->
+                            i >= y
+
+                        Nothing ->
+                            False
+
+                else
+                    True
+            )
+
+
 toString : Character -> String
 toString c =
     Models.Character.characterTypeToString c.characterType
