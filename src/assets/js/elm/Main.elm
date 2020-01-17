@@ -753,12 +753,7 @@ mastermindBottomForm model data =
                         ]
 
                   else
-                    button [ class "button is-primary", onClick NextRoomDataState ]
-                        [ span [] [ text "Next" ]
-                        , span [ class "icon" ]
-                            [ i [ class "fas fa-arrow-right" ] []
-                            ]
-                        ]
+                    nextStateButton
                 ]
             , span [ class "card-footer-item", onClick CharacterRoomDataState ]
                 [ span [] [ text "キャラクタ" ]
@@ -766,6 +761,21 @@ mastermindBottomForm model data =
             , span [ class "card-footer-item", onClick DataRoomDataState ]
                 [ span [] [ text "データ" ]
                 ]
+            ]
+        , if RoomData.isMastermindHandsSelected data then
+            RoomState.roomDataFormFooter [ span [ class "card-footer-item" ] [ nextStateButton ] ]
+
+          else
+            text ""
+        ]
+
+
+nextStateButton : Html Msg
+nextStateButton =
+    button [ class "button is-primary", onClick NextRoomDataState ]
+        [ span [] [ text "Next" ]
+        , span [ class "icon" ]
+            [ i [ class "fas fa-arrow-right" ] []
             ]
         ]
 
