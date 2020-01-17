@@ -614,7 +614,7 @@ mainContent model =
                 _ ->
                     mainContentBox model
 
-        Just _ ->
+        Just u ->
             case model.mainAreaState of
                 ScriptTab ->
                     mainContentBox model
@@ -629,16 +629,16 @@ mainContent model =
                     mainContentBox model
 
                 RoomTab ->
-                    loginedUserRoomView model
+                    loginedUserRoomView u model
 
                 NothingTab ->
                     text ""
 
 
-loginedUserRoomView : Model -> Html Msg
-loginedUserRoomView model =
+loginedUserRoomView : User -> Model -> Html Msg
+loginedUserRoomView u model =
     if isRoomOwner model then
-        ownerRoomView model
+        ownerRoomView u model
 
     else
         -- TODO: メンバーのときの見た目
@@ -655,8 +655,8 @@ isRoomOwner { room } =
             False
 
 
-ownerRoomView : Model -> Html Msg
-ownerRoomView model =
+ownerRoomView : User -> Model -> Html Msg
+ownerRoomView user model =
     case model.roomData of
         Nothing ->
             Form.createButton InitRoomData "ルーム初期化"
@@ -668,7 +668,11 @@ ownerRoomView model =
                 , RoomData.infos data
                 , mastermindSheets model
                 , mastermindScriptButtons model data
-                , mastermindBottomForm model data
+                , if RoomData.isDisplayMastermindBottomForm user data then
+                    mastermindBottomForm model data
+
+                  else
+                    text ""
                 ]
 
 

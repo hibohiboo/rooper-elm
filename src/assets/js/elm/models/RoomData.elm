@@ -205,6 +205,16 @@ changeMasterMindComponent i s f =
 -- ==============================================================================================
 
 
+isDisplayMastermindBottomForm : User -> RoomData -> Bool
+isDisplayMastermindBottomForm user data =
+    case data.state of
+        RoomDataState.ProtagonistsPlaysCard ->
+            False
+
+        _ ->
+            user.twitterScreenName == data.mastermind.twitterScreenName
+
+
 isMastermindPlaysCards : RoomData -> Bool
 isMastermindPlaysCards d =
     d.state == RoomDataState.MastermindPlaysCards
