@@ -237,6 +237,13 @@ isMastermindHandsSelected d =
     Hand.isMastermindHandsSelected d.mastermind.hands && d.state == RoomDataState.MastermindPlaysCards
 
 
+getAppearedCharacters : RoomData -> List Character
+getAppearedCharacters data =
+    data.characters
+        |> Character.filterTransferStudent data.date
+        |> Character.filterGodlyBeing data.loop
+
+
 
 -- ==============================================================================================
 -- デコーダ
@@ -417,7 +424,7 @@ boardHospital data =
     div [ class "rooper-main-board-hospital" ] <|
         Board.boardCard (Board.getHospital data.boards) (Character.isTurfHospital data.characters)
             :: List.map (\c -> Character.characterCard c)
-                (Character.getCharactersOnHospital data.characters)
+                (Character.getCharactersOnHospital <| getAppearedCharacters data)
 
 
 boardCity : RoomData -> Html msg
@@ -425,7 +432,7 @@ boardCity data =
     div [ class "rooper-main-board-city" ] <|
         Board.boardCard (Board.getCity data.boards) (Character.isTurfCity data.characters)
             :: List.map (\c -> Character.characterCard c)
-                (Character.getCharactersOnCity data.characters)
+                (Character.getCharactersOnCity <| getAppearedCharacters data)
 
 
 boardShrine : RoomData -> Html msg
@@ -433,7 +440,7 @@ boardShrine data =
     div [ class "rooper-main-board-shrine" ] <|
         Board.boardCard (Board.getShrine data.boards) (Character.isTurfShrine data.characters)
             :: List.map (\c -> Character.characterCard c)
-                (Character.getCharactersOnShrine data.characters)
+                (Character.getCharactersOnShrine <| getAppearedCharacters data)
 
 
 boardSchool : RoomData -> Html msg
@@ -441,7 +448,7 @@ boardSchool data =
     div [ class "rooper-main-board-school" ] <|
         Board.boardCard (Board.getSchool data.boards) (Character.isTurfSchool data.characters)
             :: List.map (\c -> Character.characterCard c)
-                (Character.getCharactersOnSchool data.characters)
+                (Character.getCharactersOnSchool <| getAppearedCharacters data)
 
 
 handsForm : Int -> RoomData -> (String -> msg) -> (String -> msg) -> Html msg
@@ -472,9 +479,7 @@ handsOnComponentForm i data chgMsg =
             ( "未選択", "未選択" )
                 :: List.concat
                     [ Board.getFormOptionList (Hand.getSelectedBoardComponentType i data.mastermind.hands) data.boards
-                    , data.characters
-                        |> Character.filterTransferStudent data.date
-                        |> Character.filterGodlyBeing data.loop
+                    , getAppearedCharacters data
                         |> Character.getFormOptionList (Hand.getSelectedCharacterComponentType i data.mastermind.hands)
                     ]
     in
