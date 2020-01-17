@@ -265,7 +265,9 @@ getFormOptionList : List CharacterType -> List Character -> List ( String, Strin
 getFormOptionList slectedTypes list =
     list
         |> List.filter (\c -> not <| List.member c.characterType slectedTypes)
+        |> List.filter (\c -> c.characterType /= Models.Character.Illusion)
         |> List.map (\c -> ( Models.Character.characterTypeToString c.characterType, c.name ))
+        |> List.reverse
 
 
 
