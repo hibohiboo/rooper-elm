@@ -104,9 +104,9 @@ initMastermind =
     ]
 
 
-initProtagonist : List Hand
-initProtagonist =
-    [ Hand "p0" 1 ParanoiaPlus1 True Nothing Nothing
+initProtagonist : Int -> List Hand
+initProtagonist i =
+    [ Hand "p0" i ParanoiaPlus1 True Nothing Nothing
     , Hand "p1" 0 ParanoiaMinus1 False Nothing (Just False)
     , Hand "p2" 0 GoodwillPlus1 False Nothing Nothing
     , Hand "p3" 0 GoodwillPlus2 False Nothing (Just False)
