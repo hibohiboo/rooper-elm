@@ -78,6 +78,14 @@ changeProtagonistComponent i s f =
     { f | hands = Hand.changeComponent i s f.hands }
 
 
+isProtagonistsHandsSelected : List Protagonist -> Bool
+isProtagonistsHandsSelected list =
+    list
+        |> List.filter (\p -> Hand.isProtagonistHandsSelected p.hands)
+        |> List.length
+        |> (==) 3
+
+
 
 -- ==============================================================================================
 -- getter

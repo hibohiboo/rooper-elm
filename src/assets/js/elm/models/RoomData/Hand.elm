@@ -451,3 +451,13 @@ isBoardSelected : BoardType -> List Hand -> Bool
 isBoardSelected t list =
     getSelectedBoardComponentTypeAll list
         |> List.member t
+
+
+isProtagonistHandsSelected : List Hand -> Bool
+isProtagonistHandsSelected list =
+    list
+        |> List.filter (\h -> h.formId /= 0)
+        |> List.map (\h -> h.onComponent)
+        |> List.filter ExMaybe.isJust
+        |> List.length
+        |> (==) 1

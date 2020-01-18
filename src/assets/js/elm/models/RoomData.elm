@@ -93,7 +93,12 @@ setEx s f =
 
 nextRoomDataState : RoomData -> RoomData
 nextRoomDataState f =
-    { f | state = RoomDataState.nextState f.state }
+    -- 主人公がカードを置き終わるまで、主人公行動フェイズは更新されない
+    if f.state == RoomDataState.ProtagonistsPlaysCard && not (Protagonist.isProtagonistsHandsSelected f.protagonists) then
+        f
+
+    else
+        { f | state = RoomDataState.nextState f.state }
 
 
 changeCharacterLocation : Character -> String -> RoomData -> RoomData
