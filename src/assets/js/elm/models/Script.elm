@@ -48,6 +48,23 @@ initScript =
     Nothing
 
 
+initDefault : Script
+initDefault =
+    { id = Id.fromString "forTestScript"
+    , name = Name.fromString "テスト用脚本"
+    , set = TragedySet.initBasicTragedy
+    , mainPlot = TragedySet.murderPlan
+    , subPlot1 = TragedySet.circleOfFriends
+    , subPlot2 = Just TragedySet.theHiddenFreak
+    , characters = [ Character.characterToScriptData Character.shrineMaiden ]
+    , numberOfLoops = 4
+    , daysInOneLoop = 5
+    , incidents = []
+    , extra = "相談不可。"
+    , memo = "【シナリオの特徴】"
+    }
+
+
 getId : Script -> String
 getId s =
     Id.toString s.id

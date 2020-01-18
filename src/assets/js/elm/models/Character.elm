@@ -323,6 +323,15 @@ rolesFromCharacterScriptDataList list =
 
 
 
+-- テスト用
+
+
+characterToScriptData : Character -> CharacterScriptData
+characterToScriptData c =
+    CharacterScriptData c Nothing Nothing Nothing
+
+
+
 -- Method Decoder デコーダ
 -- システムを通じて入れたfirebaseからの値のデコードを想定しているため失敗しない前提でとりあえず殺人計画をデフォルトにしておく
 

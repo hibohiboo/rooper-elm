@@ -432,11 +432,16 @@ getSelectedCharacterComponentTypeAll list =
 --
 
 
-isMastermindHandsSelected : List Hand -> Bool
-isMastermindHandsSelected list =
+playedHands : List Hand -> List Hand
+playedHands list =
     list
-        |> List.map (\h -> h.onComponent)
-        |> List.filter ExMaybe.isJust
+        |> List.filter (\h -> ExMaybe.isJust h.onComponent)
+
+
+isMastermindHandsPlayed : List Hand -> Bool
+isMastermindHandsPlayed list =
+    list
+        |> playedHands
         |> List.length
         |> (==) 3
 

@@ -39,6 +39,21 @@ init =
     Nothing
 
 
+initDefault : RoomData
+initDefault =
+    let
+        mastermind =
+            MasterMind.init "forTestRoom"
+
+        protagonists =
+            Protagonist.init "hoge1" "hoge2" "hoge3"
+
+        script =
+            Script.initDefault
+    in
+    RoomData "roomTest" mastermind protagonists (Script.scriptToOpenSheet script) Nothing 1 1 0 RoomDataState.init (Character.charactersFromCharacterScriptDataList script.characters) Board.init
+
+
 initRoomData : Room -> RoomData
 initRoomData room =
     let
@@ -214,6 +229,11 @@ changeProtagonistComponent i s f =
     { f | protagonists = Protagonist.changeProtagonistsComponent i s f.protagonists }
 
 
+resolveCards : RoomData -> RoomData
+resolveCards data =
+    data
+
+
 
 -- ==============================================================================================
 -- getter
@@ -256,7 +276,7 @@ isCardsAreResolvedState data =
 
 isMastermindHandsSelected : RoomData -> Bool
 isMastermindHandsSelected d =
-    Hand.isMastermindHandsSelected d.mastermind.hands
+    Hand.isMastermindHandsPlayed d.mastermind.hands
         && d.state
         == RoomDataState.MastermindPlaysCards
         || isProtagonistsPlayed d

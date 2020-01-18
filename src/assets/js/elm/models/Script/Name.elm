@@ -3,6 +3,7 @@ module Models.Script.Name exposing
     , Name
     , decoder
     , errorField
+    , fromString
     , toString
     )
 
@@ -16,6 +17,11 @@ type Name
 toString : Name -> String
 toString (Name str) =
     str
+
+
+fromString : String -> Name
+fromString str =
+    Name str
 
 
 type Error

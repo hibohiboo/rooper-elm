@@ -6,6 +6,7 @@ import Html.Attributes exposing (class, href, src, style)
 import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
+import Maybe.Extra as ExMaybe
 import Models.RoomData.Hand as Hand exposing (Hand)
 import Models.TragedySet as TragedySet exposing (Incident, TragedySet)
 
@@ -61,6 +62,11 @@ isMasterMind s m =
 getSelectedHandComponentKey : Int -> MasterMind -> String
 getSelectedHandComponentKey i m =
     Hand.getSelectedHandComponentKey i m.hands
+
+
+getSelectedHands : MasterMind -> List Hand
+getSelectedHands m =
+    Hand.playedHands m.hands
 
 
 

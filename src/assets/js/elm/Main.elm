@@ -154,7 +154,7 @@ type Msg
     | SetMasterMindOnComponent Int String
     | SetProtagonistHand Int String
     | SetProtagonistOnComponent Int String
-    | CardsAreResolve
+    | ResolveCards
 
 
 type MenuState
@@ -562,8 +562,8 @@ update msg model =
         SetProtagonistOnComponent i s ->
             ( { model | roomData = Maybe.map (RoomData.changeProtagonistComponent i s) model.roomData }, Cmd.none )
 
-        CardsAreResolve ->
-            ( { model | roomData = model.roomData, roomState = RoomState.setFalseIsDisplayCardsAreResolved model.roomState }, Cmd.none )
+        ResolveCards ->
+            ( { model | roomData = Maybe.map RoomData.resolveCards model.roomData, roomState = RoomState.setFalseIsDisplayCardsAreResolved model.roomState }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -788,7 +788,7 @@ mastermindBottomForm model data =
           else if model.roomState.isDisplayCardsAreResolved then
             RoomState.roomDataFormFooter
                 [ span [ class "card-footer-item" ]
-                    [ button [ class "button is-primary", onClick CardsAreResolve ]
+                    [ button [ class "button is-primary", onClick ResolveCards ]
                         [ span [] [ text "手札反映" ]
                         ]
                     ]

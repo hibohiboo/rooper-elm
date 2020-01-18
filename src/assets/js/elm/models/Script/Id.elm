@@ -3,6 +3,7 @@ module Models.Script.Id exposing
     , Id
     , decoder
     , errorField
+    , fromString
     , toString
     )
 
@@ -16,6 +17,11 @@ type Id
 toString : Id -> String
 toString (Id str) =
     str
+
+
+fromString : String -> Id
+fromString str =
+    Id str
 
 
 type Error
