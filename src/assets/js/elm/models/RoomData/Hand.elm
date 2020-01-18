@@ -26,7 +26,6 @@ type alias Hand =
     { id : String
     , formId : Int -- 選択された手札の番号
     , handType : HandType
-    , isSelected : Bool
     , onComponent : Maybe ComponentType
     , isUsed : Maybe Bool
     }
@@ -60,7 +59,6 @@ decoder =
         |> Pipeline.required "id" D.string
         |> Pipeline.required "formId" D.int
         |> Pipeline.required "handType" (D.map (typeFromString >> Maybe.withDefault ParanoiaPlus1) D.string)
-        |> Pipeline.required "isSelected" D.bool
         |> Pipeline.optional "onComponent" (D.map componentTypeFromString D.string) Nothing
         |> Pipeline.optional "isUsed" (D.maybe D.bool) Nothing
 
@@ -72,12 +70,11 @@ decoder =
 
 
 encode : Hand -> E.Value
-encode { id, formId, handType, isSelected, onComponent, isUsed } =
+encode { id, formId, handType, onComponent, isUsed } =
     E.object
         [ ( "id", E.string id )
         , ( "formId", E.int formId )
         , ( "handType", E.string <| typeToString handType )
-        , ( "isSelected", E.bool isSelected )
         , ( "onComponent", ExEncode.maybe (E.string << componentTypeToString) onComponent )
         , ( "isUsed", ExEncode.maybe E.bool isUsed )
         ]
@@ -91,29 +88,29 @@ encode { id, formId, handType, isSelected, onComponent, isUsed } =
 
 initMastermind : List Hand
 initMastermind =
-    [ Hand "m0" 1 ParanoiaPlus1 True Nothing Nothing
-    , Hand "m1" 2 ParanoiaPlus1 True Nothing Nothing
-    , Hand "m2" 3 ParanoiaMinus1 True Nothing Nothing
-    , Hand "m3" 0 ForbidParanoia False Nothing Nothing
-    , Hand "m4" 0 ForbidGoodwill False Nothing Nothing
-    , Hand "m5" 0 IntriguePlus1 False Nothing Nothing
-    , Hand "m6" 0 IntriguePlus2 False Nothing (Just False)
-    , Hand "m7" 0 MovementVertical False Nothing Nothing
-    , Hand "m8" 0 MovementHorizontal False Nothing Nothing
-    , Hand "m9" 0 MovementDiagonal False Nothing (Just False)
+    [ Hand "m0" 1 ParanoiaPlus1 Nothing Nothing
+    , Hand "m1" 2 ParanoiaPlus1 Nothing Nothing
+    , Hand "m2" 3 ParanoiaMinus1 Nothing Nothing
+    , Hand "m3" 0 ForbidParanoia Nothing Nothing
+    , Hand "m4" 0 ForbidGoodwill Nothing Nothing
+    , Hand "m5" 0 IntriguePlus1 Nothing Nothing
+    , Hand "m6" 0 IntriguePlus2 Nothing (Just False)
+    , Hand "m7" 0 MovementVertical Nothing Nothing
+    , Hand "m8" 0 MovementHorizontal Nothing Nothing
+    , Hand "m9" 0 MovementDiagonal Nothing (Just False)
     ]
 
 
 initProtagonist : Int -> List Hand
 initProtagonist i =
-    [ Hand "p0" i ParanoiaPlus1 True Nothing Nothing
-    , Hand "p1" 0 ParanoiaMinus1 False Nothing (Just False)
-    , Hand "p2" 0 GoodwillPlus1 False Nothing Nothing
-    , Hand "p3" 0 GoodwillPlus2 False Nothing (Just False)
-    , Hand "p4" 0 ForbidIntrigue False Nothing Nothing
-    , Hand "p5" 0 MovementVertical False Nothing Nothing
-    , Hand "p6" 0 MovementHorizontal False Nothing Nothing
-    , Hand "p7" 0 ForbidMovement False Nothing (Just False)
+    [ Hand "p0" i ParanoiaPlus1 Nothing Nothing
+    , Hand "p1" 0 ParanoiaMinus1 Nothing (Just False)
+    , Hand "p2" 0 GoodwillPlus1 Nothing Nothing
+    , Hand "p3" 0 GoodwillPlus2 Nothing (Just False)
+    , Hand "p4" 0 ForbidIntrigue Nothing Nothing
+    , Hand "p5" 0 MovementVertical Nothing Nothing
+    , Hand "p6" 0 MovementHorizontal Nothing Nothing
+    , Hand "p7" 0 ForbidMovement Nothing (Just False)
     ]
 
 
