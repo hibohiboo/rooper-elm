@@ -39,12 +39,12 @@ init id =
 
 changeMasterMindHand : Int -> String -> MasterMind -> MasterMind
 changeMasterMindHand i s f =
-    { f | hands = Hand.changeMasterMindHand i s f.hands }
+    { f | hands = Hand.changeHand i s f.hands }
 
 
 changeMasterMindComponent : Int -> String -> MasterMind -> MasterMind
 changeMasterMindComponent i s f =
-    { f | hands = Hand.changeMasterMindComponent i s f.hands }
+    { f | hands = Hand.changeComponent i s f.hands }
 
 
 

@@ -152,6 +152,8 @@ type Msg
     | ChangeBoardIntrigue RoomBoard.Board String
     | SetMasterMindHand Int String
     | SetMasterMindOnComponent Int String
+    | SetProtagonistHand String
+    | SetProtagonistOnComponent String
 
 
 type MenuState
@@ -557,6 +559,12 @@ update msg model =
         SetMasterMindOnComponent i s ->
             ( { model | roomData = Maybe.map (RoomData.changeMasterMindComponent i s) model.roomData }, Cmd.none )
 
+        SetProtagonistHand s ->
+            ( { model | roomData = Maybe.map (RoomData.changeProtagonistHand s) model.roomData }, Cmd.none )
+
+        SetProtagonistOnComponent s ->
+            ( { model | roomData = Maybe.map (RoomData.changeProtagonistComponent s) model.roomData }, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -795,7 +803,7 @@ protagonistsBottomForm model user data =
             ]
         , RoomState.roomDataFormContent
             [ div [ class "rooper-mastermind-form-hands" ]
-                [ RoomData.handsFormProtagonist user data (SetMasterMindHand 1) (SetMasterMindOnComponent 1)
+                [ RoomData.handsFormProtagonist user data SetProtagonistHand SetProtagonistOnComponent
                 ]
             ]
         , RoomState.roomDataFormFooter

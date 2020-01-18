@@ -37,6 +37,51 @@ init id1 id2 id3 =
 -- ==============================================================================================
 -- メソッド
 -- ==============================================================================================
+-- ==============================================================================================
+-- setter
+-- ==============================================================================================
+
+
+changeProtagonistsHand : String -> List Protagonist -> List Protagonist
+changeProtagonistsHand s list =
+    list
+        |> List.map
+            (\p ->
+                if isTurnProtagonist p.twitterScreenName list then
+                    changeProtagonistHand p.number s p
+
+                else
+                    p
+            )
+
+
+changeProtagonistsComponent : String -> List Protagonist -> List Protagonist
+changeProtagonistsComponent s list =
+    list
+        |> List.map
+            (\p ->
+                if isTurnProtagonist p.twitterScreenName list then
+                    changeProtagonistComponent p.number s p
+
+                else
+                    p
+            )
+
+
+changeProtagonistHand : Int -> String -> Protagonist -> Protagonist
+changeProtagonistHand i s f =
+    { f | hands = Hand.changeHand i s f.hands }
+
+
+changeProtagonistComponent : Int -> String -> Protagonist -> Protagonist
+changeProtagonistComponent i s f =
+    { f | hands = Hand.changeComponent i s f.hands }
+
+
+
+-- ==============================================================================================
+-- getter
+-- ==============================================================================================
 
 
 isProtagonist : String -> List Protagonist -> Bool

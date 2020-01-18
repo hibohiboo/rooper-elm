@@ -126,8 +126,8 @@ initProtagonist i =
 -- ==============================================================================================
 
 
-changeMasterMindHand : Int -> String -> List Hand -> List Hand
-changeMasterMindHand i s list =
+changeHand : Int -> String -> List Hand -> List Hand
+changeHand i s list =
     case getSelectedHand i list of
         Just hand ->
             list
@@ -147,8 +147,8 @@ changeMasterMindHand i s list =
             list
 
 
-changeMasterMindComponent : Int -> String -> List Hand -> List Hand
-changeMasterMindComponent i s list =
+changeComponent : Int -> String -> List Hand -> List Hand
+changeComponent i s list =
     list
         |> List.map
             (\h ->

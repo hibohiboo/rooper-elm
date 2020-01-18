@@ -199,6 +199,16 @@ changeMasterMindComponent i s f =
     { f | mastermind = MasterMind.changeMasterMindComponent i s f.mastermind }
 
 
+changeProtagonistHand : String -> RoomData -> RoomData
+changeProtagonistHand s f =
+    { f | protagonists = Protagonist.changeProtagonistsHand s f.protagonists }
+
+
+changeProtagonistComponent : String -> RoomData -> RoomData
+changeProtagonistComponent s f =
+    { f | protagonists = Protagonist.changeProtagonistsComponent s f.protagonists }
+
+
 
 -- ==============================================================================================
 -- getter
