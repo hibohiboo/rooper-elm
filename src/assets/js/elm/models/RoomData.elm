@@ -94,7 +94,7 @@ setEx s f =
 nextRoomDataState : RoomData -> RoomData
 nextRoomDataState f =
     -- 主人公がカードを置き終わるまで、主人公行動フェイズは更新されない
-    if f.state == RoomDataState.ProtagonistsPlaysCard && not (Protagonist.isProtagonistsHandsSelected f.protagonists) then
+    if f.state == RoomDataState.ProtagonistsPlaysCard && not (isProtagonistsPlayed f) then
         f
 
     else
@@ -224,7 +224,7 @@ isDisplayMastermindBottomForm : User -> RoomData -> Bool
 isDisplayMastermindBottomForm user data =
     case data.state of
         RoomDataState.ProtagonistsPlaysCard ->
-            False
+            isProtagonistsPlayed data
 
         _ ->
             user.twitterScreenName == data.mastermind.twitterScreenName
@@ -249,7 +249,12 @@ isRoomStateHand data =
 
 isMastermindHandsSelected : RoomData -> Bool
 isMastermindHandsSelected d =
-    Hand.isMastermindHandsSelected d.mastermind.hands && d.state == RoomDataState.MastermindPlaysCards
+    Hand.isMastermindHandsSelected d.mastermind.hands
+        && d.state
+        == RoomDataState.MastermindPlaysCards
+        || isProtagonistsPlayed d
+        && d.state
+        == RoomDataState.ProtagonistsPlaysCard
 
 
 getAppearedCharacters : RoomData -> List Character
@@ -277,6 +282,11 @@ isTurnProtagonist i user data =
 getTurnProtagonistNumber : RoomData -> Int
 getTurnProtagonistNumber { protagonists } =
     Protagonist.turnProtagonistNumber protagonists |> Maybe.withDefault 0
+
+
+isProtagonistsPlayed : RoomData -> Bool
+isProtagonistsPlayed data =
+    Protagonist.isProtagonistsHandsSelected data.protagonists
 
 
 
@@ -598,3 +608,37 @@ handsOnComponentFormProtagonist p data chgMsg =
                     ]
     in
     Form.select ("form-protagonist-on-component-" ++ String.fromInt p.number) chgMsg key optionList
+
+
+playedHands : RoomData -> Html msg
+playedHands d =
+    div [ style "display" "flex", style "justify-content" "space-evenly" ]
+        [ div [] <|
+            List.map
+                (\i ->
+                    div [ style "display" "flex" ]
+                        [ img [ src "/assets/images/hands/mastermind.png" ] []
+                        , if d.state == RoomDataState.CardsAreResolved then
+                            MasterMind.selectedCard i d.mastermind
+
+                          else
+                            img [ src "/assets/images/hands/mastermind.png" ] []
+                        , MasterMind.selectedComponentCard i d.mastermind
+                        ]
+                )
+                (List.range 1 3)
+        , div [] <|
+            List.map
+                (\p ->
+                    div [ style "display" "flex" ]
+                        [ img [ src <| Protagonist.getProtagonistCardUrl p.number ] []
+                        , if d.state == RoomDataState.CardsAreResolved then
+                            Protagonist.selectedCard p
+
+                          else
+                            img [ src <| Protagonist.getProtagonistCardUrl p.number ] []
+                        , Protagonist.selectedComponentCard p
+                        ]
+                )
+                d.protagonists
+        ]

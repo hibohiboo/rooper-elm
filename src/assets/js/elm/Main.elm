@@ -670,6 +670,7 @@ ownerRoomView user model =
                 [ RoomData.stateView data
                 , RoomData.roomBoard data
                 , RoomData.infos data
+                , RoomData.playedHands data
                 , mastermindSheets model
                 , mastermindScriptButtons model data
                 , if RoomData.isTurnProtagonist model.roomState.turnProtagonistNumber user data then
@@ -818,21 +819,6 @@ nextStateButton =
         ]
 
 
-isRoomMember : Model -> Bool
-isRoomMember { roomData, loginUser } =
-    case roomData of
-        Nothing ->
-            False
-
-        Just data ->
-            case loginUser of
-                Nothing ->
-                    False
-
-                Just user ->
-                    RoomData.isRoomMember data user
-
-
 notOwnerRoomView : Model -> Html Msg
 notOwnerRoomView model =
     case model.roomData of
@@ -854,6 +840,7 @@ userRoomView model user data =
         [ RoomData.stateView data
         , RoomData.roomBoard data
         , RoomData.infos data
+        , RoomData.playedHands data
         , RoomData.openSheetView data
         , RoomData.closeSheetView data
         , if RoomData.isTurnProtagonist model.roomState.turnProtagonistNumber user data then
