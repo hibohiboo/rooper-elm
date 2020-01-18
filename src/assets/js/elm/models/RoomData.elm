@@ -663,4 +663,4 @@ playedHands d =
 
 usedHands : RoomData -> Html msg
 usedHands d =
-    div [ style "display" "flex", style "justify-content" "space-evenly", style "flex-wrap" "wrap" ] <| Protagonist.useCardView d.protagonists
+    div [ style "display" "flex", style "justify-content" "space-evenly", style "flex-wrap" "wrap" ] <| List.concat [ Protagonist.useCardView d.protagonists, [ MasterMind.useCardView d.mastermind ] ]

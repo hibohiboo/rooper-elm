@@ -133,3 +133,11 @@ selectedComponentCard i master =
 
         Nothing ->
             img [ src "/assets/images/hands/Unselected.png" ] []
+
+
+useCardView : MasterMind -> Html msg
+useCardView { hands } =
+    div [] <|
+        img [ src "/assets/images/hands/mastermind.png" ] []
+            :: List.map (\h -> img [ src <| Hand.toCardUrl h ] [])
+                (Hand.usedHands hands)
