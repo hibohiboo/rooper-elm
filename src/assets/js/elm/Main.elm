@@ -670,6 +670,7 @@ ownerRoomView user model =
                 [ RoomData.stateView data
                 , RoomData.roomBoard data
                 , RoomData.infos data
+                , RoomData.usedHands data
                 , RoomData.playedHands data
                 , mastermindSheets model
                 , mastermindScriptButtons model data

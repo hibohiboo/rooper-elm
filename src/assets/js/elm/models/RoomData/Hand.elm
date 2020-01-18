@@ -496,3 +496,9 @@ protagonistHandsSelected list =
     list
         |> List.filter (\h -> h.formId /= 0)
         |> List.filter (\h -> ExMaybe.isJust h.onComponent)
+
+
+usedHands : List Hand -> List Hand
+usedHands list =
+    list
+        |> List.filter (\h -> ExMaybe.isJust h.isUsed)

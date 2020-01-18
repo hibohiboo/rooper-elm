@@ -241,3 +241,38 @@ selectedComponentCard { number, hands } =
 
         Nothing ->
             img [ src "/assets/images/hands/Unselected.png" ] []
+
+
+protagonistImg : Protagonist -> Html msg
+protagonistImg p =
+    img [ src <| getProtagonistCardUrl p.number, style "position" "absolute" ] []
+
+
+usedCards : Bool -> Protagonist -> Html msg
+usedCards isLeaderP p =
+    div [] <|
+        (if isLeaderP then
+            div [ style "position" "relative" ]
+                [ protagonistImg p
+                , img [ src "/assets/images/others/leader.png", style "position" "absolute" ] []
+                ]
+
+         else
+            div [ style "position" "relative" ] [ protagonistImg p ]
+        )
+            :: List.map (\h -> img [ src <| Hand.toCardUrl h ] [])
+                (Hand.usedHands p.hands)
+
+
+useCardView : List Protagonist -> List (Html msg)
+useCardView list =
+    List.map
+        (\p ->
+            case List.head list of
+                Just jp ->
+                    usedCards (jp == p) p
+
+                Nothing ->
+                    usedCards False p
+        )
+        list

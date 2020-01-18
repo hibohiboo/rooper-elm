@@ -659,3 +659,8 @@ playedHands d =
                 )
                 d.protagonists
         ]
+
+
+usedHands : RoomData -> Html msg
+usedHands d =
+    div [ style "display" "flex", style "justify-content" "space-evenly", style "flex-wrap" "wrap" ] <| Protagonist.useCardView d.protagonists
