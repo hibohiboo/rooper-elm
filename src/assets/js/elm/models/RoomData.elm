@@ -247,6 +247,13 @@ isRoomStateHand data =
         |> Maybe.withDefault False
 
 
+isParameterStateHand : Maybe RoomData -> Bool
+isParameterStateHand data =
+    data
+        |> Maybe.map (\d -> d.state == RoomDataState.CardsAreResolved)
+        |> Maybe.withDefault False
+
+
 isMastermindHandsSelected : RoomData -> Bool
 isMastermindHandsSelected d =
     Hand.isMastermindHandsSelected d.mastermind.hands

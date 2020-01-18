@@ -69,6 +69,9 @@ updateTabsStateByRoomDataState data state =
     if RoomData.isRoomStateHand data then
         setHandTab state
 
+    else if RoomData.isParameterStateHand data then
+        setCharacterTab state
+
     else
         state
 
