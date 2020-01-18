@@ -204,20 +204,14 @@ changeMasterMindComponent i s f =
     { f | mastermind = MasterMind.changeMasterMindComponent i s f.mastermind }
 
 
-changeProtagonistHand : String -> RoomData -> RoomData
-changeProtagonistHand s f =
-    case Protagonist.turnProtagonistNumber f.protagonists of
-      Just i ->
-       { f | protagonists = Protagonist.changeProtagonistsHand i s f.protagonists }
-      Nothing-> f
+changeProtagonistHand : Int -> String -> RoomData -> RoomData
+changeProtagonistHand i s f =
+    { f | protagonists = Protagonist.changeProtagonistsHand i s f.protagonists }
 
-changeProtagonistComponent : String -> RoomData -> RoomData
-changeProtagonistComponent s f =
-    case Protagonist.turnProtagonistNumber f.protagonists of
-     Just i ->
-       { f | protagonists = Protagonist.changeProtagonistsComponent i s f.protagonists }
-     Nothing ->
-       f
+
+changeProtagonistComponent : Int -> String -> RoomData -> RoomData
+changeProtagonistComponent i s f =
+    { f | protagonists = Protagonist.changeProtagonistsComponent i s f.protagonists }
 
 
 
@@ -249,7 +243,7 @@ isProtagonistsPlaysCard d =
 isRoomStateHand : Maybe RoomData -> Bool
 isRoomStateHand data =
     data
-        |> Maybe.map (\d -> d.state == RoomDataState.MastermindPlaysCards)
+        |> Maybe.map (\d -> d.state == RoomDataState.MastermindPlaysCards || d.state == RoomDataState.ProtagonistsPlaysCard)
         |> Maybe.withDefault False
 
 
@@ -270,9 +264,19 @@ isLeader user data =
     Protagonist.isLeader user.twitterScreenName data.protagonists
 
 
-isTurnProtagonist : User -> RoomData -> Bool
-isTurnProtagonist user data =
-    Protagonist.isTurnProtagonist user.twitterScreenName data.protagonists
+isTurnProtagonist : Int -> User -> RoomData -> Bool
+isTurnProtagonist i user data =
+    data.state
+        == RoomDataState.ProtagonistsPlaysCard
+        && (Protagonist.getProtagonistFromNumber i data.protagonists
+                |> Maybe.map (\p -> p.twitterScreenName == user.twitterScreenName)
+                |> Maybe.withDefault False
+           )
+
+
+getTurnProtagonistNumber : RoomData -> Int
+getTurnProtagonistNumber { protagonists } =
+    Protagonist.turnProtagonistNumber protagonists |> Maybe.withDefault 0
 
 
 
@@ -524,9 +528,9 @@ handsFormMastermind i d handChangeMsg componentChangeMsg =
         ]
 
 
-handsFormProtagonist : User -> RoomData -> (String -> msg) -> (String -> msg) -> Html msg
-handsFormProtagonist u d handChangeMsg componentChangeMsg =
-    case Protagonist.getTurnProtagonist u.twitterScreenName d.protagonists of
+handsFormProtagonist : Int -> User -> RoomData -> (String -> msg) -> (String -> msg) -> Html msg
+handsFormProtagonist i u d handChangeMsg componentChangeMsg =
+    case Protagonist.getProtagonistFromNumber i d.protagonists of
         Just p ->
             div []
                 [ div [ style "display" "flex" ]

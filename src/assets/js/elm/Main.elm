@@ -152,8 +152,8 @@ type Msg
     | ChangeBoardIntrigue RoomBoard.Board String
     | SetMasterMindHand Int String
     | SetMasterMindOnComponent Int String
-    | SetProtagonistHand String
-    | SetProtagonistOnComponent String
+    | SetProtagonistHand Int String
+    | SetProtagonistOnComponent Int String
 
 
 type MenuState
@@ -459,7 +459,7 @@ update msg model =
         ReadedRoomData val ->
             case RoomData.decode val of
                 Just data ->
-                    ( { model | roomData = Just data }, Cmd.none )
+                    ( { model | roomData = Just data, roomState = RoomState.updateByRoomDataState (Just data) model.roomState }, Cmd.none )
 
                 Nothing ->
                     ( model, Cmd.none )
@@ -502,14 +502,10 @@ update msg model =
 
         NextRoomDataState ->
             let
-                roomState =
-                    if RoomData.isRoomStateHand model.roomData then
-                        RoomState.setHandTab model.roomState
-
-                    else
-                        model.roomState
+                roomData =
+                    model.roomData |> Maybe.map RoomData.nextRoomDataState
             in
-            update UpdateRoomData { model | roomData = model.roomData |> Maybe.map RoomData.nextRoomDataState, roomState = roomState }
+            update UpdateRoomData { model | roomData = roomData, roomState = RoomState.updateByRoomDataState roomData model.roomState }
 
         UpdateRoomData ->
             let
@@ -559,11 +555,11 @@ update msg model =
         SetMasterMindOnComponent i s ->
             ( { model | roomData = Maybe.map (RoomData.changeMasterMindComponent i s) model.roomData }, Cmd.none )
 
-        SetProtagonistHand s ->
-            ( { model | roomData = Maybe.map (RoomData.changeProtagonistHand s) model.roomData }, Cmd.none )
+        SetProtagonistHand i s ->
+            ( { model | roomData = Maybe.map (RoomData.changeProtagonistHand i s) model.roomData }, Cmd.none )
 
-        SetProtagonistOnComponent s ->
-            ( { model | roomData = Maybe.map (RoomData.changeProtagonistComponent s) model.roomData }, Cmd.none )
+        SetProtagonistOnComponent i s ->
+            ( { model | roomData = Maybe.map (RoomData.changeProtagonistComponent i s) model.roomData }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -676,7 +672,7 @@ ownerRoomView user model =
                 , RoomData.infos data
                 , mastermindSheets model
                 , mastermindScriptButtons model data
-                , if RoomData.isTurnProtagonist user data then
+                , if RoomData.isTurnProtagonist model.roomState.turnProtagonistNumber user data then
                     protagonistsBottomForm model user data
 
                   else if RoomData.isDisplayMastermindBottomForm user data then
@@ -794,16 +790,16 @@ mastermindBottomForm model data =
 
 
 protagonistsBottomForm : Model -> User -> RoomData -> Html Msg
-protagonistsBottomForm model user data =
-    RoomState.roomDataBottomForm model.roomState
+protagonistsBottomForm { roomState } user data =
+    RoomState.roomDataBottomForm roomState
         [ header
             [ class "card-header" ]
-            [ RoomState.roomDataFormHeaderTitle model.roomState
-            , RoomState.roomDataFormHeaderIcon CloseRoomStateBottomNav OpenRoomStateBottomNav model.roomState
+            [ RoomState.roomDataFormHeaderTitle roomState
+            , RoomState.roomDataFormHeaderIcon CloseRoomStateBottomNav OpenRoomStateBottomNav roomState
             ]
         , RoomState.roomDataFormContent
             [ div [ class "rooper-mastermind-form-hands" ]
-                [ RoomData.handsFormProtagonist user data SetProtagonistHand SetProtagonistOnComponent
+                [ RoomData.handsFormProtagonist roomState.turnProtagonistNumber user data (SetProtagonistHand roomState.turnProtagonistNumber) (SetProtagonistOnComponent roomState.turnProtagonistNumber)
                 ]
             ]
         , RoomState.roomDataFormFooter

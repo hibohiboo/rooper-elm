@@ -12,6 +12,7 @@ import Json.Encode as E
 import Models.RoomData as RoomData exposing (RoomData)
 import Models.Script as Script exposing (Script)
 import Models.ScriptName as ScriptName exposing (ScriptName)
+import Models.User exposing (User)
 
 
 
@@ -21,6 +22,7 @@ import Models.ScriptName as ScriptName exposing (ScriptName)
 type alias RoomState =
     { tabsState : TabsState
     , bottomNavOpen : Bool
+    , turnProtagonistNumber : Int
     }
 
 
@@ -32,7 +34,7 @@ type TabsState
 
 init : RoomState
 init =
-    RoomState Data True
+    RoomState Data True 0
 
 
 setBottomNav : Bool -> RoomState -> RoomState
@@ -53,6 +55,32 @@ setDataTab f =
 setHandTab : RoomState -> RoomState
 setHandTab f =
     { f | tabsState = Hand }
+
+
+updateByRoomDataState : Maybe RoomData -> RoomState -> RoomState
+updateByRoomDataState data state =
+    state
+        |> updateTabsStateByRoomDataState data
+        |> updateTurnProtagonistByRoomDataState data
+
+
+updateTabsStateByRoomDataState : Maybe RoomData -> RoomState -> RoomState
+updateTabsStateByRoomDataState data state =
+    if RoomData.isRoomStateHand data then
+        setHandTab state
+
+    else
+        state
+
+
+updateTurnProtagonistByRoomDataState : Maybe RoomData -> RoomState -> RoomState
+updateTurnProtagonistByRoomDataState data state =
+    case data of
+        Just d ->
+            { state | turnProtagonistNumber = RoomData.getTurnProtagonistNumber d }
+
+        Nothing ->
+            state
 
 
 
