@@ -490,7 +490,7 @@ boardCard : RoomData -> Board -> (List Character -> Bool) -> Html msg
 boardCard data board isTurf =
     div [ class "rooper-roomdata-board-card-wrapper" ]
         [ Board.boardCard board (isTurf data.characters)
-        , case Hand.getSelectedBoadHand board.boardType (Protagonist.getSelectedProtagonistsHands data.protagonists) of
+        , case Hand.getSelectedBoardHand board.boardType (Protagonist.getSelectedProtagonistsHands data.protagonists) of
             Just h ->
                 img [ class "protagonist-hand", src <| Protagonist.getProtagonistCardUrl h.formId ] []
 
@@ -508,6 +508,12 @@ characterCard : RoomData -> Character -> Html msg
 characterCard data char =
     div [ class "rooper-roomdata-character-card-wrapper" ]
         [ Character.characterCard char
+        , case Hand.getSelectedCharacterHand char.characterType (Protagonist.getSelectedProtagonistsHands data.protagonists) of
+            Just h ->
+                img [ class "protagonist-hand", src <| Protagonist.getProtagonistCardUrl h.formId ] []
+
+            Nothing ->
+                text ""
         , if Hand.isCharacterSelected char.characterType data.mastermind.hands then
             img [ class "mastermind-hand", src "/assets/images/hands/mastermind.png" ] []
 

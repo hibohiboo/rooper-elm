@@ -453,14 +453,29 @@ isBoardSelected t list =
         |> List.member t
 
 
-getSelectedBoadHand : BoardType -> List Hand -> Maybe Hand
-getSelectedBoadHand bt list =
+getSelectedBoardHand : BoardType -> List Hand -> Maybe Hand
+getSelectedBoardHand bt list =
     list
         |> List.filter
             (\h ->
                 case h.onComponent of
                     Just (BoardComponentType t) ->
                         bt == t
+
+                    _ ->
+                        False
+            )
+        |> List.head
+
+
+getSelectedCharacterHand : CharacterType -> List Hand -> Maybe Hand
+getSelectedCharacterHand ct list =
+    list
+        |> List.filter
+            (\h ->
+                case h.onComponent of
+                    Just (CharacterComponentType t) ->
+                        ct == t
 
                     _ ->
                         False
