@@ -586,12 +586,15 @@ handsOnComponentFormProtagonist p data chgMsg =
         key =
             Protagonist.getSelectedHandComponentKey p
 
+        hands =
+            Protagonist.getSelectedProtagonistsHands data.protagonists
+
         optionList =
             ( "未選択", "未選択" )
                 :: List.concat
-                    [ Board.getFormOptionList (Hand.getSelectedBoardComponentType p.number p.hands) data.boards
+                    [ Board.getFormOptionList (Hand.getSelectedBoardComponentType p.number hands) data.boards
                     , getAppearedCharacters data
-                        |> Character.getFormOptionList (Hand.getSelectedCharacterComponentType p.number p.hands)
+                        |> Character.getFormOptionList (Hand.getSelectedCharacterComponentType p.number hands)
                     ]
     in
     Form.select ("form-protagonist-on-component-" ++ String.fromInt p.number) chgMsg key optionList
