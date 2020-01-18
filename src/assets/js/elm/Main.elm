@@ -668,11 +668,11 @@ ownerRoomView user model =
                 , RoomData.infos data
                 , mastermindSheets model
                 , mastermindScriptButtons model data
-                , if RoomData.isDisplayMastermindBottomForm user data then
-                    mastermindBottomForm model data
+                , if RoomData.isTurnProtagonist user data then
+                    protagonistsBottomForm model user data
 
-                  else if RoomData.isLeader user data then
-                    protagonistsBottomForm model data
+                  else if RoomData.isDisplayMastermindBottomForm user data then
+                    mastermindBottomForm model data
 
                   else
                     text ""
@@ -755,9 +755,9 @@ mastermindBottomForm model data =
 
                 RoomState.Hand ->
                     div [ class "rooper-mastermind-form-hands" ]
-                        [ RoomData.handsForm 1 data (SetMasterMindHand 1) (SetMasterMindOnComponent 1)
-                        , RoomData.handsForm 2 data (SetMasterMindHand 2) (SetMasterMindOnComponent 2)
-                        , RoomData.handsForm 3 data (SetMasterMindHand 3) (SetMasterMindOnComponent 3)
+                        [ RoomData.handsFormMastermind 1 data (SetMasterMindHand 1) (SetMasterMindOnComponent 1)
+                        , RoomData.handsFormMastermind 2 data (SetMasterMindHand 2) (SetMasterMindOnComponent 2)
+                        , RoomData.handsFormMastermind 3 data (SetMasterMindHand 3) (SetMasterMindOnComponent 3)
                         ]
             ]
         , RoomState.roomDataFormFooter
@@ -785,8 +785,8 @@ mastermindBottomForm model data =
         ]
 
 
-protagonistsBottomForm : Model -> RoomData -> Html Msg
-protagonistsBottomForm model data =
+protagonistsBottomForm : Model -> User -> RoomData -> Html Msg
+protagonistsBottomForm model user data =
     RoomState.roomDataBottomForm model.roomState
         [ header
             [ class "card-header" ]
@@ -795,7 +795,7 @@ protagonistsBottomForm model data =
             ]
         , RoomState.roomDataFormContent
             [ div [ class "rooper-mastermind-form-hands" ]
-                [ RoomData.handsForm 1 data (SetMasterMindHand 1) (SetMasterMindOnComponent 1)
+                [ RoomData.handsFormProtagonist user data (SetMasterMindHand 1) (SetMasterMindOnComponent 1)
                 ]
             ]
         , RoomState.roomDataFormFooter

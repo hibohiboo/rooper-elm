@@ -2,10 +2,11 @@ module Models.RoomData.Protagonist exposing (..)
 
 import Component.Form as Form
 import Html exposing (..)
-import Html.Attributes exposing (class, href, style)
+import Html.Attributes exposing (class, href, src, style)
 import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
+import Maybe.Extra as ExMaybe
 import Models.RoomData.Hand as Hand exposing (Hand)
 import Models.TragedySet as TragedySet exposing (Incident, TragedySet)
 
@@ -61,6 +62,41 @@ isLeader s list =
             False
 
 
+isTurnProtagonist : String -> List Protagonist -> Bool
+isTurnProtagonist s list =
+    getTurnProtagonist s list
+        |> ExMaybe.isJust
+
+
+getTurnProtagonist : String -> List Protagonist -> Maybe Protagonist
+getTurnProtagonist s list =
+    turnProtagonist list
+        |> Maybe.andThen
+            (\p ->
+                if p.twitterScreenName == s then
+                    Just p
+
+                else
+                    Nothing
+            )
+
+
+turnProtagonistNumber : List Protagonist -> Maybe Int
+turnProtagonistNumber list =
+    turnProtagonist list
+        |> Maybe.map .number
+
+
+turnProtagonist : List Protagonist -> Maybe Protagonist
+turnProtagonist list =
+    list |> List.head
+
+
+getSelectedHandComponentKey : Protagonist -> String
+getSelectedHandComponentKey { number, hands } =
+    Hand.getSelectedHandComponentKey number hands
+
+
 
 -- ==============================================================================================
 -- デコーダ
@@ -96,3 +132,40 @@ encode { number, name, twitterScreenName, hands } =
 -- ==============================================================================================
 -- View
 -- ==============================================================================================
+
+
+handsForm : Protagonist -> (String -> msg) -> Html msg
+handsForm { number, hands } chgMsg =
+    let
+        key =
+            case Hand.getSelectedHand number hands of
+                Just h ->
+                    h.id
+
+                Nothing ->
+                    ""
+
+        optionList =
+            Hand.getFormOptionList number hands
+    in
+    Form.select ("form-protagonist-" ++ String.fromInt number ++ "-hand") chgMsg key optionList
+
+
+selectedCard : Protagonist -> Html msg
+selectedCard { number, hands } =
+    case Hand.getSelectedHand number hands of
+        Just h ->
+            img [ src <| Hand.toCardUrl h ] []
+
+        Nothing ->
+            img [ src "/assets/images/hands/Unselected.png" ] []
+
+
+selectedComponentCard : Protagonist -> Html msg
+selectedComponentCard { number, hands } =
+    case Hand.getSelectedHand number hands of
+        Just h ->
+            img [ src <| Hand.toComponentCardUrl h ] []
+
+        Nothing ->
+            img [ src "/assets/images/hands/Unselected.png" ] []

@@ -249,6 +249,11 @@ isLeader user data =
     Protagonist.isLeader user.twitterScreenName data.protagonists
 
 
+isTurnProtagonist : User -> RoomData -> Bool
+isTurnProtagonist user data =
+    Protagonist.isTurnProtagonist user.twitterScreenName data.protagonists
+
+
 
 -- ==============================================================================================
 -- デコーダ
@@ -480,8 +485,8 @@ characterCard data char =
         ]
 
 
-handsForm : Int -> RoomData -> (String -> msg) -> (String -> msg) -> Html msg
-handsForm i d handChangeMsg componentChangeMsg =
+handsFormMastermind : Int -> RoomData -> (String -> msg) -> (String -> msg) -> Html msg
+handsFormMastermind i d handChangeMsg componentChangeMsg =
     div []
         [ div [ style "display" "flex" ]
             [ MasterMind.selectedCard i d.mastermind
@@ -490,7 +495,7 @@ handsForm i d handChangeMsg componentChangeMsg =
         , if d.state == RoomDataState.MastermindPlaysCards then
             div []
                 [ div [ style "padding-bottom" "20px" ] [ MasterMind.handsForm i d.mastermind handChangeMsg ]
-                , handsOnComponentForm i d componentChangeMsg
+                , handsOnComponentFormMastermind i d componentChangeMsg
                 ]
 
           else
@@ -498,8 +503,31 @@ handsForm i d handChangeMsg componentChangeMsg =
         ]
 
 
-handsOnComponentForm : Int -> RoomData -> (String -> msg) -> Html msg
-handsOnComponentForm i data chgMsg =
+handsFormProtagonist : User -> RoomData -> (String -> msg) -> (String -> msg) -> Html msg
+handsFormProtagonist u d handChangeMsg componentChangeMsg =
+    case Protagonist.getTurnProtagonist u.twitterScreenName d.protagonists of
+        Just p ->
+            div []
+                [ div [ style "display" "flex" ]
+                    [ Protagonist.selectedCard p
+                    , Protagonist.selectedComponentCard p
+                    ]
+                , if d.state == RoomDataState.ProtagonistsPlaysCard then
+                    div []
+                        [ div [ style "padding-bottom" "20px" ] [ Protagonist.handsForm p handChangeMsg ]
+                        , handsOnComponentFormProtagonist p d componentChangeMsg
+                        ]
+
+                  else
+                    text ""
+                ]
+
+        Nothing ->
+            text "異常ケース"
+
+
+handsOnComponentFormMastermind : Int -> RoomData -> (String -> msg) -> Html msg
+handsOnComponentFormMastermind i data chgMsg =
     let
         key =
             MasterMind.getSelectedHandComponentKey i data.mastermind
@@ -512,4 +540,21 @@ handsOnComponentForm i data chgMsg =
                         |> Character.getFormOptionList (Hand.getSelectedCharacterComponentType i data.mastermind.hands)
                     ]
     in
-    Form.select ("form-mastermind-hand-" ++ String.fromInt i) chgMsg key optionList
+    Form.select ("form-mastermind-on-component-" ++ String.fromInt i) chgMsg key optionList
+
+
+handsOnComponentFormProtagonist : Protagonist -> RoomData -> (String -> msg) -> Html msg
+handsOnComponentFormProtagonist p data chgMsg =
+    let
+        key =
+            Protagonist.getSelectedHandComponentKey p
+
+        optionList =
+            ( "未選択", "未選択" )
+                :: List.concat
+                    [ Board.getFormOptionList (Hand.getSelectedBoardComponentType p.number p.hands) data.boards
+                    , getAppearedCharacters data
+                        |> Character.getFormOptionList (Hand.getSelectedCharacterComponentType p.number p.hands)
+                    ]
+    in
+    Form.select ("form-protagonist-on-component-" ++ String.fromInt p.number) chgMsg key optionList
