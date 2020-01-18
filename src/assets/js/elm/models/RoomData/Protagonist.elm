@@ -42,12 +42,12 @@ init id1 id2 id3 =
 -- ==============================================================================================
 
 
-changeProtagonistsHand : String -> List Protagonist -> List Protagonist
-changeProtagonistsHand s list =
+changeProtagonistsHand : Int ->  String -> List Protagonist -> List Protagonist
+changeProtagonistsHand i s list =
     list
         |> List.map
             (\p ->
-                if isTurnProtagonist p.twitterScreenName list then
+                if  p.number == i then
                     changeProtagonistHand p.number s p
 
                 else
@@ -55,12 +55,13 @@ changeProtagonistsHand s list =
             )
 
 
-changeProtagonistsComponent : String -> List Protagonist -> List Protagonist
-changeProtagonistsComponent s list =
+changeProtagonistsComponent : Int -> String -> List Protagonist -> List Protagonist
+changeProtagonistsComponent i s list =
+
     list
         |> List.map
             (\p ->
-                if isTurnProtagonist p.twitterScreenName list then
+                if  p.number == i then
                     changeProtagonistComponent p.number s p
 
                 else
@@ -142,7 +143,7 @@ turnProtagonistNumber list =
 
 turnProtagonist : List Protagonist -> Maybe Protagonist
 turnProtagonist list =
-    list |> List.head
+    list |> List.filter (\p -> not <| Hand.isProtagonistHandsSelected p.hands) |> List.head
 
 
 getSelectedHandComponentKey : Protagonist -> String

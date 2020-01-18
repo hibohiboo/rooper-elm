@@ -21,10 +21,6 @@ decodeUserFromString json =
 
 decodeUserFromJson : Value -> Maybe User
 decodeUserFromJson json =
-    -- let
-    --     _ =
-    --         Debug.log "decodeUser" json
-    -- in
     json
         |> Decode.decodeValue decoder
         |> Result.toMaybe

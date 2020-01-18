@@ -206,12 +206,18 @@ changeMasterMindComponent i s f =
 
 changeProtagonistHand : String -> RoomData -> RoomData
 changeProtagonistHand s f =
-    { f | protagonists = Protagonist.changeProtagonistsHand s f.protagonists }
-
+    case Protagonist.turnProtagonistNumber f.protagonists of
+      Just i ->
+       { f | protagonists = Protagonist.changeProtagonistsHand i s f.protagonists }
+      Nothing-> f
 
 changeProtagonistComponent : String -> RoomData -> RoomData
 changeProtagonistComponent s f =
-    { f | protagonists = Protagonist.changeProtagonistsComponent s f.protagonists }
+    case Protagonist.turnProtagonistNumber f.protagonists of
+     Just i ->
+       { f | protagonists = Protagonist.changeProtagonistsComponent i s f.protagonists }
+     Nothing ->
+       f
 
 
 
