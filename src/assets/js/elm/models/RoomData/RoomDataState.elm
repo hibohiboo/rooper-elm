@@ -26,6 +26,7 @@ type RoomDataState
     | Morning
     | MastermindPlaysCards
     | ProtagonistsPlaysCard
+    | CardsAreResolved
 
 
 init : RoomDataState
@@ -60,6 +61,9 @@ toString state =
         ProtagonistsPlaysCard ->
             "ProtagonistsPlaysCard"
 
+        CardsAreResolved ->
+            "CardsAreResolved"
+
 
 fromString : String -> Maybe RoomDataState
 fromString s =
@@ -87,6 +91,9 @@ fromString s =
 
         "ProtagonistsPlaysCard" ->
             Just ProtagonistsPlaysCard
+
+        "CardsAreResolved" ->
+            Just CardsAreResolved
 
         _ ->
             Nothing
@@ -119,6 +126,9 @@ toName state =
         ProtagonistsPlaysCard ->
             "主人公行動フェイズ"
 
+        CardsAreResolved ->
+            "行動解決フェイズ"
+
 
 fromStringWithDefault : String -> RoomDataState
 fromStringWithDefault =
@@ -150,6 +160,9 @@ nextState state =
             ProtagonistsPlaysCard
 
         ProtagonistsPlaysCard ->
+            CardsAreResolved
+
+        CardsAreResolved ->
             InitLoop
 
 
