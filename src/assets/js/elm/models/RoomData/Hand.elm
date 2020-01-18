@@ -453,11 +453,31 @@ isBoardSelected t list =
         |> List.member t
 
 
+getSelectedBoadHand : BoardType -> List Hand -> Maybe Hand
+getSelectedBoadHand bt list =
+    list
+        |> List.filter
+            (\h ->
+                case h.onComponent of
+                    Just (BoardComponentType t) ->
+                        bt == t
+
+                    _ ->
+                        False
+            )
+        |> List.head
+
+
 isProtagonistHandsSelected : List Hand -> Bool
 isProtagonistHandsSelected list =
     list
-        |> List.filter (\h -> h.formId /= 0)
-        |> List.map (\h -> h.onComponent)
-        |> List.filter ExMaybe.isJust
+        |> protagonistHandsSelected
         |> List.length
         |> (==) 1
+
+
+protagonistHandsSelected : List Hand -> List Hand
+protagonistHandsSelected list =
+    list
+        |> List.filter (\h -> h.formId /= 0)
+        |> List.filter (\h -> ExMaybe.isJust h.onComponent)

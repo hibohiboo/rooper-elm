@@ -157,6 +157,18 @@ getSelectedHandComponentKey { number, hands } =
     Hand.getSelectedHandComponentKey number hands
 
 
+getSelectedProtagonistsHands : List Protagonist -> List Hand
+getSelectedProtagonistsHands list =
+    list
+        |> List.map (\p -> Hand.protagonistHandsSelected p.hands)
+        |> List.concat
+
+
+getProtagonistCardUrl : Int -> String
+getProtagonistCardUrl i =
+    "/assets/images/hands/protagonist" ++ String.fromInt i ++ ".png"
+
+
 
 -- ==============================================================================================
 -- デコーダ

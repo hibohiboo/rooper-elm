@@ -111,6 +111,21 @@
           opacity: 0.2;
         }
       }
+
+      .protagonist-hand {
+        left: 10px;
+        position: absolute;
+        top: 10px;
+        z-index: 2;
+
+        &:hover {
+          opacity: 0.2;
+        }
+      }
+      // 主人公カードをクリックしたら後ろの脚本家カードも半透明にする
+      .protagonist-hand:hover + .mastermind-hand {
+        opacity: 0.2;
+      }
     }
 
     img {
