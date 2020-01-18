@@ -613,7 +613,7 @@ mainContent model =
         Nothing ->
             case model.mainAreaState of
                 RoomTab ->
-                    notMemberRoomView model
+                    notOwnerRoomView model
 
                 _ ->
                     mainContentBox model
@@ -646,7 +646,7 @@ loginedUserRoomView u model =
 
     else
         -- TODO: メンバーのときの見た目
-        notMemberRoomView model
+        notOwnerRoomView model
 
 
 isRoomOwner : Model -> Bool
@@ -668,7 +668,7 @@ ownerRoomView user model =
         Just data ->
             div []
                 [ RoomData.stateView data
-                , roomBoard model data
+                , RoomData.roomBoard data
                 , RoomData.infos data
                 , mastermindSheets model
                 , mastermindScriptButtons model data
@@ -681,11 +681,6 @@ ownerRoomView user model =
                   else
                     text ""
                 ]
-
-
-roomBoard : Model -> RoomData -> Html Msg
-roomBoard model data =
-    RoomData.roomBoard data
 
 
 mastermindSheets : Model -> Html msg
@@ -838,24 +833,46 @@ isRoomMember { roomData, loginUser } =
                     RoomData.isRoomMember data user
 
 
-notMemberRoomView : Model -> Html Msg
-notMemberRoomView model =
-    notLoginedUserRoomView model
-
-
-notLoginedUserRoomView : Model -> Html Msg
-notLoginedUserRoomView model =
+notOwnerRoomView : Model -> Html Msg
+notOwnerRoomView model =
     case model.roomData of
         Nothing ->
             text "まだルームが作成されていません"
 
         Just data ->
-            div []
-                [ RoomData.infos data
-                , RoomData.stateView data
-                , RoomData.openSheetView data
-                , RoomData.closeSheetView data
-                ]
+            case model.loginUser of
+                Nothing ->
+                    notLoginedUserRoomView data
+
+                Just user ->
+                    userRoomView model user data
+
+
+userRoomView : Model -> User -> RoomData -> Html Msg
+userRoomView model user data =
+    div []
+        [ RoomData.stateView data
+        , RoomData.roomBoard data
+        , RoomData.infos data
+        , RoomData.openSheetView data
+        , RoomData.closeSheetView data
+        , if RoomData.isTurnProtagonist model.roomState.turnProtagonistNumber user data then
+            protagonistsBottomForm model user data
+
+          else
+            text ""
+        ]
+
+
+notLoginedUserRoomView : RoomData -> Html Msg
+notLoginedUserRoomView data =
+    div []
+        [ RoomData.stateView data
+        , RoomData.roomBoard data
+        , RoomData.infos data
+        , RoomData.openSheetView data
+        , RoomData.closeSheetView data
+        ]
 
 
 mainContentBox : Model -> Html Msg
