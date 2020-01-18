@@ -23,6 +23,7 @@ type alias RoomState =
     { tabsState : TabsState
     , bottomNavOpen : Bool
     , turnProtagonistNumber : Int
+    , isDisplayCardsAreResolved : Bool
     }
 
 
@@ -34,7 +35,7 @@ type TabsState
 
 init : RoomState
 init =
-    RoomState Data True 0
+    RoomState Data True 0 False
 
 
 setBottomNav : Bool -> RoomState -> RoomState
@@ -57,11 +58,17 @@ setHandTab f =
     { f | tabsState = Hand }
 
 
+setFalseIsDisplayCardsAreResolved : RoomState -> RoomState
+setFalseIsDisplayCardsAreResolved f =
+    { f | isDisplayCardsAreResolved = False }
+
+
 updateByRoomDataState : Maybe RoomData -> RoomState -> RoomState
 updateByRoomDataState data state =
     state
         |> updateTabsStateByRoomDataState data
         |> updateTurnProtagonistByRoomDataState data
+        |> updateIsDisplayCardsAreResolved data
 
 
 updateTabsStateByRoomDataState : Maybe RoomData -> RoomState -> RoomState
@@ -69,7 +76,7 @@ updateTabsStateByRoomDataState data state =
     if RoomData.isRoomStateHand data then
         setHandTab state
 
-    else if RoomData.isParameterStateHand data then
+    else if RoomData.isCardsAreResolvedState data then
         setCharacterTab state
 
     else
@@ -84,6 +91,15 @@ updateTurnProtagonistByRoomDataState data state =
 
         Nothing ->
             state
+
+
+updateIsDisplayCardsAreResolved : Maybe RoomData -> RoomState -> RoomState
+updateIsDisplayCardsAreResolved data state =
+    if RoomData.isCardsAreResolvedState data then
+        { state | isDisplayCardsAreResolved = True }
+
+    else
+        state
 
 
 

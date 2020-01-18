@@ -247,8 +247,8 @@ isRoomStateHand data =
         |> Maybe.withDefault False
 
 
-isParameterStateHand : Maybe RoomData -> Bool
-isParameterStateHand data =
+isCardsAreResolvedState : Maybe RoomData -> Bool
+isCardsAreResolvedState data =
     data
         |> Maybe.map (\d -> d.state == RoomDataState.CardsAreResolved)
         |> Maybe.withDefault False
@@ -505,38 +505,48 @@ boardSchool data =
 
 boardCard : RoomData -> Board -> (List Character -> Bool) -> Html msg
 boardCard data board isTurf =
-    div [ class "rooper-roomdata-board-card-wrapper" ]
-        [ Board.boardCard board (isTurf data.characters)
-        , case Hand.getSelectedBoardHand board.boardType (Protagonist.getSelectedProtagonistsHands data.protagonists) of
-            Just h ->
-                img [ class "protagonist-hand", src <| Protagonist.getProtagonistCardUrl h.formId ] []
+    div [ class "rooper-roomdata-board-card-wrapper" ] <|
+        Board.boardCard board (isTurf data.characters)
+            :: (if data.state == RoomDataState.CardsAreResolved then
+                    []
 
-            Nothing ->
-                text ""
-        , if Hand.isBoardSelected board.boardType data.mastermind.hands then
-            img [ class "mastermind-hand", src "/assets/images/hands/mastermind.png" ] []
+                else
+                    [ case Hand.getSelectedBoardHand board.boardType (Protagonist.getSelectedProtagonistsHands data.protagonists) of
+                        Just h ->
+                            img [ class "protagonist-hand", src <| Protagonist.getProtagonistCardUrl h.formId ] []
 
-          else
-            text ""
-        ]
+                        Nothing ->
+                            text ""
+                    , if Hand.isBoardSelected board.boardType data.mastermind.hands then
+                        img [ class "mastermind-hand", src "/assets/images/hands/mastermind.png" ] []
+
+                      else
+                        text ""
+                    ]
+               )
 
 
 characterCard : RoomData -> Character -> Html msg
 characterCard data char =
-    div [ class "rooper-roomdata-character-card-wrapper" ]
-        [ Character.characterCard char
-        , case Hand.getSelectedCharacterHand char.characterType (Protagonist.getSelectedProtagonistsHands data.protagonists) of
-            Just h ->
-                img [ class "protagonist-hand", src <| Protagonist.getProtagonistCardUrl h.formId ] []
+    div [ class "rooper-roomdata-character-card-wrapper" ] <|
+        Character.characterCard char
+            :: (if data.state == RoomDataState.CardsAreResolved then
+                    []
 
-            Nothing ->
-                text ""
-        , if Hand.isCharacterSelected char.characterType data.mastermind.hands then
-            img [ class "mastermind-hand", src "/assets/images/hands/mastermind.png" ] []
+                else
+                    [ case Hand.getSelectedCharacterHand char.characterType (Protagonist.getSelectedProtagonistsHands data.protagonists) of
+                        Just h ->
+                            img [ class "protagonist-hand", src <| Protagonist.getProtagonistCardUrl h.formId ] []
 
-          else
-            text ""
-        ]
+                        Nothing ->
+                            text ""
+                    , if Hand.isCharacterSelected char.characterType data.mastermind.hands then
+                        img [ class "mastermind-hand", src "/assets/images/hands/mastermind.png" ] []
+
+                      else
+                        text ""
+                    ]
+               )
 
 
 handsFormMastermind : Int -> RoomData -> (String -> msg) -> (String -> msg) -> Html msg
