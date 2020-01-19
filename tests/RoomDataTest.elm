@@ -1,7 +1,7 @@
 module RoomDataTest exposing (unitTest)
 
 import Expect
-import Models.Board exposing (BoardType(..))
+import Models.Board exposing (BoardType(..), city, hospital, school, shrine)
 import Models.Character exposing (CharacterType(..))
 import Models.RoomData as RoomData
 import Models.RoomData.Board as RDBoard
@@ -220,5 +220,16 @@ unitTest =
                     |> RDCharacter.getCharacter ShrineMaiden
                     |> Maybe.map .goodWill
                     |> Maybe.map (\c -> Expect.equal 0 c)
+                    |> Maybe.withDefault (Expect.fail "失敗")
+        , test "神社のキャラクターに移動上下を設置したときに学校に移動すること" <|
+            \() ->
+                RoomData.initDefault
+                    |> RoomData.changeProtagonistHand 2 "p5"
+                    |> RoomData.changeProtagonistComponent 2 "ShrineMaiden"
+                    |> RoomData.resolveCards
+                    |> .characters
+                    |> RDCharacter.getCharacter ShrineMaiden
+                    |> Maybe.map .location
+                    |> Maybe.map (\loc -> Expect.equal (Just school) loc)
                     |> Maybe.withDefault (Expect.fail "失敗")
         ]

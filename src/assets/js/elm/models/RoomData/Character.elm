@@ -10,7 +10,7 @@ import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
 import Json.Encode.Extra as ExEncode
 import List.Extra as ExList
-import Models.Board as Board exposing (Board)
+import Models.Board as Board exposing (Board, BoardType(..))
 import Models.Character exposing (CharacterScriptData, CharacterType)
 import Models.RoomData.Hand as Hand exposing (Hand, HandType(..))
 import Models.TragedySet as TragedySet exposing (Role)
@@ -125,6 +125,11 @@ setLocation s c =
     { c | location = Board.boardFromString s }
 
 
+setLocationBoard : Maybe Board -> Character -> Character
+setLocationBoard b c =
+    { c | location = b }
+
+
 setGoodWill : Int -> Character -> Character
 setGoodWill v c =
     { c | goodWill = v }
@@ -159,10 +164,47 @@ resolveCard hands c =
             List.map .handType <| Hand.getSelectedCharacterHands c.characterType hands
     in
     c
+        |> resolveMovementCard list
         |> resolveGoodwillCard list
         |> resolveParanoiaCard list
         |> guardParanoiaMinus
         |> resolveIntrigueCard list hands
+
+
+resolveMovementCard : List HandType -> Character -> Character
+resolveMovementCard list c =
+    if (==) 0 <| List.length list then
+        c
+
+    else if List.member ForbidMovement list then
+        c
+
+    else if List.member MovementVertical list then
+        setLocationBoard (moveVertical c.location) c
+
+    else
+        c
+
+
+moveVertical : Maybe Board -> Maybe Board
+moveVertical mb =
+    case mb of
+        Nothing ->
+            Nothing
+
+        Just b ->
+            case b.boardType of
+                City ->
+                    Just Board.hospital
+
+                Hospital ->
+                    Just Board.city
+
+                School ->
+                    Just Board.shrine
+
+                Shrine ->
+                    Just Board.school
 
 
 resolveGoodwillCard : List HandType -> Character -> Character
