@@ -72,10 +72,10 @@ resolveCard hands b =
         b
 
     else if List.member IntriguePlus1 list then
-        setIntrigue 1 b
+        setIntrigue (b.intrigue + 1) b
 
     else if List.member IntriguePlus2 list then
-        setIntrigue 2 b
+        setIntrigue (b.intrigue + 2) b
 
     else
         b

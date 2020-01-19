@@ -193,10 +193,10 @@ resolveIntrigueCard list hands c =
         c
 
     else if List.member IntriguePlus1 list && not isForbidIntrigue then
-        setIntrigue 1 c
+        setIntrigue (c.intrigue + 1) c
 
     else if List.member IntriguePlus2 list && not isForbidIntrigue then
-        setIntrigue 2 c
+        setIntrigue (c.intrigue + 2) c
 
     else
         c
