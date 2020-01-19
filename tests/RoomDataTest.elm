@@ -342,4 +342,21 @@ unitTest =
                     |> Maybe.map .location
                     |> Maybe.map (\loc -> Expect.equal (Just city) loc)
                     |> Maybe.withDefault (Expect.fail "失敗")
+        , test "神社に移動斜めを設置したときに幻想が都市に移動し、都市に設置された暗躍+1が適用されること" <|
+            \() ->
+                RoomData.initDefault
+                    |> RoomData.changeMasterMindHand 1 "m9"
+                    |> RoomData.changeMasterMindComponent 1 "Shrine"
+                    |> RoomData.changeMasterMindHand 2 "m5"
+                    |> RoomData.changeMasterMindComponent 2 "City"
+                    |> RoomData.changeProtagonistHand 1 "p3"
+                    |> RoomData.changeProtagonistComponent 1 "Shrine"
+                    |> RoomData.changeProtagonistHand 2 "p2"
+                    |> RoomData.changeProtagonistComponent 2 "City"
+                    |> RoomData.resolveCards
+                    |> .characters
+                    |> RDCharacter.getCharacter Illusion
+                    |> Maybe.map .intrigue
+                    |> Maybe.map (\i -> Expect.equal 1 i)
+                    |> Maybe.withDefault (Expect.fail "失敗")
         ]

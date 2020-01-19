@@ -155,22 +155,27 @@ setForbiddenLocations b c =
     { c | forbiddenLocations = b }
 
 
+getSelectedCharacterHands : List Hand -> Character -> List HandType
+getSelectedCharacterHands hands c =
+    if c.characterType /= Models.Character.Illusion then
+        List.map .handType <| Hand.getSelectedCharacterHands c.characterType hands
+
+    else
+        case c.location of
+            Nothing ->
+                []
+
+            Just b ->
+                List.map .handType <| Hand.getSelectedBoardHands b.boardType hands
+
+
 resolveCard : List Hand -> Character -> Character
 resolveCard hands c =
     let
         -- _ =
         --     Debug.log "decodeUser" hands
         list =
-            if c.characterType /= Models.Character.Illusion then
-                List.map .handType <| Hand.getSelectedCharacterHands c.characterType hands
-
-            else
-                case c.location of
-                    Nothing ->
-                        []
-
-                    Just b ->
-                        List.map .handType <| Hand.getSelectedBoardHands b.boardType hands
+            getSelectedCharacterHands hands c
     in
     c
         |> resolveMovementCard list
@@ -181,7 +186,7 @@ resolveCardParameter : List Hand -> Character -> Character
 resolveCardParameter hands c =
     let
         list =
-            List.map .handType <| Hand.getSelectedCharacterHands c.characterType hands
+            getSelectedCharacterHands hands c
     in
     c
         |> resolveGoodwillCard list
