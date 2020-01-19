@@ -197,4 +197,28 @@ unitTest =
                     |> Maybe.map .goodWill
                     |> Maybe.map (\c -> Expect.equal 1 c)
                     |> Maybe.withDefault (Expect.fail "失敗")
+        , test "キャラクターに友好+2を設置したときに友好が+2されること" <|
+            \() ->
+                RoomData.initDefault
+                    |> RoomData.changeProtagonistHand 2 "p3"
+                    |> RoomData.changeProtagonistComponent 2 "ShrineMaiden"
+                    |> RoomData.resolveCards
+                    |> .characters
+                    |> RDCharacter.getCharacter ShrineMaiden
+                    |> Maybe.map .goodWill
+                    |> Maybe.map (\c -> Expect.equal 2 c)
+                    |> Maybe.withDefault (Expect.fail "失敗")
+        , test "キャラクターに友好禁止を設置したときに友好が+2されないこと" <|
+            \() ->
+                RoomData.initDefault
+                    |> RoomData.changeMasterMindHand 1 "m4"
+                    |> RoomData.changeMasterMindComponent 1 "ShrineMaiden"
+                    |> RoomData.changeProtagonistHand 2 "p3"
+                    |> RoomData.changeProtagonistComponent 2 "ShrineMaiden"
+                    |> RoomData.resolveCards
+                    |> .characters
+                    |> RDCharacter.getCharacter ShrineMaiden
+                    |> Maybe.map .goodWill
+                    |> Maybe.map (\c -> Expect.equal 0 c)
+                    |> Maybe.withDefault (Expect.fail "失敗")
         ]
