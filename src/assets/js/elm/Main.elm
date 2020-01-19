@@ -14,6 +14,7 @@ import Models.Room as Room exposing (Room)
 import Models.RoomData as RoomData exposing (RoomData)
 import Models.RoomData.Board as RoomBoard
 import Models.RoomData.Character as RoomCharacter
+import Models.RoomData.Hand as Hand exposing (Hand)
 import Models.RoomName as RoomName exposing (RoomName)
 import Models.RoomState as RoomState exposing (RoomState)
 import Models.Script as Script exposing (Script)
@@ -159,6 +160,8 @@ type Msg
     | ResolveCards
     | ConfirmLoopEnd
     | LoopEnd
+    | ConfirmHandUnused Int Hand
+    | HandUnused Int Hand
 
 
 type MenuState
@@ -579,6 +582,21 @@ update msg model =
             in
             update UpdateRoomData { model | roomData = roomData, modalState = CloseModalState, roomState = RoomState.updateByRoomDataState roomData model.roomState }
 
+        ConfirmHandUnused i h ->
+            if isRoomOwner model then
+                case h.isUsed of
+                    Just True ->
+                        ( { model | modalState = ConfirmModalState (Hand.toName h ++ "を回収") (HandUnused i h) }, Cmd.none )
+
+                    _ ->
+                        ( model, Cmd.none )
+
+            else
+                ( model, Cmd.none )
+
+        HandUnused i h ->
+            ( { model | roomData = Maybe.map (RoomData.unusedProtagonistHand i h) model.roomData, modalState = CloseModalState }, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -688,7 +706,7 @@ ownerRoomView user model =
                 , RoomData.stateView data
                 , RoomData.roomBoard data
                 , RoomData.playedHandsView data
-                , RoomData.usedHands data
+                , RoomData.usedHands ConfirmHandUnused data
                 , mastermindSheets model
                 , if RoomData.isTurnProtagonist model.roomState.turnProtagonistNumber user data then
                     protagonistsBottomForm model user data
@@ -888,7 +906,7 @@ userRoomView model user data =
         , RoomData.stateView data
         , RoomData.roomBoard data
         , RoomData.playedHandsView data
-        , RoomData.usedHands data
+        , RoomData.usedHands ConfirmHandUnused data
         , RoomData.openSheetView data
         , RoomData.closeSheetView data
         , if RoomData.isTurnProtagonist model.roomState.turnProtagonistNumber user data then
@@ -905,7 +923,7 @@ notLoginedUserRoomView data =
         [ RoomData.infos data
         , RoomData.stateView data
         , RoomData.roomBoard data
-        , RoomData.usedHands data
+        , RoomData.usedHands ConfirmHandUnused data
         , RoomData.openSheetView data
         , RoomData.closeSheetView data
         ]

@@ -306,6 +306,11 @@ changeProtagonistComponent i s f =
     { f | protagonists = Protagonist.changeProtagonistsComponent i s f.protagonists }
 
 
+unusedProtagonistHand : Int -> Hand -> RoomData -> RoomData
+unusedProtagonistHand i h f =
+    { f | protagonists = Protagonist.unusedProtagonistHand i h f.protagonists }
+
+
 resolveCards : RoomData -> RoomData
 resolveCards data =
     let
@@ -806,6 +811,6 @@ playedHandsView d =
         ]
 
 
-usedHands : RoomData -> Html msg
-usedHands d =
-    div [ style "display" "flex", style "justify-content" "space-evenly", style "flex-wrap" "wrap" ] <| List.concat [ Protagonist.useCardView d.protagonists, [ MasterMind.useCardView d.mastermind ] ]
+usedHands : (Int -> Hand -> msg) -> RoomData -> Html msg
+usedHands returnMsg d =
+    div [ style "display" "flex", style "justify-content" "space-evenly", style "flex-wrap" "wrap" ] <| List.concat [ Protagonist.useCardView returnMsg d.protagonists, [ MasterMind.useCardView d.mastermind ] ]

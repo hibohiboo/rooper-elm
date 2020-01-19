@@ -3,6 +3,7 @@ module Models.RoomData.Protagonist exposing (..)
 import Component.Form as Form
 import Html exposing (..)
 import Html.Attributes exposing (class, href, src, style)
+import Html.Events exposing (onClick)
 import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
@@ -114,6 +115,19 @@ changeLeader list =
 
         Nothing ->
             list
+
+
+unusedProtagonistHand : Int -> Hand -> List Protagonist -> List Protagonist
+unusedProtagonistHand i h list =
+    list
+        |> List.map
+            (\p ->
+                if p.number == i then
+                    { p | hands = Hand.unusedProtagonistHand h p.hands }
+
+                else
+                    p
+            )
 
 
 
@@ -278,8 +292,8 @@ protagonistImg p =
     img [ src <| getProtagonistCardUrl p.number, style "position" "absolute" ] []
 
 
-usedCards : Bool -> Protagonist -> Html msg
-usedCards isLeaderP p =
+usedCards : (Int -> Hand -> msg) -> Bool -> Protagonist -> Html msg
+usedCards returnMsg isLeaderP p =
     div [ style "display" "flex" ] <|
         (if isLeaderP then
             div [ style "position" "relative", style "width" "35px" ]
@@ -290,19 +304,19 @@ usedCards isLeaderP p =
          else
             div [ style "position" "relative", style "width" "35px" ] [ protagonistImg p ]
         )
-            :: List.map (\h -> img [ src <| Hand.toCardUrl h, style "height" "50px" ] [])
+            :: List.map (\h -> img [ src <| Hand.toCardUrl h, style "height" "50px", onClick (returnMsg p.number h) ] [])
                 (Hand.usedHands p.hands)
 
 
-useCardView : List Protagonist -> List (Html msg)
-useCardView list =
+useCardView : (Int -> Hand -> msg) -> List Protagonist -> List (Html msg)
+useCardView returnMsg list =
     List.map
         (\p ->
             case List.head list of
                 Just jp ->
-                    usedCards (jp == p) p
+                    usedCards returnMsg (jp == p) p
 
                 Nothing ->
-                    usedCards False p
+                    usedCards returnMsg False p
         )
         list

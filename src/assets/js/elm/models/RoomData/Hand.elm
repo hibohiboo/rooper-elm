@@ -178,6 +178,19 @@ returnPlayedHands list =
             )
 
 
+unusedProtagonistHand : Hand -> List Hand -> List Hand
+unusedProtagonistHand th list =
+    list
+        |> List.map
+            (\h ->
+                if th.id == h.id then
+                    { h | isUsed = Just False }
+
+                else
+                    h
+            )
+
+
 
 -- ==============================================================================================
 -- getter
