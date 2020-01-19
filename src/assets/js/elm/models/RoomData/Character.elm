@@ -161,10 +161,29 @@ resolveCard hands c =
         -- _ =
         --     Debug.log "decodeUser" hands
         list =
-            List.map .handType <| Hand.getSelectedCharacterHands c.characterType hands
+            if c.characterType /= Models.Character.Illusion then
+                List.map .handType <| Hand.getSelectedCharacterHands c.characterType hands
+
+            else
+                case c.location of
+                    Nothing ->
+                        []
+
+                    Just b ->
+                        List.map .handType <| Hand.getSelectedBoardHands b.boardType hands
     in
     c
         |> resolveMovementCard list
+        |> resolveCardParameter hands
+
+
+resolveCardParameter : List Hand -> Character -> Character
+resolveCardParameter hands c =
+    let
+        list =
+            List.map .handType <| Hand.getSelectedCharacterHands c.characterType hands
+    in
+    c
         |> resolveGoodwillCard list
         |> resolveParanoiaCard list
         |> guardParanoiaMinus
