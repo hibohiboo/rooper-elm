@@ -160,4 +160,30 @@ unitTest =
                     |> Maybe.map .paranoia
                     |> Maybe.map (\c -> Expect.equal 2 c)
                     |> Maybe.withDefault (Expect.fail "失敗")
+        , test "キャラクターに不安+1と不安-1を設置したときに不安が相殺されること" <|
+            \() ->
+                RoomData.initDefault
+                    |> RoomData.changeMasterMindHand 1 "m2"
+                    |> RoomData.changeMasterMindComponent 1 "ShrineMaiden"
+                    |> RoomData.changeProtagonistHand 2 "p0"
+                    |> RoomData.changeProtagonistComponent 2 "ShrineMaiden"
+                    |> RoomData.resolveCards
+                    |> .characters
+                    |> RDCharacter.getCharacter ShrineMaiden
+                    |> Maybe.map .paranoia
+                    |> Maybe.map (\c -> Expect.equal 0 c)
+                    |> Maybe.withDefault (Expect.fail "失敗")
+        , test "キャラクターに不安+1と不安禁止を設置したときに不安が変化しないこと" <|
+            \() ->
+                RoomData.initDefault
+                    |> RoomData.changeMasterMindHand 1 "m3"
+                    |> RoomData.changeMasterMindComponent 1 "ShrineMaiden"
+                    |> RoomData.changeProtagonistHand 2 "p0"
+                    |> RoomData.changeProtagonistComponent 2 "ShrineMaiden"
+                    |> RoomData.resolveCards
+                    |> .characters
+                    |> RDCharacter.getCharacter ShrineMaiden
+                    |> Maybe.map .paranoia
+                    |> Maybe.map (\c -> Expect.equal 0 c)
+                    |> Maybe.withDefault (Expect.fail "失敗")
         ]
