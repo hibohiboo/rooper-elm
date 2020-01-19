@@ -153,14 +153,14 @@ setForbiddenLocations b c =
 resolveCard : List Hand -> Character -> Character
 resolveCard hands c =
     let
-        _ =
-            Debug.log "decodeUser" hands
-
+        -- _ =
+        --     Debug.log "decodeUser" hands
         list =
             List.map .handType <| Hand.getSelectedCharacterHands c.characterType hands
     in
     c
         |> resolveParanoiaCard list
+        |> guardParanoiaMinus
         |> resolveIntrigueCard list hands
 
 
@@ -177,6 +177,15 @@ resolveParanoiaCard list c =
 
     else if List.member ParanoiaMinus1 list then
         setParanoia (c.paranoia - 1) c
+
+    else
+        c
+
+
+guardParanoiaMinus : Character -> Character
+guardParanoiaMinus c =
+    if c.paranoia < 0 then
+        setParanoia 0 c
 
     else
         c
