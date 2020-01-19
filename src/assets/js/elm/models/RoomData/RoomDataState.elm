@@ -117,6 +117,9 @@ fromString s =
         "MastermindPlaysCards" ->
             Just MastermindPlaysCards
 
+        "MastemindAbilities" ->
+            Just MastemindAbilities
+
         "ProtagonistsPlaysCard" ->
             Just ProtagonistsPlaysCard
 
