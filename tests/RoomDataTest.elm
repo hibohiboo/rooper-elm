@@ -28,6 +28,16 @@ unitTest =
                     |> RoomData.playedHands
                     |> List.length
                     |> Expect.equal 2
+        , test "ボードに暗躍+1を設置" <|
+            \() ->
+                RoomData.initDefault
+                    |> RoomData.changeMasterMindHand 1 "m5"
+                    |> RoomData.changeMasterMindComponent 1 "City"
+                    |> RoomData.resolveCards
+                    |> .boards
+                    |> RDBoard.getBoard City
+                    |> .intrigue
+                    |> Expect.equal 1
         , test "ボードに暗躍+2を設置" <|
             \() ->
                 RoomData.initDefault
