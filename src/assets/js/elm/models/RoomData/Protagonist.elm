@@ -255,17 +255,17 @@ protagonistImg p =
 
 usedCards : Bool -> Protagonist -> Html msg
 usedCards isLeaderP p =
-    div [] <|
+    div [ style "display" "flex" ] <|
         (if isLeaderP then
-            div [ style "position" "relative" ]
+            div [ style "position" "relative", style "width" "35px" ]
                 [ protagonistImg p
                 , img [ src "/assets/images/others/leader.png", style "position" "absolute" ] []
                 ]
 
          else
-            div [ style "position" "relative" ] [ protagonistImg p ]
+            div [ style "position" "relative", style "width" "35px" ] [ protagonistImg p ]
         )
-            :: List.map (\h -> img [ src <| Hand.toCardUrl h ] [])
+            :: List.map (\h -> img [ src <| Hand.toCardUrl h, style "height" "50px" ] [])
                 (Hand.usedHands p.hands)
 
 

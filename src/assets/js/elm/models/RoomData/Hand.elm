@@ -319,12 +319,21 @@ typeFromString s =
 toCardUrl : Hand -> String
 toCardUrl h =
     "/assets/images/hands/"
-        ++ (case h.id of
+        ++ ((case h.id of
                 "p1" ->
                     "p1"
 
                 _ ->
                     typeToString h.handType
+            )
+                |> (\s ->
+                        case h.isUsed of
+                            Just True ->
+                                s ++ "Used"
+
+                            _ ->
+                                s
+                   )
            )
         ++ ".png"
 
