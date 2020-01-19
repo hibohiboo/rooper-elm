@@ -6,6 +6,7 @@ import Html.Attributes exposing (class, href, src, style)
 import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
+import List.Extra as ExList
 import Maybe.Extra as ExMaybe
 import Models.RoomData.Hand as Hand exposing (Hand)
 import Models.TragedySet as TragedySet exposing (Incident, TragedySet)
@@ -89,6 +90,16 @@ isProtagonistsHandsSelected list =
 returnPlayedHands : List Protagonist -> List Protagonist
 returnPlayedHands list =
     list |> List.map (\p -> { p | hands = Hand.changeHand p.number "p0" <| Hand.returnPlayedHands p.hands })
+
+
+changeLeader : List Protagonist -> List Protagonist
+changeLeader list =
+    case List.head list of
+        Just h ->
+            List.concat [ ExList.remove h list, [ h ] ]
+
+        Nothing ->
+            list
 
 
 

@@ -111,6 +111,7 @@ nextRoomDataState data =
     data
         |> updateNextState
         |> updateHandsData
+        |> updateProtagonists
 
 
 updateNextState : RoomData -> RoomData
@@ -127,6 +128,15 @@ updateHandsData : RoomData -> RoomData
 updateHandsData data =
     if data.state == RoomDataState.MastemindAbilities then
         { data | mastermind = MasterMind.returnPlayedHands data.mastermind, protagonists = Protagonist.returnPlayedHands data.protagonists }
+
+    else
+        data
+
+
+updateProtagonists : RoomData -> RoomData
+updateProtagonists data =
+    if data.state == RoomDataState.Night then
+        { data | protagonists = Protagonist.changeLeader data.protagonists }
 
     else
         data
