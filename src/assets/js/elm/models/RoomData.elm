@@ -3,6 +3,7 @@ module Models.RoomData exposing (..)
 import Component.Form as Form
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Extra as ExHtml
 import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
@@ -16,6 +17,7 @@ import Models.RoomData.OpenSheet as OpenSheet exposing (OpenSheet)
 import Models.RoomData.Protagonist as Protagonist exposing (Protagonist)
 import Models.RoomData.RoomDataState as RoomDataState exposing (RoomDataState)
 import Models.Script as Script exposing (Script)
+import Models.TragedySet as TragedySet
 import Models.User exposing (User)
 
 
@@ -501,7 +503,15 @@ infos data =
                     [ th [] [ text "Loop" ]
                     , th [] [ text "Date" ]
                     , th [] [ text "事件" ]
-                    , th [] [ text "Ex" ]
+                    , case openSheet.set.setType of
+                        TragedySet.BasicTragedy ->
+                            ExHtml.nothing
+
+                        TragedySet.FirstSteps ->
+                            ExHtml.nothing
+
+                        TragedySet.MysteryCircle ->
+                            th [] [ text "Ex" ]
                     ]
                 ]
             , tbody []
@@ -509,7 +519,15 @@ infos data =
                     [ td [] [ text <| String.fromInt loop ]
                     , td [] [ text <| String.fromInt date ]
                     , td [] [ OpenSheet.incidentIcon date openSheet.incidents ]
-                    , td [] [ text <| String.fromInt ex ]
+                    , case openSheet.set.setType of
+                        TragedySet.BasicTragedy ->
+                            ExHtml.nothing
+
+                        TragedySet.FirstSteps ->
+                            ExHtml.nothing
+
+                        TragedySet.MysteryCircle ->
+                            td [] [ text <| String.fromInt ex ]
                     ]
                 ]
             ]

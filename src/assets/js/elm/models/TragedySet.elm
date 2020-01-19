@@ -810,6 +810,9 @@ typeToName t =
         FirstSteps ->
             "First Steps"
 
+        MysteryCircle ->
+            "Mystery Circle"
+
 
 toString : TragedySet -> String
 toString set =
@@ -825,7 +828,11 @@ typeToString t =
         FirstSteps ->
             "FirstSteps"
 
+        MysteryCircle ->
+            "MysteryCircle"
+
 
 type TragedySetType
     = BasicTragedy
     | FirstSteps
+    | MysteryCircle

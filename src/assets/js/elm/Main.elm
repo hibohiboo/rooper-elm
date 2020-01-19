@@ -7,6 +7,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Html.Events.Extra exposing (onChange)
+import Html.Extra as ExHtml
 import Json.Encode exposing (Value)
 import Models.Character as Character exposing (Character)
 import Models.Room as Room exposing (Room)
@@ -18,6 +19,7 @@ import Models.RoomState as RoomState exposing (RoomState)
 import Models.Script as Script exposing (Script)
 import Models.Script.IncidentScriptData exposing (IncidentScriptData)
 import Models.ScriptName as ScriptName exposing (ScriptName)
+import Models.TragedySet as TragedySet
 import Models.User exposing (User)
 import Ports exposing (..)
 import Route
@@ -521,10 +523,10 @@ update msg model =
             ( model, Cmd.batch [ command ] )
 
         CharacterRoomDataState ->
-            ( { model | roomState = RoomState.setCharacterTab model.roomState }, Cmd.none )
+            ( { model | roomState = RoomState.setParameterTab model.roomState }, Cmd.none )
 
         DataRoomDataState ->
-            ( { model | roomState = RoomState.setDataTab model.roomState }, Cmd.none )
+            ( { model | roomState = RoomState.setActionTab model.roomState }, Cmd.none )
 
         HandRoomDataState ->
             ( { model | roomState = RoomState.setHandTab model.roomState }, Cmd.none )
@@ -640,7 +642,7 @@ mainContent model =
                     loginedUserRoomView u model
 
                 NothingTab ->
-                    text ""
+                    ExHtml.nothing
 
 
 loginedUserRoomView : User -> Model -> Html Msg
@@ -677,7 +679,6 @@ ownerRoomView user model =
                 , RoomData.playedHandsView data
                 , RoomData.usedHands data
                 , mastermindSheets model
-                , mastermindScriptButtons model data
                 , if RoomData.isTurnProtagonist model.roomState.turnProtagonistNumber user data then
                     protagonistsBottomForm model user data
 
@@ -685,7 +686,7 @@ ownerRoomView user model =
                     mastermindBottomForm model data
 
                   else
-                    text ""
+                    ExHtml.nothing
                 ]
 
 
@@ -697,7 +698,7 @@ mastermindSheets model =
                 Script.scriptView room.script
 
             Nothing ->
-                text ""
+                ExHtml.nothing
         ]
 
 
@@ -745,17 +746,28 @@ mastermindBottomForm model data =
             ]
         , RoomState.roomDataFormContent
             [ case model.roomState.tabsState of
-                RoomState.Character ->
+                RoomState.Parameter ->
                     div []
-                        [ RoomData.boardsForm data ChangeBoardIntrigue
+                        [ case data.openSheet.set.setType of
+                            TragedySet.BasicTragedy ->
+                                ExHtml.nothing
+
+                            TragedySet.FirstSteps ->
+                                ExHtml.nothing
+
+                            TragedySet.MysteryCircle ->
+                                RoomState.roomDataFormDataBoard
+                                    [ --  td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataLoop, value <| String.fromInt data.loop ] [] ]
+                                      -- , td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataDate, value <| String.fromInt data.date ] [] ]
+                                      td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataEx, value <| String.fromInt data.ex ] [] ]
+                                    ]
+                        , RoomData.boardsForm data ChangeBoardIntrigue
                         , RoomData.charactersForm data ChangeCharacterLocation ChangeCharacterGoodWill ChangeCharacterParanoia ChangeCharacterIntrigue ToggleCharacterIsDead DeleteCharacterForbiddenLocationMsg
                         ]
 
-                RoomState.Data ->
-                    RoomState.roomDataFormDataBoard
-                        [ --  td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataLoop, value <| String.fromInt data.loop ] [] ]
-                          -- , td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataDate, value <| String.fromInt data.date ] [] ]
-                          td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataEx, value <| String.fromInt data.ex ] [] ]
+                RoomState.Action ->
+                    div []
+                        [ mastermindScriptButtons model data
                         ]
 
                 RoomState.Hand ->
@@ -776,10 +788,10 @@ mastermindBottomForm model data =
                     nextStateButton
                 ]
             , span [ class "card-footer-item", onClick CharacterRoomDataState ]
-                [ span [] [ text "キャラクタ" ]
+                [ span [] [ text "パラメータ" ]
                 ]
             , span [ class "card-footer-item", onClick DataRoomDataState ]
-                [ span [] [ text "データ" ]
+                [ span [] [ text "アクション" ]
                 ]
             ]
         , if RoomData.isMastermindHandsSelected data then
@@ -795,7 +807,7 @@ mastermindBottomForm model data =
                 ]
 
           else
-            text ""
+            ExHtml.nothing
         ]
 
 
@@ -862,7 +874,7 @@ userRoomView model user data =
             protagonistsBottomForm model user data
 
           else
-            text ""
+            ExHtml.nothing
         ]
 
 
@@ -989,7 +1001,7 @@ mainTabs model =
     in
     case loginUser of
         Nothing ->
-            text ""
+            ExHtml.nothing
 
         Just _ ->
             div [ class "tabs" ]
@@ -1017,7 +1029,7 @@ logginedMainArea model =
             mainTopContent model
 
         NothingTab ->
-            text ""
+            ExHtml.nothing
 
         ScriptTab ->
             mainScriptContent model
@@ -1052,7 +1064,7 @@ mainScriptContent model =
                 ScriptName.scripts s
 
             _ ->
-                text ""
+                ExHtml.nothing
         ]
 
 
@@ -1068,13 +1080,13 @@ mainTopContent model =
                 RoomName.roomEdits r
 
             Nothing ->
-                text ""
+                ExHtml.nothing
         , case rooms of
             Just r ->
                 RoomName.rooms r
 
             Nothing ->
-                text ""
+                ExHtml.nothing
         ]
 
 
@@ -1170,7 +1182,7 @@ editRoomView { roomForm, scripts, room } =
                 Script.scriptView s
 
             Nothing ->
-                text ""
+                ExHtml.nothing
         ]
 
 
@@ -1227,7 +1239,7 @@ headNavRight model =
                 ]
 
         Nothing ->
-            text ""
+            ExHtml.nothing
 
 
 
@@ -1330,7 +1342,7 @@ scriptFormView scriptForm =
             ]
 
       else
-        text ""
+        ExHtml.nothing
     , Form.field
         [ label
             [ class "label has-text-white" ]
@@ -1431,6 +1443,6 @@ characterFormCollection scriptForm =
                                 ]
 
                         _ ->
-                            text ""
+                            ExHtml.nothing
                     ]
             )

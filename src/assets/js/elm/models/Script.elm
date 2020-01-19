@@ -413,6 +413,13 @@ setTragedySet s f =
                     { f | set = set, mainPlot = TragedySet.murderPlan, subPlot1 = TragedySet.shadowOfTheRipper, subPlot2 = Nothing, incidents = [] }
             in
             { new | characters = resetRolesCharacterScriptDataList new }
+        -- TODO: 実際に作る
+        TragedySet.MysteryCircle ->
+            let
+                new =
+                    { f | set = set, mainPlot = TragedySet.murderPlan, subPlot1 = TragedySet.shadowOfTheRipper, subPlot2 = Nothing, incidents = [] }
+            in
+            { new | characters = resetRolesCharacterScriptDataList new }
 
 
 resetRolesCharacterScriptDataList : RegisterForm -> List Character.CharacterScriptData

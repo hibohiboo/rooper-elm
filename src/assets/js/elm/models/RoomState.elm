@@ -28,14 +28,14 @@ type alias RoomState =
 
 
 type TabsState
-    = Character
-    | Data
+    = Parameter
+    | Action
     | Hand
 
 
 init : RoomState
 init =
-    RoomState Data True 0 False
+    RoomState Action True 0 False
 
 
 setBottomNav : Bool -> RoomState -> RoomState
@@ -43,14 +43,14 @@ setBottomNav b f =
     { f | bottomNavOpen = b }
 
 
-setCharacterTab : RoomState -> RoomState
-setCharacterTab f =
-    { f | tabsState = Character }
+setParameterTab : RoomState -> RoomState
+setParameterTab f =
+    { f | tabsState = Parameter }
 
 
-setDataTab : RoomState -> RoomState
-setDataTab f =
-    { f | tabsState = Data }
+setActionTab : RoomState -> RoomState
+setActionTab f =
+    { f | tabsState = Action }
 
 
 setHandTab : RoomState -> RoomState
@@ -77,7 +77,7 @@ updateTabsStateByRoomDataState data state =
         setHandTab state
 
     else if RoomData.isCardsAreResolvedState data then
-        setCharacterTab state
+        setParameterTab state
 
     else
         state
@@ -127,11 +127,11 @@ roomDataFormHeaderTitle state =
     p [ class "card-header-title" ]
         [ text <|
             case state.tabsState of
-                Data ->
-                    "データボード"
+                Action ->
+                    "アクション"
 
-                Character ->
-                    "キャラクター"
+                Parameter ->
+                    "パラメータ"
 
                 Hand ->
                     "手札"
