@@ -173,10 +173,10 @@ resolveParanoiaCard list c =
         c
 
     else if List.member ParanoiaPlus1 list then
-        setParanoia 1 c
+        setParanoia (c.paranoia + 1) c
 
     else if List.member ParanoiaMinus1 list then
-        setParanoia 2 c
+        setParanoia (c.paranoia - 1) c
 
     else
         c
