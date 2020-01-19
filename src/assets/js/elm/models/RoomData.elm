@@ -231,7 +231,20 @@ changeProtagonistComponent i s f =
 
 resolveCards : RoomData -> RoomData
 resolveCards data =
+    let
+        hands =
+            playedHands data
+    in
     data
+        |> resolveCardOnBoards hands
+
+
+resolveCardOnBoards : List Hand -> RoomData -> RoomData
+resolveCardOnBoards hands data =
+    { data
+        | boards =
+            data.boards |> List.map (\b -> Board.resolveCard (Hand.getSelectedBoardHands b.boardType hands) b)
+    }
 
 
 

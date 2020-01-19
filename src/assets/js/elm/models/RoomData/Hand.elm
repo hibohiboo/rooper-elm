@@ -399,9 +399,7 @@ getSelectedBoardComponentTypeAll list =
                     _ ->
                         Nothing
             )
-        |> List.filter ExMaybe.isJust
-        |> ExMaybe.combine
-        |> Maybe.withDefault []
+        |> ExMaybe.values
 
 
 getSelectedCharacterComponentType : Int -> List Hand -> List CharacterType
@@ -458,8 +456,8 @@ isBoardSelected t list =
         |> List.member t
 
 
-getSelectedBoardHand : BoardType -> List Hand -> Maybe Hand
-getSelectedBoardHand bt list =
+getSelectedBoardHands : BoardType -> List Hand -> List Hand
+getSelectedBoardHands bt list =
     list
         |> List.filter
             (\h ->
@@ -470,6 +468,12 @@ getSelectedBoardHand bt list =
                     _ ->
                         False
             )
+
+
+getSelectedBoardHand : BoardType -> List Hand -> Maybe Hand
+getSelectedBoardHand bt list =
+    list
+        |> getSelectedBoardHands bt
         |> List.head
 
 

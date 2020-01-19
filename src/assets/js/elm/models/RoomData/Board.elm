@@ -11,6 +11,7 @@ import Json.Encode as E
 import Json.Encode.Extra as ExEncode
 import List.Extra as ExList
 import Models.Board as Board exposing (BoardType)
+import Models.RoomData.Hand as Hand exposing (Hand, HandType(..))
 import Models.TragedySet as TragedySet exposing (Role)
 import Models.Utility.List as UtilityList
 
@@ -51,6 +52,19 @@ shrine =
 setIntrigue : Int -> Board -> Board
 setIntrigue v c =
     { c | intrigue = v }
+
+
+resolveCard : List Hand -> Board -> Board
+resolveCard hands b =
+    let
+        _ =
+            Debug.log "decodeUser" hands
+    in
+    if List.member IntriguePlus2 (List.map .handType hands) then
+        setIntrigue 2 b
+
+    else
+        b
 
 
 
