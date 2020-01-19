@@ -27,6 +27,13 @@ type RoomDataState
     | MastermindPlaysCards
     | ProtagonistsPlaysCard
     | CardsAreResolved
+    | MastemindAbilities
+    | GoodwillAbilities
+    | IncidentsHappen
+    | SwitchLeader
+    | Night
+    | TimeSpairal
+    | FinalGuess
 
 
 init : RoomDataState
@@ -64,6 +71,27 @@ toString state =
         CardsAreResolved ->
             "CardsAreResolved"
 
+        MastemindAbilities ->
+            "MastemindAbilities"
+
+        GoodwillAbilities ->
+            "GoodwillAbilities"
+
+        IncidentsHappen ->
+            "IncidentsHappen"
+
+        SwitchLeader ->
+            "SwitchLeader"
+
+        Night ->
+            "Night"
+
+        TimeSpairal ->
+            "TimeSpairal"
+
+        FinalGuess ->
+            "FinalGuess"
+
 
 fromString : String -> Maybe RoomDataState
 fromString s =
@@ -94,6 +122,24 @@ fromString s =
 
         "CardsAreResolved" ->
             Just CardsAreResolved
+
+        "GoodwillAbilities" ->
+            Just GoodwillAbilities
+
+        "IncidentsHappen" ->
+            Just IncidentsHappen
+
+        "SwitchLeader" ->
+            Just SwitchLeader
+
+        "Night" ->
+            Just Night
+
+        "TimeSpairal" ->
+            Just TimeSpairal
+
+        "FinalGuess" ->
+            Just FinalGuess
 
         _ ->
             Nothing
@@ -129,6 +175,27 @@ toName state =
         CardsAreResolved ->
             "行動解決フェイズ"
 
+        MastemindAbilities ->
+            "脚本家能力フェイズ"
+
+        GoodwillAbilities ->
+            "主人公能力フェイズ"
+
+        IncidentsHappen ->
+            "事件フェイズ"
+
+        SwitchLeader ->
+            "リーダー交代フェイズ"
+
+        Night ->
+            "ターン終了フェイズ"
+
+        TimeSpairal ->
+            "時の狭間"
+
+        FinalGuess ->
+            "最後の戦い"
+
 
 fromStringWithDefault : String -> RoomDataState
 fromStringWithDefault =
@@ -163,6 +230,27 @@ nextState state =
             CardsAreResolved
 
         CardsAreResolved ->
+            MastemindAbilities
+
+        MastemindAbilities ->
+            GoodwillAbilities
+
+        GoodwillAbilities ->
+            IncidentsHappen
+
+        IncidentsHappen ->
+            SwitchLeader
+
+        SwitchLeader ->
+            Night
+
+        Night ->
+            Morning
+
+        TimeSpairal ->
+            SetupCharacter
+
+        FinalGuess ->
             InitLoop
 
 
