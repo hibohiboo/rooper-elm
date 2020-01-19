@@ -631,12 +631,12 @@ headNavLeft model =
     div [ class "left" ]
         [ case model.roomData of
             Nothing ->
-                a [ href "/", style "color" "red" ] [ text "惨劇RoopeR online tool" ]
+                a [ href "/rooper/", style "color" "red" ] [ text "惨劇RoopeR online tool" ]
 
             Just data ->
                 case model.loginUser of
                     Nothing ->
-                        a [ href "/", style "color" "red" ] [ text "惨劇RoopeR online tool" ]
+                        a [ href "/rooper/", style "color" "red" ] [ text "惨劇RoopeR online tool" ]
 
                     Just user ->
                         RoomData.tags (Just data) user
