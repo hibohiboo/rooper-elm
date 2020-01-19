@@ -34,6 +34,11 @@ init id1 id2 id3 =
     ]
 
 
+reset : List Protagonist -> List Protagonist
+reset list =
+    List.map (\p -> { p | hands = Hand.initProtagonist p.number }) list
+
+
 
 -- ==============================================================================================
 -- メソッド

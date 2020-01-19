@@ -117,6 +117,7 @@ nextRoomDataState data =
         |> updateDate
         |> updateLoop
         |> updateBoardsCharacters
+        |> updateHands
 
 
 updateNextState : RoomData -> RoomData
@@ -173,6 +174,15 @@ updateBoardsCharacters : RoomData -> RoomData
 updateBoardsCharacters data =
     if data.state == RoomDataState.SetupCounter then
         { data | characters = Character.resetCharacters data.characters, boards = Board.init }
+
+    else
+        data
+
+
+updateHands : RoomData -> RoomData
+updateHands data =
+    if data.state == RoomDataState.SetupHand then
+        { data | mastermind = MasterMind.init data.mastermind.twitterScreenName, protagonists = Protagonist.reset data.protagonists }
 
     else
         data
