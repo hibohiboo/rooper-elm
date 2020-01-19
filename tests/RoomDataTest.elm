@@ -125,4 +125,15 @@ unitTest =
                     |> Maybe.map .intrigue
                     |> Maybe.map (\c -> Expect.equal 2 c)
                     |> Maybe.withDefault (Expect.fail "失敗")
+        , test "キャラクターに不安+1を設置したときに不安が+１されること" <|
+            \() ->
+                RoomData.initDefault
+                    |> RoomData.changeMasterMindHand 1 "m0"
+                    |> RoomData.changeMasterMindComponent 1 "ShrineMaiden"
+                    |> RoomData.resolveCards
+                    |> .characters
+                    |> RDCharacter.getCharacter ShrineMaiden
+                    |> Maybe.map .paranoia
+                    |> Maybe.map (\c -> Expect.equal 1 c)
+                    |> Maybe.withDefault (Expect.fail "失敗")
         ]

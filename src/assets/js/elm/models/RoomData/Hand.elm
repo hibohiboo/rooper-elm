@@ -130,11 +130,11 @@ changeHand i s list =
             list
                 |> List.map
                     (\h ->
-                        if h.formId == i then
-                            { h | formId = 0, onComponent = Nothing }
-
-                        else if h.id == s then
+                        if h.id == s then
                             { h | formId = i, onComponent = hand.onComponent }
+
+                        else if h.formId == i then
+                            { h | formId = 0, onComponent = Nothing }
 
                         else
                             h
