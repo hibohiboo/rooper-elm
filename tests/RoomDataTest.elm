@@ -86,41 +86,43 @@ unitTest =
                     |> Maybe.map .intrigue
                     |> Maybe.map (\c -> Expect.equal 1 c)
                     |> Maybe.withDefault (Expect.fail "失敗")
-
-        -- , test "キャラクターに暗躍+2を設置したときに暗躍が+2されること" <|
-        --     \() ->
-        --         RoomData.initDefault
-        --             |> RoomData.changeMasterMindHand 1 "m6"
-        --             |> RoomData.changeMasterMindComponent 1 "ShrineMaiden"
-        --             |> RoomData.resolveCards
-        --             |> .characters
-        --             |> RDCharacter.getCharacter City
-        --             |> .intrigue
-        --             |> Expect.equal 2
-        -- , test "キャラクターに暗躍禁止を設置したときに暗躍が増えないこと" <|
-        --     \() ->
-        --         RoomData.initDefault
-        --             |> RoomData.changeMasterMindHand 1 "m6"
-        --             |> RoomData.changeMasterMindComponent 1 "ShrineMaiden"
-        --             |> RoomData.changeProtagonistHand 1 "p4"
-        --             |> RoomData.changeProtagonistComponent 1 "ShrineMaiden"
-        --             |> RoomData.resolveCards
-        --             |> .characters
-        --             |> RDBoard.getBoard City
-        --             |> .intrigue
-        --             |> Expect.equal 0
-        -- , test "キャラクターに主人公二人が暗躍禁止を設置したときに暗躍+を阻止できないこと" <|
-        --     \() ->
-        --         RoomData.initDefault
-        --             |> RoomData.changeMasterMindHand 1 "m6"
-        --             |> RoomData.changeMasterMindComponent 1 "ShrineMaiden"
-        --             |> RoomData.changeProtagonistHand 1 "p4"
-        --             |> RoomData.changeProtagonistComponent 1 "City"
-        --             |> RoomData.changeProtagonistHand 2 "p4"
-        --             |> RoomData.changeProtagonistComponent 2 "ShrineMaiden"
-        --             |> RoomData.resolveCards
-        --             |> .characters
-        --             |> RDBoard.getBoard City
-        --             |> .intrigue
-        --             |> Expect.equal 2
+        , test "キャラクターに暗躍+2を設置したときに暗躍が+2されること" <|
+            \() ->
+                RoomData.initDefault
+                    |> RoomData.changeMasterMindHand 1 "m6"
+                    |> RoomData.changeMasterMindComponent 1 "ShrineMaiden"
+                    |> RoomData.resolveCards
+                    |> .characters
+                    |> RDCharacter.getCharacter ShrineMaiden
+                    |> Maybe.map .intrigue
+                    |> Maybe.map (\c -> Expect.equal 2 c)
+                    |> Maybe.withDefault (Expect.fail "失敗")
+        , test "キャラクターに暗躍禁止を設置したときに暗躍が増えないこと" <|
+            \() ->
+                RoomData.initDefault
+                    |> RoomData.changeMasterMindHand 1 "m6"
+                    |> RoomData.changeMasterMindComponent 1 "ShrineMaiden"
+                    |> RoomData.changeProtagonistHand 1 "p4"
+                    |> RoomData.changeProtagonistComponent 1 "ShrineMaiden"
+                    |> RoomData.resolveCards
+                    |> .characters
+                    |> RDCharacter.getCharacter ShrineMaiden
+                    |> Maybe.map .intrigue
+                    |> Maybe.map (\c -> Expect.equal 0 c)
+                    |> Maybe.withDefault (Expect.fail "失敗")
+        , test "キャラクターに主人公二人が暗躍禁止を設置したときに暗躍+を阻止できないこと" <|
+            \() ->
+                RoomData.initDefault
+                    |> RoomData.changeMasterMindHand 1 "m6"
+                    |> RoomData.changeMasterMindComponent 1 "ShrineMaiden"
+                    |> RoomData.changeProtagonistHand 1 "p4"
+                    |> RoomData.changeProtagonistComponent 1 "City"
+                    |> RoomData.changeProtagonistHand 2 "p4"
+                    |> RoomData.changeProtagonistComponent 2 "ShrineMaiden"
+                    |> RoomData.resolveCards
+                    |> .characters
+                    |> RDCharacter.getCharacter ShrineMaiden
+                    |> Maybe.map .intrigue
+                    |> Maybe.map (\c -> Expect.equal 2 c)
+                    |> Maybe.withDefault (Expect.fail "失敗")
         ]
