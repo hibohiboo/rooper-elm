@@ -12,14 +12,22 @@ export const historyInit = (ports) => {
   document.querySelector('.rooper-container')?.addEventListener('click', (event) => {
     // aタグ以外は処理をしない
     const { target }: { target: any } = event;
-    event.preventDefault();
+
     console.log(target);
     if (target && target.tagName && target.tagName.toUpperCase() !== 'A') {
       return;
     }
+
     // ドメイン外への遷移は制御しない
     const element = target as HTMLAnchorElement;
     if (element.href.indexOf(document.domain) === -1) {
+      return;
+    }
+
+    // ドメイントップへの移動は制御しない
+    const port = document.location.port ? `:${document.location.port}` : '';
+    const topUrl = `${document.location.protocol}//${document.location.hostname}${port}`;
+    if (element.href === topUrl || element.href === `${topUrl}/`) {
       return;
     }
 
