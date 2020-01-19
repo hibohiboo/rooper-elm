@@ -65,7 +65,7 @@ initRoomData room =
         protagonists =
             Protagonist.init room.protagonist1TwitterScreenName room.protagonist2TwitterScreenName room.protagonist3TwitterScreenName
     in
-    RoomData (Room.getId room) mastermind protagonists (Script.scriptToOpenSheet room.script) Nothing 1 1 0 RoomDataState.init (Character.charactersFromCharacterScriptDataList room.script.characters) Board.init
+    RoomData (Room.getId room) mastermind protagonists (Script.scriptToOpenSheet room.script) Nothing 0 0 0 RoomDataState.init (Character.charactersFromCharacterScriptDataList room.script.characters) Board.init
 
 
 
