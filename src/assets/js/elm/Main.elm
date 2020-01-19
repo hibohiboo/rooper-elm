@@ -910,6 +910,7 @@ userRoomView model user data =
         , RoomData.usedHands ConfirmHandUnused data
         , RoomData.openSheetView data
         , RoomData.closeSheetView data
+        , RoomData.roomDataView data
         , if RoomData.isTurnProtagonist model.roomState.turnProtagonistNumber user data then
             protagonistsBottomForm model user data
 
@@ -928,6 +929,7 @@ notLoginedUserRoomView data =
         , RoomData.usedHands ConfirmHandUnused data
         , RoomData.openSheetView data
         , RoomData.closeSheetView data
+        , RoomData.roomDataView data
         , creativeCommmons
         ]
 

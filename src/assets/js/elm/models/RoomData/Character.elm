@@ -626,6 +626,45 @@ charactersFormItem c changeLocationMsg changeGMsg changePMsg changeIMsg toggleIs
         ]
 
 
+
+charactersViewItem : Character -> Html msg
+charactersViewItem c =
+    div []
+        [ div [ class "rooper-character-room-form-item" ]
+            [ characterCard c
+            , div []
+                [ text "ボード"
+                , div [] [ case c.location of
+                  Just l ->
+                    text l.name
+                  Nothing ->
+                    text "" ]
+                ]
+            , div []
+                [ text "友好"
+                , div []
+                    [ text <| String.fromInt c.goodWill
+                    ]
+                ]
+            , div []
+                [ text "不安"
+                , div []
+                    [ text <| String.fromInt c.paranoia
+                    ]
+                ]
+            , div []
+                [ text "暗躍"
+                , div []
+                    [ text <| String.fromInt c.intrigue
+                    ]
+                ]
+            , div []
+                [  if  c.isDead then text "死" else text ""
+                ]
+            ]
+        , div [] [ text c.name]
+        ]
+
 characterLocationBoards : Character -> (String -> msg) -> Html msg
 characterLocationBoards char chgMsg =
     let

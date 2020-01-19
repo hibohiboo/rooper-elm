@@ -199,3 +199,20 @@ boardsFormItem b changeIMsg =
                 ]
             ]
         ]
+
+
+boardsViewItem : Board -> Html msg
+boardsViewItem b =
+    div []
+        [ div [ class "rooper-board-room-form-item" ]
+            [ div []
+                [ boardCard b False
+                , div [] [ text b.name ]
+                ]
+            , div []
+                [ text "暗躍"
+                , div []
+                    [ text <| String.fromInt b.intrigue ]
+                ]
+            ]
+        ]

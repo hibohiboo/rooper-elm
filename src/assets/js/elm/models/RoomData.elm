@@ -814,3 +814,30 @@ playedHandsView d =
 usedHands : (Int -> Hand -> msg) -> RoomData -> Html msg
 usedHands returnMsg d =
     div [ style "display" "flex", style "justify-content" "space-evenly", style "flex-wrap" "wrap" ] <| List.concat [ Protagonist.useCardView returnMsg d.protagonists, [ MasterMind.useCardView d.mastermind ] ]
+
+
+roomDataView : RoomData -> Html msg
+roomDataView data =
+    div [ class "box" ]
+        [ boardsView data
+        , charactersView data
+        ]
+
+
+boardsView : RoomData -> Html msg
+boardsView data =
+    div [ class "rooper-boards-form" ]
+        (data.boards
+            |> List.map
+                (\b -> Board.boardsViewItem b)
+        )
+
+
+charactersView : RoomData -> Html msg
+charactersView data =
+    div [ class "rooper-characters-form" ]
+        (data.characters
+            |> List.reverse
+            |> List.map
+                (\c -> Character.charactersViewItem c)
+        )
