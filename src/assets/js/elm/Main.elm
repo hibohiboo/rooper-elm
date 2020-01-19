@@ -157,6 +157,8 @@ type Msg
     | SetProtagonistHand Int String
     | SetProtagonistOnComponent Int String
     | ResolveCards
+    | ConfirmLoopEnd
+    | LoopEnd
 
 
 type MenuState
@@ -567,6 +569,16 @@ update msg model =
         ResolveCards ->
             ( { model | roomData = Maybe.map RoomData.resolveCards model.roomData, roomState = RoomState.setFalseIsDisplayCardsAreResolved model.roomState }, Cmd.none )
 
+        ConfirmLoopEnd ->
+            ( { model | modalState = ConfirmModalState "ループ終了" LoopEnd }, Cmd.none )
+
+        LoopEnd ->
+            let
+                roomData =
+                    Maybe.map RoomData.loopEnd model.roomData
+            in
+            update UpdateRoomData { model | roomData = roomData, modalState = CloseModalState, roomState = RoomState.updateByRoomDataState roomData model.roomState }
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -651,7 +663,6 @@ loginedUserRoomView u model =
         ownerRoomView u model
 
     else
-        -- TODO: メンバーのときの見た目
         notOwnerRoomView model
 
 
@@ -767,7 +778,13 @@ mastermindBottomForm model data =
 
                 RoomState.Action ->
                     div []
-                        [ mastermindScriptButtons model data
+                        [ div [ class "box" ]
+                            [ button [ class "button is-primary", onClick ConfirmLoopEnd ]
+                                [ span [ class "icon" ] [ i [ class "fas fa-clock" ] [] ]
+                                , span [] [ text "ループを終了させる..." ]
+                                ]
+                            ]
+                        , mastermindScriptButtons model data
                         ]
 
                 RoomState.Hand ->

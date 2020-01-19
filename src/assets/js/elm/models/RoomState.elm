@@ -10,6 +10,7 @@ import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
 import Models.RoomData as RoomData exposing (RoomData)
+import Models.RoomData.RoomDataState exposing (RoomDataState(..))
 import Models.Script as Script exposing (Script)
 import Models.ScriptName as ScriptName exposing (ScriptName)
 import Models.User exposing (User)
@@ -80,7 +81,16 @@ updateTabsStateByRoomDataState data state =
         setParameterTab state
 
     else
-        state
+        case data of
+            Just d ->
+                if d.state == TimeSpairal then
+                    setParameterTab state
+
+                else
+                    state
+
+            Nothing ->
+                state
 
 
 updateTurnProtagonistByRoomDataState : Maybe RoomData -> RoomState -> RoomState
@@ -99,7 +109,7 @@ updateIsDisplayCardsAreResolved data state =
         { state | isDisplayCardsAreResolved = True }
 
     else
-        state
+        { state | isDisplayCardsAreResolved = False }
 
 
 

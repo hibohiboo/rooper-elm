@@ -108,6 +108,11 @@ setEx s f =
     { f | ex = Maybe.withDefault 0 <| String.toInt s }
 
 
+loopEnd : RoomData -> RoomData
+loopEnd data =
+    { data | state = RoomDataState.TimeSpairal }
+
+
 nextRoomDataState : RoomData -> RoomData
 nextRoomDataState data =
     data
