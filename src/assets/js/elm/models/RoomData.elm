@@ -334,14 +334,19 @@ isCardsAreResolvedState data =
         |> Maybe.withDefault False
 
 
-isMastermindHandsSelected : RoomData -> Bool
-isMastermindHandsSelected d =
+isMastermindHandsPlayed : RoomData -> Bool
+isMastermindHandsPlayed d =
     Hand.isMastermindHandsPlayed d.mastermind.hands
         && d.state
         == RoomDataState.MastermindPlaysCards
         || isProtagonistsPlayed d
         && d.state
         == RoomDataState.ProtagonistsPlaysCard
+
+
+isProtagonistHandsPlayed : Int -> RoomData -> Bool
+isProtagonistHandsPlayed i d =
+    Protagonist.isProtagonistHandsPlayed i d.protagonists
 
 
 getAppearedCharacters : RoomData -> List Character
@@ -373,7 +378,7 @@ getTurnProtagonistNumber { protagonists } =
 
 isProtagonistsPlayed : RoomData -> Bool
 isProtagonistsPlayed data =
-    Protagonist.isProtagonistsHandsSelected data.protagonists
+    Protagonist.isProtagonistsHandsPlayed data.protagonists
 
 
 playedHands : RoomData -> List Hand

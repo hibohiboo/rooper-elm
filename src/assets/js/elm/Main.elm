@@ -794,7 +794,7 @@ mastermindBottomForm model data =
                 [ span [] [ text "アクション" ]
                 ]
             ]
-        , if RoomData.isMastermindHandsSelected data then
+        , if RoomData.isMastermindHandsPlayed data then
             RoomState.roomDataFormFooter [ span [ class "card-footer-item" ] [ nextStateButton ] ]
 
           else if model.roomState.isDisplayCardsAreResolved then
@@ -831,7 +831,11 @@ protagonistsBottomForm { roomState } user data =
                     ]
                 ]
             ]
-        , RoomState.roomDataFormFooter [ span [ class "card-footer-item" ] [ nextStateButton ] ]
+        , if RoomData.isProtagonistHandsPlayed roomState.turnProtagonistNumber data then
+            RoomState.roomDataFormFooter [ span [ class "card-footer-item" ] [ nextStateButton ] ]
+
+          else
+            ExHtml.nothing
         ]
 
 

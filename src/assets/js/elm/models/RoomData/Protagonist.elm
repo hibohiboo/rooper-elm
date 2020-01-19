@@ -79,8 +79,17 @@ changeProtagonistComponent i s f =
     { f | hands = Hand.changeComponent i s f.hands }
 
 
-isProtagonistsHandsSelected : List Protagonist -> Bool
-isProtagonistsHandsSelected list =
+isProtagonistHandsPlayed : Int -> List Protagonist -> Bool
+isProtagonistHandsPlayed i list =
+    list
+        |> List.filter (\p -> p.number == i)
+        |> List.filter (\p -> Hand.isProtagonistHandsPlayed p.hands)
+        |> List.length
+        |> (==) 1
+
+
+isProtagonistsHandsPlayed : List Protagonist -> Bool
+isProtagonistsHandsPlayed list =
     list
         |> List.filter (\p -> Hand.isProtagonistHandsPlayed p.hands)
         |> List.length
