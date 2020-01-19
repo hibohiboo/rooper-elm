@@ -402,6 +402,7 @@ getFormHandList : Int -> List Hand -> List Hand
 getFormHandList i list =
     list
         |> List.filter (\h -> h.formId == i || h.formId == 0)
+        |> List.filter (\h -> h.isUsed /= Just True)
 
 
 getFormOptionList : Int -> List Hand -> List ( String, String )
