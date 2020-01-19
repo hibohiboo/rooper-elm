@@ -112,6 +112,7 @@ nextRoomDataState data =
         |> updateNextState
         |> updateHandsData
         |> updateProtagonists
+        |> updateDate
 
 
 updateNextState : RoomData -> RoomData
@@ -137,6 +138,15 @@ updateProtagonists : RoomData -> RoomData
 updateProtagonists data =
     if data.state == RoomDataState.Night then
         { data | protagonists = Protagonist.changeLeader data.protagonists }
+
+    else
+        data
+
+
+updateDate : RoomData -> RoomData
+updateDate data =
+    if data.state == RoomDataState.Morning then
+        { data | date = data.date + 1 }
 
     else
         data
