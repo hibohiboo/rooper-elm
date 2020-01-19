@@ -636,7 +636,7 @@ headNavLeft model =
             Just data ->
                 case model.loginUser of
                     Nothing ->
-                        a [ href "/rooper/", style "color" "red" ] [ text "惨劇RoopeR online tool" ]
+                        a [ href "/", style "color" "red" ] [ text "惨劇RoopeR online tool" ]
 
                     Just user ->
                         RoomData.tags (Just data) user
@@ -716,6 +716,7 @@ ownerRoomView user model =
 
                   else
                     ExHtml.nothing
+                , creativeCommmons
                 ]
 
 
@@ -914,6 +915,7 @@ userRoomView model user data =
 
           else
             ExHtml.nothing
+        , creativeCommmons
         ]
 
 
@@ -926,14 +928,30 @@ notLoginedUserRoomView data =
         , RoomData.usedHands ConfirmHandUnused data
         , RoomData.openSheetView data
         , RoomData.closeSheetView data
+        , creativeCommmons
+        ]
+
+
+creativeCommmons : Html msg
+creativeCommmons =
+    div [ style "font-size" "10px" ]
+        [ a [ href "http://bakafire.main.jp/rooper/sr_dl_04_sozai.htm" ] [ text "惨劇コモンズ、惨劇コモンズχ作成:BakaFire様、紺ノ玲" ]
+        , text " is licensed under a "
+        , a [ href "https://creativecommons.org/licenses/by-sa/2.1/jp/" ] [ text "Creative Commons 表示 - 継承 2.1 日本 License" ]
+        , a [ href "https://twitter.com/hibohiboo" ] [ text "Copyright © 2020-hibo" ]
         ]
 
 
 mainContentBox : Model -> Html Msg
 mainContentBox model =
-    div [ class "center box" ]
-        [ mainTabs model
-        , mainMessage model
+    div []
+        [ div [ class "center box" ]
+            [ mainTabs model
+            , mainMessage model
+            ]
+        , div [ style "position" "absolute", style "bottom" "0" ]
+            [ creativeCommmons
+            ]
         ]
 
 
