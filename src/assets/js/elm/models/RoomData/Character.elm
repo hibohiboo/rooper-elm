@@ -186,6 +186,12 @@ resolveMovementCard list c =
     else if List.member MovementHorizontal list && List.member MovementVertical list then
         setLocationBoard (validForbiddenBoard <| moveDiagonal c.location) c
 
+    else if List.member MovementDiagonal list && List.member MovementVertical list then
+        setLocationBoard (validForbiddenBoard <| moveHorizontal c.location) c
+
+    else if List.member MovementDiagonal list && List.member MovementHorizontal list then
+        setLocationBoard (validForbiddenBoard <| moveVertical c.location) c
+
     else if List.member MovementVertical list then
         setLocationBoard (validForbiddenBoard <| moveVertical c.location) c
 
