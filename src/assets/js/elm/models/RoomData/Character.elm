@@ -182,6 +182,9 @@ resolveMovementCard list c =
     else if List.member MovementVertical list then
         setLocationBoard (moveVertical c.location) c
 
+    else if List.member MovementHorizontal list then
+        setLocationBoard (moveMovementHorizontal c.location) c
+
     else
         c
 
@@ -205,6 +208,27 @@ moveVertical mb =
 
                 Shrine ->
                     Just Board.school
+
+
+moveMovementHorizontal : Maybe Board -> Maybe Board
+moveMovementHorizontal mb =
+    case mb of
+        Nothing ->
+            Nothing
+
+        Just b ->
+            case b.boardType of
+                City ->
+                    Just Board.school
+
+                Hospital ->
+                    Just Board.shrine
+
+                School ->
+                    Just Board.city
+
+                Shrine ->
+                    Just Board.hospital
 
 
 resolveGoodwillCard : List HandType -> Character -> Character

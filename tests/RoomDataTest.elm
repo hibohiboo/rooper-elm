@@ -232,4 +232,15 @@ unitTest =
                     |> Maybe.map .location
                     |> Maybe.map (\loc -> Expect.equal (Just school) loc)
                     |> Maybe.withDefault (Expect.fail "失敗")
+        , test "神社のキャラクターに移動左右を設置したときに病院に移動すること" <|
+            \() ->
+                RoomData.initDefault
+                    |> RoomData.changeProtagonistHand 2 "p6"
+                    |> RoomData.changeProtagonistComponent 2 "ShrineMaiden"
+                    |> RoomData.resolveCards
+                    |> .characters
+                    |> RDCharacter.getCharacter ShrineMaiden
+                    |> Maybe.map .location
+                    |> Maybe.map (\loc -> Expect.equal (Just hospital) loc)
+                    |> Maybe.withDefault (Expect.fail "失敗")
         ]
