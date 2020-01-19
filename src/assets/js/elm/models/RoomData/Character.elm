@@ -159,9 +159,28 @@ resolveCard hands c =
             List.map .handType <| Hand.getSelectedCharacterHands c.characterType hands
     in
     c
+        |> resolveGoodwillCard list
         |> resolveParanoiaCard list
         |> guardParanoiaMinus
         |> resolveIntrigueCard list hands
+
+
+resolveGoodwillCard : List HandType -> Character -> Character
+resolveGoodwillCard list c =
+    if (==) 0 <| List.length list then
+        c
+
+    else if List.member ForbidGoodwill list then
+        c
+
+    else if List.member GoodwillPlus1 list then
+        setGoodWill (c.goodWill + 1) c
+
+    else if List.member GoodwillPlus2 list then
+        setGoodWill (c.goodWill + 2) c
+
+    else
+        c
 
 
 resolveParanoiaCard : List HandType -> Character -> Character
