@@ -671,11 +671,11 @@ ownerRoomView user model =
 
         Just data ->
             div []
-                [ RoomData.stateView data
+                [ RoomData.infos data
+                , RoomData.stateView data
                 , RoomData.roomBoard data
-                , RoomData.infos data
-                , RoomData.usedHands data
                 , RoomData.playedHandsView data
+                , RoomData.usedHands data
                 , mastermindSheets model
                 , mastermindScriptButtons model data
                 , if RoomData.isTurnProtagonist model.roomState.turnProtagonistNumber user data then
@@ -851,10 +851,11 @@ notOwnerRoomView model =
 userRoomView : Model -> User -> RoomData -> Html Msg
 userRoomView model user data =
     div []
-        [ RoomData.stateView data
+        [ RoomData.infos data
+        , RoomData.stateView data
         , RoomData.roomBoard data
-        , RoomData.infos data
         , RoomData.playedHandsView data
+        , RoomData.usedHands data
         , RoomData.openSheetView data
         , RoomData.closeSheetView data
         , if RoomData.isTurnProtagonist model.roomState.turnProtagonistNumber user data then
@@ -868,9 +869,10 @@ userRoomView model user data =
 notLoginedUserRoomView : RoomData -> Html Msg
 notLoginedUserRoomView data =
     div []
-        [ RoomData.stateView data
+        [ RoomData.infos data
+        , RoomData.stateView data
         , RoomData.roomBoard data
-        , RoomData.infos data
+        , RoomData.usedHands data
         , RoomData.openSheetView data
         , RoomData.closeSheetView data
         ]
