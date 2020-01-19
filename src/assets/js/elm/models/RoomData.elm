@@ -237,6 +237,7 @@ resolveCards data =
     in
     data
         |> resolveCardOnBoards hands
+        |> resolveCardOnCharacters hands
 
 
 resolveCardOnBoards : List Hand -> RoomData -> RoomData
@@ -244,6 +245,14 @@ resolveCardOnBoards hands data =
     { data
         | boards =
             data.boards |> List.map (\b -> Board.resolveCard hands b)
+    }
+
+
+resolveCardOnCharacters : List Hand -> RoomData -> RoomData
+resolveCardOnCharacters hands data =
+    { data
+        | characters =
+            data.characters |> List.map (\c -> Character.resolveCard hands c)
     }
 
 

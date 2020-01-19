@@ -477,8 +477,8 @@ getSelectedBoardHand bt list =
         |> List.head
 
 
-getSelectedCharacterHand : CharacterType -> List Hand -> Maybe Hand
-getSelectedCharacterHand ct list =
+getSelectedCharacterHands : CharacterType -> List Hand -> List Hand
+getSelectedCharacterHands ct list =
     list
         |> List.filter
             (\h ->
@@ -489,6 +489,12 @@ getSelectedCharacterHand ct list =
                     _ ->
                         False
             )
+
+
+getSelectedCharacterHand : CharacterType -> List Hand -> Maybe Hand
+getSelectedCharacterHand ct list =
+    list
+        |> getSelectedCharacterHands ct
         |> List.head
 
 

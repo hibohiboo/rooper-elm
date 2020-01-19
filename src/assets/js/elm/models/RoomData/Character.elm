@@ -9,8 +9,10 @@ import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
 import Json.Encode.Extra as ExEncode
+import List.Extra as ExList
 import Models.Board as Board exposing (Board)
 import Models.Character exposing (CharacterScriptData, CharacterType)
+import Models.RoomData.Hand as Hand exposing (Hand, HandType(..))
 import Models.TragedySet as TragedySet exposing (Role)
 import Models.Utility.List as UtilityList
 
@@ -57,6 +59,58 @@ characterFromCharacterScriptData { character, role, optionalNumber, turf } =
 -- メソッド
 -- ==============================================================================================
 -- ==============================================================================================
+-- デコーダ
+-- ==============================================================================================
+
+
+decoder : D.Decoder Character
+decoder =
+    D.succeed Character
+        |> Pipeline.required "characterType" (D.map (Models.Character.characterTypeFromString >> Maybe.withDefault Models.Character.BoyStudent) D.string)
+        |> Pipeline.required "name" D.string
+        |> Pipeline.required "paranoiaLimit" D.int
+        |> Pipeline.required "firstLocation" Board.decode
+        |> Pipeline.optional "role" TragedySet.decodeRole Nothing
+        |> Pipeline.optional "optionalNumber" (D.maybe D.int) Nothing
+        |> Pipeline.optional "turf" Board.decodeBoard Nothing
+        |> Pipeline.required "goodWill" D.int
+        |> Pipeline.required "paranoia" D.int
+        |> Pipeline.required "intrigue" D.int
+        |> Pipeline.optional "location" Board.decodeBoard Nothing
+        |> Pipeline.required "forbiddenLocations" (D.list Board.decode)
+        |> Pipeline.optional "isDead" D.bool False
+
+
+
+-- ==============================================================================================
+-- エンコーダ
+-- ==============================================================================================
+
+
+encode : Character -> E.Value
+encode { characterType, name, paranoiaLimit, firstLocation, role, optionalNumber, turf, goodWill, paranoia, intrigue, location, forbiddenLocations, isDead } =
+    E.object
+        [ ( "name", E.string name )
+        , ( "characterType", E.string <| Models.Character.characterTypeToString characterType )
+        , ( "paranoiaLimit", E.int paranoiaLimit )
+        , ( "firstLocation", E.string <| Board.toString firstLocation )
+        , ( "role", ExEncode.maybe E.string <| Maybe.map TragedySet.roleToString role )
+        , ( "optionalNumber", ExEncode.maybe E.int optionalNumber )
+        , ( "turf", ExEncode.maybe E.string <| Maybe.map Board.toString turf )
+        , ( "goodWill", E.int goodWill )
+        , ( "paranoia", E.int paranoia )
+        , ( "intrigue", E.int intrigue )
+        , ( "location", ExEncode.maybe E.string <| Maybe.map Board.toString location )
+        , ( "forbiddenLocations", E.list (E.string << Board.toString) forbiddenLocations )
+        , ( "isDead", E.bool isDead )
+        ]
+
+
+
+-- ==============================================================================================
+-- Method
+-- ==============================================================================================
+-- ==============================================================================================
 -- setter
 -- ==============================================================================================
 
@@ -94,6 +148,31 @@ setIsDead b c =
 setForbiddenLocations : List Board -> Character -> Character
 setForbiddenLocations b c =
     { c | forbiddenLocations = b }
+
+
+resolveCard : List Hand -> Character -> Character
+resolveCard hands c =
+    let
+        -- _ =
+        --     Debug.log "decodeUser" hands
+        list =
+            List.map .handType <| Hand.getSelectedCharacterHands c.characterType hands
+
+        isForbidIntrigue =
+            ((==) 1 <| List.length <| List.filter (\t -> t == ForbidIntrigue) <| list)
+                && ((==) 1 <| List.length <| List.filter (\t -> t == ForbidIntrigue) <| List.map .handType <| hands)
+    in
+    if (==) 0 <| List.length list then
+        c
+
+    else if List.member IntriguePlus1 list && not isForbidIntrigue then
+        setIntrigue 1 c
+
+    else if List.member IntriguePlus2 list && not isForbidIntrigue then
+        setIntrigue 2 c
+
+    else
+        c
 
 
 
@@ -176,61 +255,6 @@ isTurfSchool list =
     isTurf Board.School list
 
 
-
--- ==============================================================================================
--- デコーダ
--- ==============================================================================================
-
-
-decoder : D.Decoder Character
-decoder =
-    D.succeed Character
-        |> Pipeline.required "characterType" (D.map (Models.Character.characterTypeFromString >> Maybe.withDefault Models.Character.BoyStudent) D.string)
-        |> Pipeline.required "name" D.string
-        |> Pipeline.required "paranoiaLimit" D.int
-        |> Pipeline.required "firstLocation" Board.decode
-        |> Pipeline.optional "role" TragedySet.decodeRole Nothing
-        |> Pipeline.optional "optionalNumber" (D.maybe D.int) Nothing
-        |> Pipeline.optional "turf" Board.decodeBoard Nothing
-        |> Pipeline.required "goodWill" D.int
-        |> Pipeline.required "paranoia" D.int
-        |> Pipeline.required "intrigue" D.int
-        |> Pipeline.optional "location" Board.decodeBoard Nothing
-        |> Pipeline.required "forbiddenLocations" (D.list Board.decode)
-        |> Pipeline.optional "isDead" D.bool False
-
-
-
--- ==============================================================================================
--- エンコーダ
--- ==============================================================================================
-
-
-encode : Character -> E.Value
-encode { characterType, name, paranoiaLimit, firstLocation, role, optionalNumber, turf, goodWill, paranoia, intrigue, location, forbiddenLocations, isDead } =
-    E.object
-        [ ( "name", E.string name )
-        , ( "characterType", E.string <| Models.Character.characterTypeToString characterType )
-        , ( "paranoiaLimit", E.int paranoiaLimit )
-        , ( "firstLocation", E.string <| Board.toString firstLocation )
-        , ( "role", ExEncode.maybe E.string <| Maybe.map TragedySet.roleToString role )
-        , ( "optionalNumber", ExEncode.maybe E.int optionalNumber )
-        , ( "turf", ExEncode.maybe E.string <| Maybe.map Board.toString turf )
-        , ( "goodWill", E.int goodWill )
-        , ( "paranoia", E.int paranoia )
-        , ( "intrigue", E.int intrigue )
-        , ( "location", ExEncode.maybe E.string <| Maybe.map Board.toString location )
-        , ( "forbiddenLocations", E.list (E.string << Board.toString) forbiddenLocations )
-        , ( "isDead", E.bool isDead )
-        ]
-
-
-
--- ==============================================================================================
--- Method
--- ==============================================================================================
-
-
 filterTransferStudent : Int -> List Character -> List Character
 filterTransferStudent i list =
     list
@@ -304,6 +328,11 @@ getFormOptionList slectedTypes list =
         |> List.filter (\c -> c.characterType /= Models.Character.Illusion)
         |> List.map (\c -> ( Models.Character.characterTypeToString c.characterType, c.name ))
         |> List.reverse
+
+
+getCharacter : CharacterType -> List Character -> Maybe Character
+getCharacter t list =
+    ExList.find (\c -> c.characterType == t) list
 
 
 
