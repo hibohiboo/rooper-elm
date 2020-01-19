@@ -243,7 +243,7 @@ resolveCardOnBoards : List Hand -> RoomData -> RoomData
 resolveCardOnBoards hands data =
     { data
         | boards =
-            data.boards |> List.map (\b -> Board.resolveCard (Hand.getSelectedBoardHands b.boardType hands) b)
+            data.boards |> List.map (\b -> Board.resolveCard hands b)
     }
 
 

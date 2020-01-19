@@ -60,12 +60,15 @@ resolveCard hands b =
         -- _ =
         --     Debug.log "decodeUser" hands
         list =
-            List.map .handType hands
+            List.map .handType <| Hand.getSelectedBoardHands b.boardType hands
     in
     if (==) 0 <| List.length list then
         b
 
-    else if (==) 1 <| List.length <| List.filter (\t -> t == ForbidIntrigue) <| list then
+    else if
+        ((==) 1 <| List.length <| List.filter (\t -> t == ForbidIntrigue) <| list)
+            && ((==) 1 <| List.length <| List.filter (\t -> t == ForbidIntrigue) <| List.map .handType <| hands)
+    then
         b
 
     else if List.member IntriguePlus1 list then
