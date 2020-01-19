@@ -244,6 +244,19 @@ unitTest =
                     |> Maybe.map (\loc -> Expect.equal (Just hospital) loc)
                     |> Maybe.withDefault (Expect.fail "失敗")
 
+        -- , test "神社のキャラクターに移動左右と移動上下を設置したときに都市に移動すること" <|
+        --     \() ->
+        --         RoomData.initDefault
+        --             |> RoomData.changeMasterMindHand 1 "m8"
+        --             |> RoomData.changeMasterMindComponent 1 "ShrineMaiden"
+        --             |> RoomData.changeProtagonistHand 2 "p5"
+        --             |> RoomData.changeProtagonistComponent 2 "ShrineMaiden"
+        --             |> RoomData.resolveCards
+        --             |> .characters
+        --             |> RDCharacter.getCharacter ShrineMaiden
+        --             |> Maybe.map .location
+        --             |> Maybe.map (\loc -> Expect.equal (Just city) loc)
+        --             |> Maybe.withDefault (Expect.fail "失敗")
         -- , test "神社のキャラクターに移動斜めを設置したときに都市に移動すること" <|
         --     \() ->
         --         RoomData.initDefault
@@ -278,5 +291,18 @@ unitTest =
                     |> RDCharacter.getCharacter ShrineMaiden
                     |> Maybe.map .location
                     |> Maybe.map (\loc -> Expect.equal (Just shrine) loc)
+                    |> Maybe.withDefault (Expect.fail "失敗")
+        , test "神社のキャラクターに移動左右と移動左右を設置したときに病院に移動すること" <|
+            \() ->
+                RoomData.initDefault
+                    |> RoomData.changeMasterMindHand 1 "m8"
+                    |> RoomData.changeMasterMindComponent 1 "ShrineMaiden"
+                    |> RoomData.changeProtagonistHand 2 "p6"
+                    |> RoomData.changeProtagonistComponent 2 "ShrineMaiden"
+                    |> RoomData.resolveCards
+                    |> .characters
+                    |> RDCharacter.getCharacter ShrineMaiden
+                    |> Maybe.map .location
+                    |> Maybe.map (\loc -> Expect.equal (Just hospital) loc)
                     |> Maybe.withDefault (Expect.fail "失敗")
         ]
