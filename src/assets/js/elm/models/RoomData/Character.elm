@@ -157,7 +157,13 @@ resolveCard hands c =
         --     Debug.log "decodeUser" hands
         list =
             List.map .handType <| Hand.getSelectedCharacterHands c.characterType hands
+    in
+    c |> resolveIntrigueCard list hands
 
+
+resolveIntrigueCard : List HandType -> List Hand -> Character -> Character
+resolveIntrigueCard list hands c =
+    let
         isForbidIntrigue =
             ((==) 1 <| List.length <| List.filter (\t -> t == ForbidIntrigue) <| list)
                 && ((==) 1 <| List.length <| List.filter (\t -> t == ForbidIntrigue) <| List.map .handType <| hands)
