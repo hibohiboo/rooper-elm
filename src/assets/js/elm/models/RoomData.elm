@@ -115,13 +115,18 @@ nextRoomDataState data =
         |> updateHandsData
         |> updateProtagonists
         |> updateDate
+        |> updateLoop
 
 
 updateNextState : RoomData -> RoomData
 updateNextState f =
-    -- 主人公がカードを置き終わるまで、主人公行動フェイズは更新されない
     if f.state == RoomDataState.ProtagonistsPlaysCard && not (isProtagonistsPlayed f) then
+        -- 主人公がカードを置き終わるまで、主人公行動フェイズは更新されない
         f
+
+    else if f.state == RoomDataState.Night && f.openSheet.daysInOneLoop == f.date then
+        -- 最終日のターン終了フェイズの次は時のはざまとする
+        { f | state = RoomDataState.TimeSpairal }
 
     else
         { f | state = RoomDataState.nextState f.state }
@@ -149,6 +154,15 @@ updateDate : RoomData -> RoomData
 updateDate data =
     if data.state == RoomDataState.Morning then
         { data | date = data.date + 1 }
+
+    else
+        data
+
+
+updateLoop : RoomData -> RoomData
+updateLoop data =
+    if data.state == RoomDataState.SetupCharacter then
+        { data | loop = data.loop + 1, date = 0 }
 
     else
         data
