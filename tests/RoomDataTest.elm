@@ -48,4 +48,16 @@ unitTest =
                     |> RDBoard.getBoard City
                     |> .intrigue
                     |> Expect.equal 2
+        , test "暗躍禁止を設置" <|
+            \() ->
+                RoomData.initDefault
+                    |> RoomData.changeMasterMindHand 1 "m6"
+                    |> RoomData.changeMasterMindComponent 1 "City"
+                    |> RoomData.changeProtagonistHand 1 "p4"
+                    |> RoomData.changeProtagonistComponent 1 "City"
+                    |> RoomData.resolveCards
+                    |> .boards
+                    |> RDBoard.getBoard City
+                    |> .intrigue
+                    |> Expect.equal 0
         ]

@@ -56,14 +56,22 @@ setIntrigue v c =
 
 resolveCard : List Hand -> Board -> Board
 resolveCard hands b =
-    -- let
-    --     _ =
-    --         Debug.log "decodeUser" hands
-    -- in
-    if List.member IntriguePlus1 (List.map .handType hands) then
+    let
+        -- _ =
+        --     Debug.log "decodeUser" hands
+        list =
+            List.map .handType hands
+    in
+    if (==) 0 <| List.length list then
+        b
+
+    else if (==) 1 <| List.length <| List.filter (\t -> t == ForbidIntrigue) <| list then
+        b
+
+    else if List.member IntriguePlus1 list then
         setIntrigue 1 b
 
-    else if List.member IntriguePlus2 (List.map .handType hands) then
+    else if List.member IntriguePlus2 list then
         setIntrigue 2 b
 
     else
