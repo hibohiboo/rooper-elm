@@ -64,8 +64,8 @@ getSelectedHandComponentKey i m =
     Hand.getSelectedHandComponentKey i m.hands
 
 
-getSelectedHands : MasterMind -> List Hand
-getSelectedHands m =
+getPlayedHands : MasterMind -> List Hand
+getPlayedHands m =
     Hand.playedHands m.hands
 
 

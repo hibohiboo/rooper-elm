@@ -10,4 +10,4 @@ container_name=${1:-rooper}
 composeFile=${1:-"docker-compose.yml"}
 
 # docker-composeの起動
-cd $docker_dir && docker-compose -f $composeFile run $container_name yarn run elm-test
+cd $docker_dir && docker-compose -f $composeFile run $container_name yarn run elm-test --watch

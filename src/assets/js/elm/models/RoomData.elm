@@ -10,7 +10,7 @@ import Json.Encode.Extra as ExEncode
 import Models.Room as Room exposing (Room)
 import Models.RoomData.Board as Board exposing (Board)
 import Models.RoomData.Character as Character exposing (Character)
-import Models.RoomData.Hand as Hand
+import Models.RoomData.Hand as Hand exposing (Hand)
 import Models.RoomData.MasterMind as MasterMind exposing (MasterMind)
 import Models.RoomData.OpenSheet as OpenSheet exposing (OpenSheet)
 import Models.RoomData.Protagonist as Protagonist exposing (Protagonist)
@@ -229,9 +229,9 @@ changeProtagonistComponent i s f =
     { f | protagonists = Protagonist.changeProtagonistsComponent i s f.protagonists }
 
 
-resolveCards : RoomData -> RoomData
-resolveCards data =
-    data
+resolveCards : RoomData -> List Hand
+resolveCards { mastermind, protagonists } =
+    List.concat [ Protagonist.getPlayedProtagonistsHands protagonists, MasterMind.getPlayedHands mastermind ]
 
 
 
@@ -314,6 +314,11 @@ getTurnProtagonistNumber { protagonists } =
 isProtagonistsPlayed : RoomData -> Bool
 isProtagonistsPlayed data =
     Protagonist.isProtagonistsHandsSelected data.protagonists
+
+
+playedHands : RoomData -> List Hand
+playedHands data =
+    Protagonist.getPlayedProtagonistsHands data.protagonists
 
 
 
@@ -531,7 +536,7 @@ boardCard data board isTurf =
                     []
 
                 else
-                    [ case Hand.getSelectedBoardHand board.boardType (Protagonist.getSelectedProtagonistsHands data.protagonists) of
+                    [ case Hand.getSelectedBoardHand board.boardType (Protagonist.getPlayedProtagonistsHands data.protagonists) of
                         Just h ->
                             img [ class "protagonist-hand", src <| Protagonist.getProtagonistCardUrl h.formId ] []
 
@@ -554,7 +559,7 @@ characterCard data char =
                     []
 
                 else
-                    [ case Hand.getSelectedCharacterHand char.characterType (Protagonist.getSelectedProtagonistsHands data.protagonists) of
+                    [ case Hand.getSelectedCharacterHand char.characterType (Protagonist.getPlayedProtagonistsHands data.protagonists) of
                         Just h ->
                             img [ class "protagonist-hand", src <| Protagonist.getProtagonistCardUrl h.formId ] []
 
@@ -634,7 +639,7 @@ handsOnComponentFormProtagonist p data chgMsg =
             Protagonist.getSelectedHandComponentKey p
 
         hands =
-            Protagonist.getSelectedProtagonistsHands data.protagonists
+            Protagonist.getPlayedProtagonistsHands data.protagonists
 
         optionList =
             ( "未選択", "未選択" )
@@ -647,8 +652,8 @@ handsOnComponentFormProtagonist p data chgMsg =
     Form.select ("form-protagonist-on-component-" ++ String.fromInt p.number) chgMsg key optionList
 
 
-playedHands : RoomData -> Html msg
-playedHands d =
+playedHandsView : RoomData -> Html msg
+playedHandsView d =
     div [ style "display" "flex", style "justify-content" "space-evenly" ]
         [ div [] <|
             List.map

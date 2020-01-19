@@ -488,16 +488,16 @@ getSelectedCharacterHand ct list =
         |> List.head
 
 
-isProtagonistHandsSelected : List Hand -> Bool
-isProtagonistHandsSelected list =
+isProtagonistHandsPlayed : List Hand -> Bool
+isProtagonistHandsPlayed list =
     list
-        |> protagonistHandsSelected
+        |> protagonistHandsPlayed
         |> List.length
         |> (==) 1
 
 
-protagonistHandsSelected : List Hand -> List Hand
-protagonistHandsSelected list =
+protagonistHandsPlayed : List Hand -> List Hand
+protagonistHandsPlayed list =
     list
         |> List.filter (\h -> h.formId /= 0)
         |> List.filter (\h -> ExMaybe.isJust h.onComponent)

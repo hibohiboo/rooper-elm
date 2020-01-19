@@ -18,4 +18,12 @@ unitTest =
                 RoomData.initDefault
                     |> .id
                     |> Expect.equal "roomTest"
+        , test "場に出したカード一覧を取得" <|
+            \() ->
+                RoomData.initDefault
+                    |> RoomData.changeMasterMindComponent 1 "ShrineMaiden"
+                    |> RoomData.changeProtagonistComponent 1 "ShrineMaiden"
+                    |> RoomData.resolveCards
+                    |> List.length
+                    |> Expect.equal 2
         ]

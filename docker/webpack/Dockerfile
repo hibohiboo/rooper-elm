@@ -61,7 +61,7 @@ RUN yarn add --dev esdoc esdoc-standard-plugin
 ## for ts
 RUN yarn add --dev typescript
 RUN yarn add --dev tslint tslint-config-airbnb
-RUN yarn add --dev typedoc 
+RUN yarn add --dev typedoc
 
 ### postcss
 RUN yarn add --dev postcss postcss-cli
@@ -69,7 +69,7 @@ RUN yarn add --dev autoprefixer
 RUN yarn add --dev cssnano
 
 ### lint
-RUN yarn add --dev stylelint 
+RUN yarn add --dev stylelint
 RUN yarn add --dev stylelint-scss
 RUN yarn add --dev stylelint-order
 RUN yarn add --dev stylelint-config-sass-guidelines
@@ -80,9 +80,9 @@ RUN yarn add --dev cpx
 RUN yarn add --dev postcss-loader
 RUN yarn add --dev @types/firebase
 
-RUN yarn add --dev  source-map 
+RUN yarn add --dev  source-map
 # Cannot find module 'source-map'のエラーが出るため。
-RUN yarn add --dev @types/source-map@0.5.2 
+RUN yarn add --dev @types/source-map@0.5.2
 
 
 ## pug
@@ -111,3 +111,6 @@ RUN yarn add --dev firebase
 # import * as vfileMessage from 'vfile-message'; 対策
 # https://github.com/vmware/clarity/issues/4012
 RUN sed -i -e "s/'vfile-message'/'vfile-message\/node_modules\/vfile-message'/" /app/node_modules/@types/vfile/index.d.ts
+
+# elm-test --watchしたときのpolling設定
+RUN sed -i -e "s/\(cwd: projectRootDir,\)/\1\n    usePolling: true, /g" /app/node_modules/elm-test/lib/elm-test.js

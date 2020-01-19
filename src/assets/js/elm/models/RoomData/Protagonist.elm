@@ -81,7 +81,7 @@ changeProtagonistComponent i s f =
 isProtagonistsHandsSelected : List Protagonist -> Bool
 isProtagonistsHandsSelected list =
     list
-        |> List.filter (\p -> Hand.isProtagonistHandsSelected p.hands)
+        |> List.filter (\p -> Hand.isProtagonistHandsPlayed p.hands)
         |> List.length
         |> (==) 3
 
@@ -149,7 +149,7 @@ turnProtagonistNumber list =
 
 turnProtagonist : List Protagonist -> Maybe Protagonist
 turnProtagonist list =
-    list |> List.filter (\p -> not <| Hand.isProtagonistHandsSelected p.hands) |> List.head
+    list |> List.filter (\p -> not <| Hand.isProtagonistHandsPlayed p.hands) |> List.head
 
 
 getSelectedHandComponentKey : Protagonist -> String
@@ -157,10 +157,10 @@ getSelectedHandComponentKey { number, hands } =
     Hand.getSelectedHandComponentKey number hands
 
 
-getSelectedProtagonistsHands : List Protagonist -> List Hand
-getSelectedProtagonistsHands list =
+getPlayedProtagonistsHands : List Protagonist -> List Hand
+getPlayedProtagonistsHands list =
     list
-        |> List.map (\p -> Hand.protagonistHandsSelected p.hands)
+        |> List.map (\p -> Hand.protagonistHandsPlayed p.hands)
         |> List.concat
 
 

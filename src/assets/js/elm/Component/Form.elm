@@ -48,10 +48,7 @@ createButton message buttonText =
 
 select : String -> (String -> msg) -> String -> List ( String, String ) -> Html msg
 select nodeKeySuffix chgMsg selectedKey rs =
-    Keyed.node "select"
-        [ onChange chgMsg ]
-    <|
-        List.indexedMap (\i r -> keyedOption i nodeKeySuffix r selectedKey) rs
+    Keyed.node "select" [ onChange chgMsg ] <| List.indexedMap (\i r -> keyedOption i nodeKeySuffix r selectedKey) rs
 
 
 keyedOption : Int -> String -> ( String, String ) -> String -> ( String, Html msg )
