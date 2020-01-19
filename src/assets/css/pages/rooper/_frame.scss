@@ -60,6 +60,7 @@
         display: none;
         position: absolute;
         top: $header-height + 1rem;
+        z-index: 10;
 
         &.open {
           display: block;
