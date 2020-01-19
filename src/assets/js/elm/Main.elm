@@ -675,7 +675,7 @@ ownerRoomView user model =
                 , RoomData.roomBoard data
                 , RoomData.infos data
                 , RoomData.usedHands data
-                , RoomData.playedHands data
+                , RoomData.playedHandsView data
                 , mastermindSheets model
                 , mastermindScriptButtons model data
                 , if RoomData.isTurnProtagonist model.roomState.turnProtagonistNumber user data then
@@ -854,7 +854,7 @@ userRoomView model user data =
         [ RoomData.stateView data
         , RoomData.roomBoard data
         , RoomData.infos data
-        , RoomData.playedHands data
+        , RoomData.playedHandsView data
         , RoomData.openSheetView data
         , RoomData.closeSheetView data
         , if RoomData.isTurnProtagonist model.roomState.turnProtagonistNumber user data then

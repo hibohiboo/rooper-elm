@@ -229,9 +229,9 @@ changeProtagonistComponent i s f =
     { f | protagonists = Protagonist.changeProtagonistsComponent i s f.protagonists }
 
 
-resolveCards : RoomData -> List Hand
-resolveCards { mastermind, protagonists } =
-    List.concat [ Protagonist.getPlayedProtagonistsHands protagonists, MasterMind.getPlayedHands mastermind ]
+resolveCards : RoomData -> RoomData
+resolveCards data =
+    data
 
 
 
@@ -317,8 +317,8 @@ isProtagonistsPlayed data =
 
 
 playedHands : RoomData -> List Hand
-playedHands data =
-    Protagonist.getPlayedProtagonistsHands data.protagonists
+playedHands { mastermind, protagonists } =
+    List.concat [ Protagonist.getPlayedProtagonistsHands protagonists, MasterMind.getPlayedHands mastermind ]
 
 
 

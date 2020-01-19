@@ -23,7 +23,7 @@ unitTest =
                 RoomData.initDefault
                     |> RoomData.changeMasterMindComponent 1 "ShrineMaiden"
                     |> RoomData.changeProtagonistComponent 1 "ShrineMaiden"
-                    |> RoomData.resolveCards
+                    |> RoomData.playedHands
                     |> List.length
                     |> Expect.equal 2
         ]
