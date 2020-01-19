@@ -107,13 +107,29 @@ setEx s f =
 
 
 nextRoomDataState : RoomData -> RoomData
-nextRoomDataState f =
+nextRoomDataState data =
+    data
+        |> updateNextState
+        |> updateHandsData
+
+
+updateNextState : RoomData -> RoomData
+updateNextState f =
     -- 主人公がカードを置き終わるまで、主人公行動フェイズは更新されない
     if f.state == RoomDataState.ProtagonistsPlaysCard && not (isProtagonistsPlayed f) then
         f
 
     else
         { f | state = RoomDataState.nextState f.state }
+
+
+updateHandsData : RoomData -> RoomData
+updateHandsData data =
+    if data.state == RoomDataState.MastemindAbilities then
+        { data | mastermind = MasterMind.returnPlayedHands data.mastermind, protagonists = Protagonist.returnPlayedHands data.protagonists }
+
+    else
+        data
 
 
 changeCharacterLocation : Character -> String -> RoomData -> RoomData

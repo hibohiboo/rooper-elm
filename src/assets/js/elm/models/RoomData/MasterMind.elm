@@ -48,6 +48,11 @@ changeMasterMindComponent i s f =
     { f | hands = Hand.changeComponent i s f.hands }
 
 
+returnPlayedHands : MasterMind -> MasterMind
+returnPlayedHands f =
+    { f | hands = Hand.changeHand 1 "m0" <| Hand.changeHand 2 "m1" <| Hand.changeHand 3 "m2" <| Hand.returnPlayedHands f.hands }
+
+
 
 -- ==============================================================================================
 -- getter

@@ -142,6 +142,14 @@ changeHand i s list =
 
         Nothing ->
             list
+                |> List.map
+                    (\h ->
+                        if h.id == s then
+                            { h | formId = i, onComponent = Nothing }
+
+                        else
+                            h
+                    )
 
 
 changeComponent : Int -> String -> List Hand -> List Hand
@@ -154,6 +162,19 @@ changeComponent i s list =
 
                 else
                     h
+            )
+
+
+returnPlayedHands : List Hand -> List Hand
+returnPlayedHands list =
+    list
+        |> List.map
+            (\h ->
+                if isPlayed h && ExMaybe.isJust h.isUsed then
+                    { h | isUsed = Just True, formId = 0, onComponent = Nothing }
+
+                else
+                    { h | formId = 0, onComponent = Nothing }
             )
 
 
@@ -430,10 +451,15 @@ getSelectedCharacterComponentTypeAll list =
 --
 
 
+isPlayed : Hand -> Bool
+isPlayed h =
+    ExMaybe.isJust h.onComponent
+
+
 playedHands : List Hand -> List Hand
 playedHands list =
     list
-        |> List.filter (\h -> ExMaybe.isJust h.onComponent)
+        |> List.filter isPlayed
 
 
 isMastermindHandsPlayed : List Hand -> Bool
@@ -510,7 +536,7 @@ protagonistHandsPlayed : List Hand -> List Hand
 protagonistHandsPlayed list =
     list
         |> List.filter (\h -> h.formId /= 0)
-        |> List.filter (\h -> ExMaybe.isJust h.onComponent)
+        |> List.filter isPlayed
 
 
 usedHands : List Hand -> List Hand

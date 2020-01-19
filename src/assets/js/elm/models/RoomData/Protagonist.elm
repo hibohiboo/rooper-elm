@@ -86,6 +86,11 @@ isProtagonistsHandsSelected list =
         |> (==) 3
 
 
+returnPlayedHands : List Protagonist -> List Protagonist
+returnPlayedHands list =
+    list |> List.map (\p -> { p | hands = Hand.changeHand p.number "p0" <| Hand.returnPlayedHands p.hands })
+
+
 
 -- ==============================================================================================
 -- getter
