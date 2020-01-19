@@ -243,4 +243,15 @@ unitTest =
                     |> Maybe.map .location
                     |> Maybe.map (\loc -> Expect.equal (Just hospital) loc)
                     |> Maybe.withDefault (Expect.fail "失敗")
+        , test "神社のキャラクターに移動斜めを設置したときに都市に移動すること" <|
+            \() ->
+                RoomData.initDefault
+                    |> RoomData.changeMasterMindHand 1 "m9"
+                    |> RoomData.changeMasterMindComponent 1 "ShrineMaiden"
+                    |> RoomData.resolveCards
+                    |> .characters
+                    |> RDCharacter.getCharacter ShrineMaiden
+                    |> Maybe.map .location
+                    |> Maybe.map (\loc -> Expect.equal (Just city) loc)
+                    |> Maybe.withDefault (Expect.fail "失敗")
         ]
