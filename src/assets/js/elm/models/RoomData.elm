@@ -53,7 +53,7 @@ initDefault =
         script =
             Script.initDefault
     in
-    RoomData "roomTest" mastermind protagonists (Script.scriptToOpenSheet script) Nothing 1 1 0 RoomDataState.init (Character.charactersFromCharacterScriptDataList script.characters) Board.init
+    RoomData "roomTest" mastermind protagonists (Script.scriptToOpenSheet script) Nothing 0 0 0 RoomDataState.init (Character.charactersFromCharacterScriptDataList script.characters) Board.init
 
 
 initRoomData : Room -> RoomData
