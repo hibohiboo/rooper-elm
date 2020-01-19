@@ -54,6 +54,21 @@ characterFromCharacterScriptData { character, role, optionalNumber, turf } =
     Character characterType name paranoiaLimit firstLocation role optionalNumber turf 0 0 0 (Just firstLocation) forbiddenLocations False
 
 
+resetCharacter : Character -> Character
+resetCharacter { role, optionalNumber, turf, characterType, name, paranoiaLimit, firstLocation } =
+    let
+        -- 移動禁止エリアは、医者や女の子の能力で変更されている可能性があるのでリフレッシュする
+        { forbiddenLocations } =
+            Models.Character.characterFromCharacterType characterType
+    in
+    Character characterType name paranoiaLimit firstLocation role optionalNumber turf 0 0 0 (Just firstLocation) forbiddenLocations False
+
+
+resetCharacters : List Character -> List Character
+resetCharacters list =
+    List.map resetCharacter list
+
+
 
 -- ==============================================================================================
 -- メソッド

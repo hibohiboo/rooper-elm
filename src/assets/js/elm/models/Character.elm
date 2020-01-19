@@ -277,6 +277,91 @@ characterTypeFromString s =
     characterFromString s |> Maybe.map .characterType
 
 
+characterFromCharacterType : CharacterType -> Character
+characterFromCharacterType t =
+    case t of
+        BoyStudent ->
+            boyStudent
+
+        GirlStudent ->
+            girlStudent
+
+        RichMansDaughter ->
+            richMansDaughter
+
+        ShrineMaiden ->
+            shrineMaiden
+
+        PoliceOfficer ->
+            policeOfficer
+
+        OfficeWorker ->
+            officeWorker
+
+        Informer ->
+            informer
+
+        Doctor ->
+            doctor
+
+        Patient ->
+            patient
+
+        ClassRep ->
+            classRep
+
+        MysteryBoy ->
+            mysteryBoy
+
+        Alien ->
+            alien
+
+        GodlyBeing ->
+            godlyBeing
+
+        PopIdol ->
+            popIdol
+
+        Journalist ->
+            journalist
+
+        Boss ->
+            boss
+
+        Nurse ->
+            nurse
+
+        Henchman ->
+            henchman
+
+        Illusion ->
+            illusion
+
+        Scientist ->
+            scientist
+
+        ForensicSpecialist ->
+            forensicSpecialist
+
+        AI ->
+            ai
+
+        Teacher ->
+            teacher
+
+        TransferStudent ->
+            transferStudent
+
+        Soldier ->
+            soldier
+
+        BlackCat ->
+            blackCat
+
+        LittleGirl ->
+            littleGirl
+
+
 characters : List Character
 characters =
     [ boyStudent

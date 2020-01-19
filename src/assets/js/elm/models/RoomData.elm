@@ -116,6 +116,7 @@ nextRoomDataState data =
         |> updateProtagonists
         |> updateDate
         |> updateLoop
+        |> updateBoardsCharacters
 
 
 updateNextState : RoomData -> RoomData
@@ -163,6 +164,15 @@ updateLoop : RoomData -> RoomData
 updateLoop data =
     if data.state == RoomDataState.SetupCharacter then
         { data | loop = data.loop + 1, date = 0 }
+
+    else
+        data
+
+
+updateBoardsCharacters : RoomData -> RoomData
+updateBoardsCharacters data =
+    if data.state == RoomDataState.SetupCounter then
+        { data | characters = Character.resetCharacters data.characters, boards = Board.init }
 
     else
         data
