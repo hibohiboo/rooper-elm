@@ -173,6 +173,10 @@ resolveCard hands c =
 
 resolveMovementCard : List HandType -> Character -> Character
 resolveMovementCard list c =
+    let
+        validForbiddenBoard =
+            validMove c
+    in
     if (==) 0 <| List.length list then
         c
 
@@ -180,13 +184,13 @@ resolveMovementCard list c =
         c
 
     else if List.member MovementVertical list then
-        setLocationBoard (moveVertical c.location) c
+        setLocationBoard (validForbiddenBoard <| moveVertical c.location) c
 
     else if List.member MovementHorizontal list then
-        setLocationBoard (moveHorizontal c.location) c
+        setLocationBoard (validForbiddenBoard <| moveHorizontal c.location) c
 
     else if List.member MovementDiagonal list then
-        setLocationBoard (moveDiagonal c.location) c
+        setLocationBoard (validForbiddenBoard <| moveDiagonal c.location) c
 
     else
         c
@@ -232,6 +236,20 @@ moveHorizontal mb =
 
                 Shrine ->
                     Just Board.hospital
+
+
+validMove : Character -> Maybe Board -> Maybe Board
+validMove c mb =
+    case mb of
+        Nothing ->
+            Nothing
+
+        Just b ->
+            if List.member b c.forbiddenLocations then
+                c.location
+
+            else
+                mb
 
 
 moveDiagonal : Maybe Board -> Maybe Board
