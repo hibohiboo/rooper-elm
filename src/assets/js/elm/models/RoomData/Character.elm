@@ -173,10 +173,10 @@ resolveParanoiaCard list c =
         c
 
     else if List.member ParanoiaPlus1 list then
-        setParanoia (c.paranoia + 1) c
+        resolveParanoiaCard (ExList.remove ParanoiaPlus1 list) (setParanoia (c.paranoia + 1) c)
 
     else if List.member ParanoiaMinus1 list then
-        setParanoia (c.paranoia - 1) c
+        resolveParanoiaCard (ExList.remove ParanoiaMinus1 list) (setParanoia (c.paranoia - 1) c)
 
     else
         c

@@ -147,4 +147,17 @@ unitTest =
                     |> Maybe.map .paranoia
                     |> Maybe.map (\c -> Expect.equal 0 c)
                     |> Maybe.withDefault (Expect.fail "失敗")
+        , test "キャラクターに不安+1を2枚設置したときに不安が+2されること" <|
+            \() ->
+                RoomData.initDefault
+                    |> RoomData.changeMasterMindHand 1 "m0"
+                    |> RoomData.changeMasterMindComponent 1 "ShrineMaiden"
+                    |> RoomData.changeProtagonistHand 2 "p0"
+                    |> RoomData.changeProtagonistComponent 2 "ShrineMaiden"
+                    |> RoomData.resolveCards
+                    |> .characters
+                    |> RDCharacter.getCharacter ShrineMaiden
+                    |> Maybe.map .paranoia
+                    |> Maybe.map (\c -> Expect.equal 2 c)
+                    |> Maybe.withDefault (Expect.fail "失敗")
         ]
