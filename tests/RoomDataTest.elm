@@ -266,4 +266,17 @@ unitTest =
                     |> Maybe.map .location
                     |> Maybe.map (\loc -> Expect.equal (Just shrine) loc)
                     |> Maybe.withDefault (Expect.fail "失敗")
+        , test "神社のキャラクターに移動左右と移動禁止を設置したときに神社のままであること" <|
+            \() ->
+                RoomData.initDefault
+                    |> RoomData.changeMasterMindHand 1 "m8"
+                    |> RoomData.changeMasterMindComponent 1 "ShrineMaiden"
+                    |> RoomData.changeProtagonistHand 2 "p7"
+                    |> RoomData.changeProtagonistComponent 2 "ShrineMaiden"
+                    |> RoomData.resolveCards
+                    |> .characters
+                    |> RDCharacter.getCharacter ShrineMaiden
+                    |> Maybe.map .location
+                    |> Maybe.map (\loc -> Expect.equal (Just shrine) loc)
+                    |> Maybe.withDefault (Expect.fail "失敗")
         ]
