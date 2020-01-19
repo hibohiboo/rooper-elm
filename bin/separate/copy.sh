@@ -19,4 +19,5 @@ cp -r $pre_dist_dir/assets/css $app_dir/public/assets/css
 # manifestファイルをコピー
 cp -r $parent_dir/manifest/manifest.json $app_dir/public/manifest.json
 cp -r $parent_dir/manifest/serviceWorker.js $app_dir/public/serviceWorker.js
+cp -r $parent_dir/manifest/index.js $app_dir/public/index.js
 cp -r $parent_dir/manifest/icons $app_dir/public/icons
