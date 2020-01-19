@@ -227,7 +227,7 @@ update msg model =
         ChangedUrl url ->
             case Route.toRoute url of
                 Route.Top ->
-                    ( { model | mainAreaState = MainTab }, readRooms () )
+                    ( { model | mainAreaState = MainTab, script = Nothing, roomData = Nothing, room = Nothing }, readRooms () )
 
                 Route.Script ->
                     ( { model | mainAreaState = ScriptTab }, readScriptNames () )
