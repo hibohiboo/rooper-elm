@@ -397,7 +397,7 @@ setTragedySet : String -> RegisterForm -> RegisterForm
 setTragedySet s f =
     let
         set =
-            TragedySet.getTragedySetFromString s
+            TragedySet.tragedySetFromString s
     in
     case set.setType of
         TragedySet.BasicTragedy ->
@@ -413,11 +413,11 @@ setTragedySet s f =
                     { f | set = set, mainPlot = TragedySet.murderPlan, subPlot1 = TragedySet.shadowOfTheRipper, subPlot2 = Nothing, incidents = [] }
             in
             { new | characters = resetRolesCharacterScriptDataList new }
-        -- TODO: 実際に作る
+
         TragedySet.MysteryCircle ->
             let
                 new =
-                    { f | set = set, mainPlot = TragedySet.murderPlan, subPlot1 = TragedySet.shadowOfTheRipper, subPlot2 = Nothing, incidents = [] }
+                    { f | set = set, mainPlot = TragedySet.murderPlan, subPlot1 = TragedySet.isolatedInstitutionPsycho, subPlot2 = Just TragedySet.smellOfGunpowder, incidents = [] }
             in
             { new | characters = resetRolesCharacterScriptDataList new }
 
@@ -770,6 +770,7 @@ selectTragedySet chgMsg scriptForm =
     select [ onChange chgMsg ]
         [ option [ value <| TragedySet.typeToString TragedySet.FirstSteps, selected (isSetFirstSteps scriptForm) ] [ text <| TragedySet.typeToName TragedySet.FirstSteps ]
         , option [ value <| TragedySet.typeToString TragedySet.BasicTragedy, selected (isSetBasicTragedy scriptForm) ] [ text <| TragedySet.typeToName TragedySet.BasicTragedy ]
+        , option [ value <| TragedySet.typeToString TragedySet.MysteryCircle, selected (scriptForm.set.setType == TragedySet.MysteryCircle) ] [ text <| TragedySet.typeToName TragedySet.MysteryCircle ]
         ]
 
 

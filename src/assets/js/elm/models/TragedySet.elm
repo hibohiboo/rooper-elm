@@ -812,6 +812,7 @@ initMysteryCirclePlots =
     , tightropePlan
     , theBlackSchool
     , aDropOfStrychnine
+    , theHiddenFreak
     , isolatedInstitutionPsycho
     , smellOfGunpowder
     , iAmAMasterDetective
@@ -1142,16 +1143,23 @@ type Error
 
 decoderTragedySet : D.Decoder TragedySet
 decoderTragedySet =
-    D.map getTragedySetFromString D.string
+    D.map tragedySetFromString D.string
 
 
-getTragedySetFromString : String -> TragedySet
-getTragedySetFromString s =
-    if s == typeToString BasicTragedy then
-        initBasicTragedy
+tragedySetFromString : String -> TragedySet
+tragedySetFromString s =
+    case typeFromString s of
+        Just BasicTragedy ->
+            initBasicTragedy
 
-    else
-        initFirstSteps
+        Just MysteryCircle ->
+            initMysteryCircle
+
+        Just FirstSteps ->
+            initFirstSteps
+
+        Nothing ->
+            initBasicTragedy
 
 
 decoder : Decoder TragedySet Error TragedySet
@@ -1193,6 +1201,22 @@ typeToString t =
 
         MysteryCircle ->
             "MysteryCircle"
+
+
+typeFromString : String -> Maybe TragedySetType
+typeFromString s =
+    case s of
+        "BasicTragedy" ->
+            Just BasicTragedy
+
+        "FirstSteps" ->
+            Just FirstSteps
+
+        "MysteryCircle" ->
+            Just MysteryCircle
+
+        _ ->
+            Nothing
 
 
 type TragedySetType
