@@ -558,6 +558,7 @@ initBasicPlots =
     , circleOfFriends
     , aLoveAffair
     , theHiddenFreak
+    , anUnsettlingRumour
     , paranoiaVirus
     , threadsOfFate
     , unknownFactorX
