@@ -506,6 +506,14 @@ type IncidentType
     | Spreading
     | FoulEvil
     | ButterflyEffect
+    | SerialMurder
+    | FakedSuicide
+    | Terrorism
+    | Portent
+    | BestialMurder
+    | ASuspiciousLetter
+    | ClosedCircle
+    | TheSilverBullet
 
 
 
@@ -542,6 +550,30 @@ incidentToString i =
         ButterflyEffect ->
             "ButterflyEffect"
 
+        SerialMurder ->
+            "SerialMurder"
+
+        FakedSuicide ->
+            "FakedSuicide"
+
+        Terrorism ->
+            "Terrorism"
+
+        Portent ->
+            "Portent"
+
+        BestialMurder ->
+            "BestialMurder"
+
+        ASuspiciousLetter ->
+            "ASuspiciousLetter"
+
+        ClosedCircle ->
+            "ClosedCircle"
+
+        TheSilverBullet ->
+            "TheSilverBullet"
+
 
 incidentFromString : String -> Maybe Incident
 incidentFromString s =
@@ -572,6 +604,30 @@ incidentFromString s =
 
         "ButterflyEffect" ->
             Just butterflyEffect
+
+        "SerialMurder" ->
+            Just serialMurder
+
+        "FakedSuicide" ->
+            Just fakedSuicide
+
+        "Terrorism" ->
+            Just terrorism
+
+        "Portent" ->
+            Just portent
+
+        "BestialMurder" ->
+            Just bestialMurder
+
+        "ASuspiciousLetter" ->
+            Just aSuspiciousLetter
+
+        "ClosedCircle" ->
+            Just closedCircle
+
+        "TheSilverBullet" ->
+            Just theSilverBullet
 
         _ ->
             Nothing
@@ -749,6 +805,22 @@ initFirstStepsPlots =
     ]
 
 
+initMysteryCirclePlots : List Plot
+initMysteryCirclePlots =
+    [ murderPlan
+    , aQuiltOfIncidents
+    , tightropePlan
+    , theBlackSchool
+    , aDropOfStrychnine
+    , isolatedInstitutionPsycho
+    , smellOfGunpowder
+    , iAmAMasterDetective
+    , danceOfFools
+    , anAbsoluteWill
+    , trickyTwins
+    ]
+
+
 
 -- 役職 データ
 
@@ -887,6 +959,24 @@ initBasicTragedyRoles =
     ]
 
 
+initMysteryCircleRoles : List Role
+initMysteryCircleRoles =
+    [ keyPerson
+    , killer
+    , brain
+    , poisoner
+    , fool
+    , conspiracyTheorist
+    , friend
+    , serialKiller
+    , paranoiac
+    , therapist
+    , privateInvestigator
+    , obstinate
+    , twin
+    ]
+
+
 
 -- 事件 データ
 
@@ -936,6 +1026,50 @@ butterflyEffect =
     Incident ButterflyEffect "蝶の羽ばたき" "犯人と同一エリアにいるキャラクター1人にいずれかのカウンターを１つ置く。"
 
 
+
+-- Mystery Circle
+
+
+serialMurder : Incident
+serialMurder =
+    Incident SerialMurder "連続殺人" ""
+
+
+fakedSuicide : Incident
+fakedSuicide =
+    Incident FakedSuicide "偽装自殺" ""
+
+
+terrorism : Incident
+terrorism =
+    Incident Terrorism "テロリズム" ""
+
+
+portent : Incident
+portent =
+    Incident Portent "前兆" ""
+
+
+bestialMurder : Incident
+bestialMurder =
+    Incident BestialMurder "猟奇殺人" ""
+
+
+aSuspiciousLetter : Incident
+aSuspiciousLetter =
+    Incident ASuspiciousLetter "不審な手紙" ""
+
+
+closedCircle : Incident
+closedCircle =
+    Incident ClosedCircle "クローズドサークル" ""
+
+
+theSilverBullet : Incident
+theSilverBullet =
+    Incident TheSilverBullet "銀の銃弾" ""
+
+
 initBasicTragedyIncidents : List Incident
 initBasicTragedyIncidents =
     [ murder
@@ -962,6 +1096,21 @@ initFirstStepsIncidents =
     ]
 
 
+initMysteryCircleIncidents : List Incident
+initMysteryCircleIncidents =
+    [ serialMurder
+    , terrorism
+    , hospitalIncident
+    , suicide
+    , increasingUnease
+    , portent
+    , bestialMurder
+    , fakedSuicide
+    , closedCircle
+    , theSilverBullet
+    ]
+
+
 type alias TragedySet =
     { name : String
     , subPlotNumber : Int
@@ -972,14 +1121,19 @@ type alias TragedySet =
     }
 
 
+initFirstSteps : TragedySet
+initFirstSteps =
+    TragedySet "First Steps" 1 initFirstStepsPlots initFirstStepsRoles initFirstStepsIncidents FirstSteps
+
+
 initBasicTragedy : TragedySet
 initBasicTragedy =
     TragedySet "Basic Tragedy X" 2 initBasicPlots initBasicTragedyRoles initBasicTragedyIncidents BasicTragedy
 
 
-initFirstSteps : TragedySet
-initFirstSteps =
-    TragedySet "First Steps" 1 initFirstStepsPlots initFirstStepsRoles initFirstStepsIncidents FirstSteps
+initMysteryCircle : TragedySet
+initMysteryCircle =
+    TragedySet "Mystery Circle X" 2 initMysteryCirclePlots initMysteryCircleRoles initMysteryCircleIncidents MysteryCircle
 
 
 type Error
