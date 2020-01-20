@@ -836,7 +836,7 @@ boardsView data =
 charactersView : RoomData -> Html msg
 charactersView data =
     div [ class "rooper-characters-form" ]
-        (data.characters
+        (getAppearedCharacters data
             |> List.reverse
             |> List.map
                 (\c -> Character.charactersViewItem c)
