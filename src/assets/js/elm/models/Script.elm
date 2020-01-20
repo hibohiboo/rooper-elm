@@ -355,7 +355,11 @@ unassignedCulpritCharacters f =
                 |> List.reverse
 
         assignedList =
-            IncidentScriptData.assignedCulpritCharacters f.incidents
+            if TragedySet.incidentFromString f.incident == Just TragedySet.serialMurder then
+                IncidentScriptData.assignedCulpritCharacters <| List.filter (\i -> i.incident /= TragedySet.serialMurder) f.incidents
+
+            else
+                IncidentScriptData.assignedCulpritCharacters f.incidents
     in
     List.filter (\c -> not <| List.member c assignedList) charactersList
 
@@ -507,7 +511,7 @@ addIncidents f =
     let
         -- TODO: フォーム上からは失敗しない想定でwithDefaultを使用
         incident =
-            Maybe.withDefault TragedySet.murder (TragedySet.incidentFromString f.incident)
+            Maybe.withDefault TragedySet.suicide (TragedySet.incidentFromString f.incident)
 
         char =
             Maybe.withDefault Character.boyStudent (Character.characterFromString f.incidentCulprit)
