@@ -339,13 +339,19 @@ update msg model =
                             update (OpenModal "既にキャラクターに事件が割り振られています。") model
 
                         char :: _ ->
-                            let
-                                scriptForm =
-                                    model.scriptForm
-                                        |> Script.setIntIncidentDay day
-                                        |> Script.setIncidentCulprit (Character.characterToString char)
-                            in
-                            ( { model | modalState = OpenAddIncidentModalState, scriptForm = scriptForm }, Cmd.none )
+                            case List.head model.scriptForm.set.incidents of
+                                Nothing ->
+                                    update (OpenModal "ここに来ることはありえません") model
+
+                                Just incident ->
+                                    let
+                                        scriptForm =
+                                            model.scriptForm
+                                                |> Script.setIntIncidentDay day
+                                                |> Script.setIncidentCulprit (Character.characterToString char)
+                                                |> Script.setIncident (TragedySet.incidentToString incident)
+                                    in
+                                    ( { model | modalState = OpenAddIncidentModalState, scriptForm = scriptForm }, Cmd.none )
 
         ChangeIncidentCreateFormDay val ->
             ( { model | scriptForm = Script.setIncidentDay val model.scriptForm }, Cmd.none )
