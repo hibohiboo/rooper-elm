@@ -23,6 +23,12 @@ type RoleType
     | Factor
     | ConspiracyTheorist
     | Curmudgeon
+    | Poisoner
+    | Fool
+    | Paranoiac
+    | Therapist
+    | PrivateInvestigator
+    | Twin
 
 
 type alias Role =
@@ -87,6 +93,24 @@ roleToString r =
         Curmudgeon ->
             "Curmudgeon"
 
+        Poisoner ->
+            "Poisoner"
+
+        Fool ->
+            "Fool"
+
+        Paranoiac ->
+            "Paranoiac"
+
+        Therapist ->
+            "Therapist"
+
+        PrivateInvestigator ->
+            "PrivateInvestigator"
+
+        Twin ->
+            "Twin"
+
 
 roleFromString : String -> Maybe Role
 roleFromString s =
@@ -132,6 +156,24 @@ roleFromString s =
 
         "Curmudgeon" ->
             Just curmudgeon
+
+        "Poisoner" ->
+            Just poisoner
+
+        "Fool" ->
+            Just fool
+
+        "Paranoiac" ->
+            Just paranoiac
+
+        "Therapist" ->
+            Just therapist
+
+        "PrivateInvestigator" ->
+            Just privateInvestigator
+
+        "Twin" ->
+            Just twin
 
         _ ->
             Nothing
@@ -648,6 +690,36 @@ conspiracyTheorist =
 curmudgeon : Role
 curmudgeon =
     Role Curmudgeon "マイナス" Nothing
+
+
+poisoner : Role
+poisoner =
+    Role Poisoner "ドリッパー" Nothing
+
+
+fool : Role
+fool =
+    Role Fool "フール" (Just 1)
+
+
+paranoiac : Role
+paranoiac =
+    Role Paranoiac "パラノイア" Nothing
+
+
+therapist : Role
+therapist =
+    Role Therapist "セラピスト" Nothing
+
+
+privateInvestigator : Role
+privateInvestigator =
+    Role PrivateInvestigator "メイタンテイ" Nothing
+
+
+twin : Role
+twin =
+    Role Twin "ツイン" Nothing
 
 
 initFirstStepsRoles : List Role
