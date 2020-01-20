@@ -29,6 +29,7 @@ type RoleType
     | Therapist
     | PrivateInvestigator
     | Twin
+    | Obstinate
 
 
 type alias Role =
@@ -111,6 +112,9 @@ roleToString r =
         Twin ->
             "Twin"
 
+        Obstinate ->
+            "Obstinate"
+
 
 roleFromString : String -> Maybe Role
 roleFromString s =
@@ -175,6 +179,9 @@ roleFromString s =
         "Twin" ->
             Just twin
 
+        "Obstinate" ->
+            Just obstinate
+
         _ ->
             Nothing
 
@@ -237,6 +244,16 @@ type PlotType
     | ParanoiaVirus
     | ThreadsOfFate
     | UnknownFactorX
+    | AQuiltOfIncidents
+    | TightropePlan
+    | TheBlackSchool
+    | ADropOfStrychnine
+    | IsolatedInstitutionPsycho
+    | SmellOfGunpowder
+    | IAmAMasterDetective
+    | DanceOfFools
+    | AnAbsoluteWill
+    | TrickyTwins
 
 
 type alias Effect =
@@ -333,6 +350,36 @@ plotToString p =
         UnknownFactorX ->
             "UnknownFactorX"
 
+        AQuiltOfIncidents ->
+            "AQuiltOfIncidents"
+
+        TightropePlan ->
+            "TightropePlan"
+
+        TheBlackSchool ->
+            "TheBlackSchool"
+
+        ADropOfStrychnine ->
+            "ADropOfStrychnine"
+
+        IsolatedInstitutionPsycho ->
+            "IsolatedInstitutionPsycho"
+
+        SmellOfGunpowder ->
+            "SmellOfGunpowder"
+
+        IAmAMasterDetective ->
+            "IAmAMasterDetective"
+
+        DanceOfFools ->
+            "DanceOfFools"
+
+        AnAbsoluteWill ->
+            "AnAbsoluteWill"
+
+        TrickyTwins ->
+            "TrickyTwins"
+
 
 plotFromString : String -> Maybe Plot
 plotFromString s =
@@ -384,6 +431,36 @@ plotFromString s =
 
         "UnknownFactorX" ->
             Just unknownFactorX
+
+        "AQuiltOfIncidents" ->
+            Just aQuiltOfIncidents
+
+        "TightropePlan" ->
+            Just tightropePlan
+
+        "TheBlackSchool" ->
+            Just theBlackSchool
+
+        "ADropOfStrychnine" ->
+            Just aDropOfStrychnine
+
+        "IsolatedInstitutionPsycho" ->
+            Just isolatedInstitutionPsycho
+
+        "SmellOfGunpowder" ->
+            Just smellOfGunpowder
+
+        "IAmAMasterDetective" ->
+            Just iAmAMasterDetective
+
+        "DanceOfFools" ->
+            Just danceOfFools
+
+        "AnAbsoluteWill" ->
+            Just anAbsoluteWill
+
+        "TrickyTwins" ->
+            Just trickyTwins
 
         _ ->
             Nothing
@@ -590,6 +667,60 @@ unknownFactorX =
     Plot "不定因子χ" False UnknownFactorX [ factor ] []
 
 
+
+-- Mystery Circle
+
+
+aQuiltOfIncidents : Plot
+aQuiltOfIncidents =
+    Plot "組み重なり事件キルト" True AQuiltOfIncidents [ fool, conspiracyTheorist ] []
+
+
+tightropePlan : Plot
+tightropePlan =
+    Plot "タイトロープ上の計画\t" True TightropePlan [ killer, brain ] []
+
+
+theBlackSchool : Plot
+theBlackSchool =
+    Plot "黒の学園" True TheBlackSchool [ brain ] []
+
+
+aDropOfStrychnine : Plot
+aDropOfStrychnine =
+    Plot "ストリキニーネの雫" True ADropOfStrychnine [ keyPerson, poisoner, fool ] []
+
+
+isolatedInstitutionPsycho : Plot
+isolatedInstitutionPsycho =
+    Plot "隔離病棟サイコ" False IsolatedInstitutionPsycho [ conspiracyTheorist, paranoiac, therapist ] []
+
+
+smellOfGunpowder : Plot
+smellOfGunpowder =
+    Plot "火薬の香り" False SmellOfGunpowder [ serialKiller ] []
+
+
+iAmAMasterDetective : Plot
+iAmAMasterDetective =
+    Plot "私は名探偵" False IAmAMasterDetective [ conspiracyTheorist, friend, privateInvestigator ] []
+
+
+danceOfFools : Plot
+danceOfFools =
+    Plot "愚者のダンス" False DanceOfFools [ fool, friend ] []
+
+
+anAbsoluteWill : Plot
+anAbsoluteWill =
+    Plot "絶対の意志" False AnAbsoluteWill [ obstinate ] []
+
+
+trickyTwins : Plot
+trickyTwins =
+    Plot "双子のトリック" False TrickyTwins [ paranoiac, twin ] []
+
+
 initBasicPlots : List Plot
 initBasicPlots =
     [ murderPlan
@@ -720,6 +851,11 @@ privateInvestigator =
 twin : Role
 twin =
     Role Twin "ツイン" Nothing
+
+
+obstinate : Role
+obstinate =
+    Role Obstinate "ゼッタイシャ" Nothing
 
 
 initFirstStepsRoles : List Role
