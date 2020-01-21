@@ -691,9 +691,7 @@ charactersViewItem c =
                 ]
             , if c.isSetEx then
                 -- TODO: Mystery Circle時点ではキャラクターにセットされるExカードは仮死のみ
-                div []
-                    [ text "Ex"
-                    ]
+                text "Ex"
 
               else
                 ExHtml.nothing
