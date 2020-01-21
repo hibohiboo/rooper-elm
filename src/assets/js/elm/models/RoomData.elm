@@ -254,6 +254,22 @@ toggleCharacterIsDead c f =
     }
 
 
+toggleCharacterIsSetEx : Character -> RoomData -> RoomData
+toggleCharacterIsSetEx c f =
+    { f
+        | characters =
+            List.map
+                (\char ->
+                    if char == c then
+                        Character.setIsSetEx (not char.isSetEx) char
+
+                    else
+                        char
+                )
+                f.characters
+    }
+
+
 deleteForbiddenLocation : Character -> RoomData -> RoomData
 deleteForbiddenLocation c f =
     { f
@@ -590,13 +606,13 @@ stateView data =
         ]
 
 
-charactersForm : RoomData -> (Character -> String -> msg) -> (Character -> String -> msg) -> (Character -> String -> msg) -> (Character -> String -> msg) -> (Character -> msg) -> (Character -> msg) -> Html msg
-charactersForm data changeLocationMsg changeGMsg changePMsg changeIMsg toggleIsDeadMsg deleteForbiddenLocationMsg =
+charactersForm : RoomData -> (Character -> String -> msg) -> (Character -> String -> msg) -> (Character -> String -> msg) -> (Character -> String -> msg) -> (Character -> msg) -> (Character -> msg) -> (Character -> msg) -> Html msg
+charactersForm data changeLocationMsg changeGMsg changePMsg changeIMsg toggleIsDeadMsg deleteForbiddenLocationMsg toggleIsSetExMsg =
     div [ class "rooper-characters-form" ]
         (data.characters
             |> List.reverse
             |> List.map
-                (\c -> Character.charactersFormItem c (changeLocationMsg c) (changeGMsg c) (changePMsg c) (changeIMsg c) (toggleIsDeadMsg c) (deleteForbiddenLocationMsg c))
+                (\c -> Character.charactersFormItem c (data.openSheet.set.setType == TragedySet.MysteryCircle) (changeLocationMsg c) (changeGMsg c) (changePMsg c) (changeIMsg c) (toggleIsDeadMsg c) (deleteForbiddenLocationMsg c) (toggleIsSetExMsg c))
         )
 
 
@@ -771,6 +787,14 @@ handsOnComponentFormProtagonist p data chgMsg =
                 :: List.concat
                     [ Board.getFormOptionList (Hand.getSelectedBoardComponentType p.number hands) data.boards
                     , getAppearedCharacters data
+                        |> List.filter
+                            (\c ->
+                                if c.isSetEx && data.openSheet.set.setType == TragedySet.MysteryCircle then
+                                    False
+
+                                else
+                                    True
+                            )
                         |> Character.getFormOptionList (Hand.getSelectedCharacterComponentType p.number hands)
                     ]
     in

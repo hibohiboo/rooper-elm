@@ -64,7 +64,12 @@
   &-characters-form {
     .rooper-character-room-form-item {
       display: grid;
-      grid-template-columns: 45px 1fr 1fr 1fr 1fr 20px;
+      grid-template-columns: 45px 1fr 1fr 1fr 1fr 30px 20px;
+
+      // キャラクタ以外は中央揃え
+      div:nth-child(n+2) {
+        text-align: center;
+      }
 
       [type='number'] {
         width: 30px;

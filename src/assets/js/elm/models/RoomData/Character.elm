@@ -5,6 +5,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Html.Events.Extra exposing (onChange)
+import Html.Extra as ExHtml
 import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
@@ -31,6 +32,7 @@ type alias Character =
     , location : Maybe Board -- 現在のボード
     , forbiddenLocations : List Board -- 禁止エリア
     , isDead : Bool -- 死亡
+    , isSetEx : Bool -- Exカードセット
     }
 
 
@@ -51,7 +53,7 @@ characterFromCharacterScriptData { character, role, optionalNumber, turf } =
         { characterType, name, paranoiaLimit, firstLocation, forbiddenLocations } =
             character
     in
-    Character characterType name paranoiaLimit firstLocation role optionalNumber turf 0 0 0 (Just firstLocation) forbiddenLocations False
+    Character characterType name paranoiaLimit firstLocation role optionalNumber turf 0 0 0 (Just firstLocation) forbiddenLocations False False
 
 
 resetCharacter : Character -> Character
@@ -61,7 +63,7 @@ resetCharacter { role, optionalNumber, turf, characterType, name, paranoiaLimit,
         { forbiddenLocations } =
             Models.Character.characterFromCharacterType characterType
     in
-    Character characterType name paranoiaLimit firstLocation role optionalNumber turf 0 0 0 (Just firstLocation) forbiddenLocations False
+    Character characterType name paranoiaLimit firstLocation role optionalNumber turf 0 0 0 (Just firstLocation) forbiddenLocations False False
 
 
 resetCharacters : List Character -> List Character
@@ -94,6 +96,7 @@ decoder =
         |> Pipeline.optional "location" Board.decodeBoard Nothing
         |> Pipeline.required "forbiddenLocations" (D.list Board.decode)
         |> Pipeline.optional "isDead" D.bool False
+        |> Pipeline.optional "isSetEx" D.bool False
 
 
 
@@ -103,7 +106,7 @@ decoder =
 
 
 encode : Character -> E.Value
-encode { characterType, name, paranoiaLimit, firstLocation, role, optionalNumber, turf, goodWill, paranoia, intrigue, location, forbiddenLocations, isDead } =
+encode { characterType, name, paranoiaLimit, firstLocation, role, optionalNumber, turf, goodWill, paranoia, intrigue, location, forbiddenLocations, isDead, isSetEx } =
     E.object
         [ ( "name", E.string name )
         , ( "characterType", E.string <| Models.Character.characterTypeToString characterType )
@@ -118,6 +121,7 @@ encode { characterType, name, paranoiaLimit, firstLocation, role, optionalNumber
         , ( "location", ExEncode.maybe E.string <| Maybe.map Board.toString location )
         , ( "forbiddenLocations", E.list (E.string << Board.toString) forbiddenLocations )
         , ( "isDead", E.bool isDead )
+        , ( "isSetEx", E.bool isSetEx )
         ]
 
 
@@ -163,6 +167,11 @@ setIntrigue v c =
 setIsDead : Bool -> Character -> Character
 setIsDead b c =
     { c | isDead = b }
+
+
+setIsSetEx : Bool -> Character -> Character
+setIsSetEx b c =
+    { c | isSetEx = b }
 
 
 setForbiddenLocations : List Board -> Character -> Character
@@ -560,7 +569,12 @@ characterCard c =
             img [ src "/assets/images/others/x.png" ] []
 
           else
-            text ""
+            ExHtml.nothing
+        , if c.isSetEx then
+            img [ src "/assets/images/hands/exA.png", style "left" "15px", style "top" "15px" ] []
+
+          else
+            ExHtml.nothing
         , characterCardChip c.goodWill "goodwill"
         , characterCardChip c.paranoia "paranoia"
         , characterCardChip c.intrigue "intrigue"
@@ -575,13 +589,13 @@ characterCardChip i s =
                 (\_ -> span [ class <| "chip big " ++ s ] [ text "3" ])
                 (List.range 1 (i // 3))
             , List.map
-                (\_ -> span [ class <| "chip " ++ s ] [ text "" ])
+                (\_ -> span [ class <| "chip " ++ s ] [ ExHtml.nothing ])
                 (List.range 1 (modBy 3 i))
             ]
 
 
-charactersFormItem : Character -> (String -> msg) -> (String -> msg) -> (String -> msg) -> (String -> msg) -> msg -> msg -> Html msg
-charactersFormItem c changeLocationMsg changeGMsg changePMsg changeIMsg toggleIsDeadMsg deleteForbiddenLocationMsg =
+charactersFormItem : Character -> Bool -> (String -> msg) -> (String -> msg) -> (String -> msg) -> (String -> msg) -> msg -> msg -> msg -> Html msg
+charactersFormItem c useEx changeLocationMsg changeGMsg changePMsg changeIMsg toggleIsDeadMsg deleteForbiddenLocationMsg toggleIsSetExMsg =
     div []
         [ div [ class "rooper-character-room-form-item" ]
             [ characterCard c
@@ -611,6 +625,14 @@ charactersFormItem c changeLocationMsg changeGMsg changePMsg changeIMsg toggleIs
                 [ text "死"
                 , div [] [ input [ type_ "checkbox", checked c.isDead, onClick toggleIsDeadMsg ] [] ]
                 ]
+            , if useEx then
+                div []
+                    [ text "Ex"
+                    , div [] [ input [ type_ "checkbox", checked c.isSetEx, onClick toggleIsSetExMsg ] [] ]
+                    ]
+
+              else
+                ExHtml.nothing
             ]
         , div []
             [ text c.name
@@ -621,10 +643,9 @@ charactersFormItem c changeLocationMsg changeGMsg changePMsg changeIMsg toggleIs
                 button [ style "margin-left" "1rem", onClick deleteForbiddenLocationMsg ] [ text "下校" ]
 
               else
-                text ""
+                ExHtml.nothing
             ]
         ]
-
 
 
 charactersViewItem : Character -> Html msg
@@ -634,11 +655,14 @@ charactersViewItem c =
             [ characterCard c
             , div []
                 [ text "ボード"
-                , div [] [ case c.location of
-                  Just l ->
-                    text l.name
-                  Nothing ->
-                    text "" ]
+                , div []
+                    [ case c.location of
+                        Just l ->
+                            text l.name
+
+                        Nothing ->
+                            ExHtml.nothing
+                    ]
                 ]
             , div []
                 [ text "友好"
@@ -659,11 +683,16 @@ charactersViewItem c =
                     ]
                 ]
             , div []
-                [  if  c.isDead then text "死" else text ""
+                [ if c.isDead then
+                    text "死"
+
+                  else
+                    ExHtml.nothing
                 ]
             ]
-        , div [] [ text c.name]
+        , div [] [ text c.name ]
         ]
+
 
 characterLocationBoards : Character -> (String -> msg) -> Html msg
 characterLocationBoards char chgMsg =

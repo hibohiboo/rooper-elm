@@ -162,6 +162,7 @@ type Msg
     | LoopEnd
     | ConfirmHandUnused Int Hand
     | HandUnused Int Hand
+    | ToggleCharacterIsSetEx RoomCharacter.Character
 
 
 type MenuState
@@ -336,6 +337,7 @@ update msg model =
                 day :: _ ->
                     case Script.unassignedCulpritCharacters model.scriptForm of
                         [] ->
+                            -- TODO: 選択中のキャラクターが0人のときにも出る。
                             update (OpenModal "既にキャラクターに事件が割り振られています。") model
 
                         char :: _ ->
@@ -603,6 +605,9 @@ update msg model =
         HandUnused i h ->
             ( { model | roomData = Maybe.map (RoomData.unusedProtagonistHand i h) model.roomData, modalState = CloseModalState }, Cmd.none )
 
+        ToggleCharacterIsSetEx c ->
+            ( { model | roomData = Maybe.map (RoomData.toggleCharacterIsSetEx c) model.roomData }, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -798,7 +803,7 @@ mastermindBottomForm model data =
                                       td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataEx, value <| String.fromInt data.ex ] [] ]
                                     ]
                         , RoomData.boardsForm data ChangeBoardIntrigue
-                        , RoomData.charactersForm data ChangeCharacterLocation ChangeCharacterGoodWill ChangeCharacterParanoia ChangeCharacterIntrigue ToggleCharacterIsDead DeleteCharacterForbiddenLocationMsg
+                        , RoomData.charactersForm data ChangeCharacterLocation ChangeCharacterGoodWill ChangeCharacterParanoia ChangeCharacterIntrigue ToggleCharacterIsDead DeleteCharacterForbiddenLocationMsg ToggleCharacterIsSetEx
                         ]
 
                 RoomState.Action ->
