@@ -41,6 +41,7 @@ type CharacterType
     | Soldier -- 軍人
     | BlackCat -- 黒猫
     | LittleGirl -- 女の子
+    | Sister -- 妹
 
 
 type alias Character =
@@ -183,6 +184,9 @@ characterTypeToString t =
         LittleGirl ->
             "LittleGirl"
 
+        Sister ->
+            "Sister"
+
 
 characterFromString : String -> Maybe Character
 characterFromString s =
@@ -267,6 +271,9 @@ characterFromString s =
 
         "LittleGirl" ->
             Just littleGirl
+
+        "Sister" ->
+            Just sister
 
         _ ->
             Nothing
@@ -361,6 +368,9 @@ characterFromCharacterType t =
         LittleGirl ->
             littleGirl
 
+        Sister ->
+            sister
+
 
 characters : List Character
 characters =
@@ -391,6 +401,7 @@ characters =
     , soldier
     , blackCat
     , littleGirl
+    , sister
     ]
 
 
@@ -598,6 +609,11 @@ littleGirl =
     Character LittleGirl "女の子" 1 Board.school [ Board.shrine, Board.hospital, Board.city ]
 
 
+sister : Character
+sister =
+    Character Sister "妹" 3 Board.shrine []
+
+
 
 -- View Method
 
@@ -678,19 +694,22 @@ characterTypeToCardUrl t =
                     "char21.png"
 
                 Teacher ->
-                    "silhouette.png"
+                    "teacher.png"
 
                 TransferStudent ->
-                    "silhouette.png"
+                    "transfer-student.png"
 
                 Soldier ->
-                    "silhouette.png"
+                    "soldier.png"
 
                 BlackCat ->
-                    "silhouette.png"
+                    "black-cat.png"
 
                 LittleGirl ->
-                    "silhouette.png"
+                    "little-girl.png"
+
+                Sister ->
+                    "sister.png"
            )
 
 
