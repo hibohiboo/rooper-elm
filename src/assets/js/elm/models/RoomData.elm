@@ -868,8 +868,8 @@ charactersView data =
         )
 
 
-tweetView : RoomData -> User -> msg -> Html msg
-tweetView data user closeModelMsg =
+tweetView : RoomData -> User -> Int -> msg -> Html msg
+tweetView data user turnNumber closeModelMsg =
     let
         componentText =
             if Protagonist.protagonistsHandsPlayedNumber data.protagonists == 0 then
@@ -902,22 +902,17 @@ tweetView data user closeModelMsg =
                 "脚本家が" ++ componentText ++ "に手札をセットしました。"
 
             else
-                case Protagonist.turnProtagonist data.protagonists of
+                case Protagonist.getProtagonistFromNumber turnNumber data.protagonists of
                     Just p ->
                         "主人公" ++ String.fromInt p.number ++ "が" ++ componentText ++ "に手札をセットしました。"
 
                     Nothing ->
-                        case data.protagonists |> List.reverse |> List.head of
-                            Just p ->
-                                "主人公" ++ String.fromInt p.number ++ "が" ++ componentText ++ "に手札をセットしました。"
-
-                            Nothing ->
-                                "ここにはこない"
+                        "ここにはこない"
 
         nextUser =
             case Protagonist.turnProtagonist data.protagonists of
                 Just p ->
-                    p.twitterScreenName ++ String.fromInt p.number
+                    p.twitterScreenName
 
                 Nothing ->
                     data.mastermind.twitterScreenName

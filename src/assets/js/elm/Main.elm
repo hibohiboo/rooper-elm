@@ -1056,7 +1056,7 @@ modal model =
                         Just d ->
                             case model.loginUser of
                                 Just u ->
-                                    RoomData.tweetView d u CloseModal
+                                    RoomData.tweetView d u model.roomState.turnProtagonistNumber CloseModal
 
                                 Nothing ->
                                     ExHtml.nothing
@@ -1291,6 +1291,14 @@ editRoomView { roomForm, scripts, room } =
 
             Nothing ->
                 ExHtml.nothing
+        , Form.field
+            [ button [ class "button is-danger", onClick ConfirmInitRoomData ]
+                [ span [ class "icon" ]
+                    [ i [ class "fas fa-book" ] []
+                    ]
+                , span [] [ text "ルーム初期化..." ]
+                ]
+            ]
         ]
 
 
