@@ -279,6 +279,11 @@ characterFromString s =
             Nothing
 
 
+characterTypeToName : CharacterType -> String
+characterTypeToName t =
+    characterFromCharacterType t |> .name
+
+
 characterTypeFromString : String -> Maybe CharacterType
 characterTypeFromString s =
     characterFromString s |> Maybe.map .characterType

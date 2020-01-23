@@ -66,6 +66,27 @@ boardFromString s =
             Nothing
 
 
+boardTypeToName : BoardType -> String
+boardTypeToName t =
+    boardTypeToBoard t |> .name
+
+
+boardTypeToBoard : BoardType -> Board
+boardTypeToBoard t =
+    case t of
+        Shrine ->
+            shrine
+
+        School ->
+            school
+
+        Hospital ->
+            hospital
+
+        City ->
+            city
+
+
 boardTypeFromString : String -> Maybe BoardType
 boardTypeFromString s =
     boardFromString s |> Maybe.map .boardType

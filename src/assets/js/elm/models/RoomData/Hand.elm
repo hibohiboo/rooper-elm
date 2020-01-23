@@ -389,6 +389,26 @@ componentTypeToString t =
             Board.boardTypeToString bt
 
 
+handToComponentName : Hand -> String
+handToComponentName h =
+    case h.onComponent of
+        Just c ->
+            componentTypeToName c
+
+        Nothing ->
+            ""
+
+
+componentTypeToName : ComponentType -> String
+componentTypeToName t =
+    case t of
+        CharacterComponentType ct ->
+            Character.characterTypeToName ct
+
+        BoardComponentType bt ->
+            Board.boardTypeToName bt
+
+
 getSelectedHand : Int -> List Hand -> Maybe Hand
 getSelectedHand i list =
     list

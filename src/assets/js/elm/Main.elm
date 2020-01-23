@@ -163,6 +163,7 @@ type Msg
     | ConfirmHandUnused Int Hand
     | HandUnused Int Hand
     | ToggleCharacterIsSetEx RoomCharacter.Character
+    | OpenTwitterModal
 
 
 type MenuState
@@ -185,6 +186,7 @@ type ModalState
     | ConfirmModalState String Msg
     | CharacterSelectModalState
     | OpenAddIncidentModalState
+    | OpenTwitterModalState
 
 
 type PlayerType
@@ -608,6 +610,9 @@ update msg model =
         ToggleCharacterIsSetEx c ->
             ( { model | roomData = Maybe.map (RoomData.toggleCharacterIsSetEx c) model.roomData }, Cmd.none )
 
+        OpenTwitterModal ->
+            ( { model | modalState = OpenTwitterModalState }, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -772,6 +777,14 @@ mastermindScriptButtons model data =
                     [ i [ class "fas fa-book" ] []
                     ]
                 , span [] [ text "ルーム初期化..." ]
+                ]
+            ]
+        , Form.field
+            [ button [ class "button is-danger", onClick OpenTwitterModal ]
+                [ span [ class "icon" ]
+                    [ i [ class "fas fa-book" ] []
+                    ]
+                , span [] [ text "呟く..." ]
                 ]
             ]
         ]
@@ -1025,6 +1038,19 @@ modal model =
                             ]
                         , Form.field [ button [ class "button is-info", onClick AddIncidents ] [ text "追加" ] ]
                         ]
+
+                OpenTwitterModalState ->
+                    case model.roomData of
+                        Just d ->
+                            case model.loginUser of
+                                Just u ->
+                                    RoomData.tweetView d u CloseModal
+
+                                Nothing ->
+                                    ExHtml.nothing
+
+                        Nothing ->
+                            ExHtml.nothing
             ]
 
 

@@ -3,6 +3,7 @@ module Models.RoomData exposing (..)
 import Component.Form as Form
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
 import Html.Extra as ExHtml
 import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
@@ -865,3 +866,40 @@ charactersView data =
             |> List.map
                 (\c -> Character.charactersViewItem c)
         )
+
+
+tweetView : RoomData -> User -> msg -> Html msg
+tweetView data user closeModelMsg =
+    let
+        componentText =
+            List.foldl (++) "" <|
+                List.map (\h -> "【" ++ Hand.handToComponentName h ++ "】") <|
+                    MasterMind.getPlayedHands data.mastermind
+
+        tweetText =
+            "脚本家が" ++ componentText ++ "に手札をセットしました。"
+
+        url =
+            "https://twitter.com/intent/tweet?screen_name=TwitterDev&button_hashtag=惨劇オンライン&text="
+                ++ tweetText
+                ++ "&ref_src=twsrc%5Etfw"
+    in
+    div []
+        [ div [ class "columns is-mobile" ]
+            [ text <| componentText ++ "に手札をセットしました。"
+            ]
+        , div [ class "columns is-mobile" ]
+            [ div [ class "column  is-4  is-offset-1 control" ]
+                [ a
+                    [ class "button is-primary twitter-hashtag-button"
+                    , attribute "data-text" "test"
+                    , href url
+                    ]
+                    [ span [ class "icon" ] [ i [ class "fab fa-twitter" ] [] ]
+                    , span [] [ text "呟く" ]
+                    ]
+                ]
+            , div [ class "column  is-4 is-offset-2 control" ]
+                [ button [ class "button is-info", onClick closeModelMsg ] [ text "閉じる" ] ]
+            ]
+        ]
