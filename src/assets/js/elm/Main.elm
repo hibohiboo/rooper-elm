@@ -779,6 +779,8 @@ mastermindScriptButtons model data =
                 , span [] [ text "ルーム初期化..." ]
                 ]
             ]
+
+        -- TODO: 消す
         , Form.field
             [ button [ class "button is-danger", onClick OpenTwitterModal ]
                 [ span [ class "icon" ]
@@ -896,6 +898,16 @@ protagonistsBottomForm { roomState } user data =
 
           else
             ExHtml.nothing
+
+        -- TODO: 消す
+        , Form.field
+            [ button [ class "button is-danger", onClick OpenTwitterModal ]
+                [ span [ class "icon" ]
+                    [ i [ class "fas fa-book" ] []
+                    ]
+                , span [] [ text "呟く..." ]
+                ]
+            ]
         ]
 
 

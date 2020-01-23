@@ -85,23 +85,6 @@ changeProtagonistComponent i s f =
     { f | hands = Hand.changeComponent i s f.hands }
 
 
-isProtagonistHandsPlayed : Int -> List Protagonist -> Bool
-isProtagonistHandsPlayed i list =
-    list
-        |> List.filter (\p -> p.number == i)
-        |> List.filter (\p -> Hand.isProtagonistHandsPlayed p.hands)
-        |> List.length
-        |> (==) 1
-
-
-isProtagonistsHandsPlayed : List Protagonist -> Bool
-isProtagonistsHandsPlayed list =
-    list
-        |> List.filter (\p -> Hand.isProtagonistHandsPlayed p.hands)
-        |> List.length
-        |> (==) 3
-
-
 returnPlayedHands : List Protagonist -> List Protagonist
 returnPlayedHands list =
     list |> List.map (\p -> { p | hands = Hand.changeHand p.number "p0" <| Hand.returnPlayedHands p.hands })
@@ -134,6 +117,29 @@ unusedProtagonistHand i h list =
 -- ==============================================================================================
 -- getter
 -- ==============================================================================================
+
+
+isProtagonistHandsPlayed : Int -> List Protagonist -> Bool
+isProtagonistHandsPlayed i list =
+    list
+        |> List.filter (\p -> p.number == i)
+        |> List.filter (\p -> Hand.isProtagonistHandsPlayed p.hands)
+        |> List.length
+        |> (==) 1
+
+
+protagonistsHandsPlayedNumber : List Protagonist -> Int
+protagonistsHandsPlayedNumber list =
+    list
+        |> List.filter (\p -> Hand.isProtagonistHandsPlayed p.hands)
+        |> List.length
+
+
+isProtagonistsHandsPlayed : List Protagonist -> Bool
+isProtagonistsHandsPlayed list =
+    list
+        |> protagonistsHandsPlayedNumber
+        |> (==) 3
 
 
 isProtagonist : String -> List Protagonist -> Bool
@@ -199,6 +205,14 @@ turnProtagonist list =
 getSelectedHandComponentKey : Protagonist -> String
 getSelectedHandComponentKey { number, hands } =
     Hand.getSelectedHandComponentKey number hands
+
+
+getPlayedProtagonistHand : List Protagonist -> Maybe Hand
+getPlayedProtagonistHand list =
+    list
+        |> getPlayedProtagonistsHands
+        |> List.reverse
+        |> List.head
 
 
 getPlayedProtagonistsHands : List Protagonist -> List Hand

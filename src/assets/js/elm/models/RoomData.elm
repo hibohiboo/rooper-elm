@@ -872,15 +872,60 @@ tweetView : RoomData -> User -> msg -> Html msg
 tweetView data user closeModelMsg =
     let
         componentText =
-            List.foldl (++) "" <|
-                List.map (\h -> "【" ++ Hand.handToComponentName h ++ "】") <|
-                    MasterMind.getPlayedHands data.mastermind
+            if Protagonist.protagonistsHandsPlayedNumber data.protagonists == 0 then
+                List.foldl (++) "" <|
+                    List.map (\h -> "【" ++ Hand.handToComponentName h ++ "】") <|
+                        MasterMind.getPlayedHands data.mastermind
+
+            else
+                -- 主人公の手番がまだあるかを確認
+                case Protagonist.turnProtagonist data.protagonists of
+                    Just _ ->
+                        -- あれば、選択済のカードの置き場所を取得
+                        case Protagonist.getPlayedProtagonistHand data.protagonists of
+                            Just h ->
+                                "【" ++ Hand.handToComponentName h ++ "】"
+
+                            Nothing ->
+                                "ここはこないはず"
+
+                    Nothing ->
+                        case Protagonist.getPlayedProtagonistHand data.protagonists of
+                            Just h ->
+                                "【" ++ Hand.handToComponentName h ++ "】"
+
+                            Nothing ->
+                                "ここはこないはず"
 
         tweetText =
-            "脚本家が" ++ componentText ++ "に手札をセットしました。"
+            if Protagonist.protagonistsHandsPlayedNumber data.protagonists == 0 then
+                "脚本家が" ++ componentText ++ "に手札をセットしました。"
+
+            else
+                case Protagonist.turnProtagonist data.protagonists of
+                    Just p ->
+                        "主人公" ++ String.fromInt p.number ++ "が" ++ componentText ++ "に手札をセットしました。"
+
+                    Nothing ->
+                        case data.protagonists |> List.reverse |> List.head of
+                            Just p ->
+                                "主人公" ++ String.fromInt p.number ++ "が" ++ componentText ++ "に手札をセットしました。"
+
+                            Nothing ->
+                                "ここにはこない"
+
+        nextUser =
+            case Protagonist.turnProtagonist data.protagonists of
+                Just p ->
+                    p.twitterScreenName ++ String.fromInt p.number
+
+                Nothing ->
+                    data.mastermind.twitterScreenName
 
         url =
-            "https://twitter.com/intent/tweet?screen_name=TwitterDev&button_hashtag=惨劇オンライン&text="
+            "https://twitter.com/intent/tweet?screen_name="
+                ++ nextUser
+                ++ "&button_hashtag=惨劇オンライン&text="
                 ++ tweetText
                 ++ "&ref_src=twsrc%5Etfw"
     in
