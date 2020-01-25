@@ -905,18 +905,22 @@ tweetView data user turnNumber closeModelMsg =
                     Nothing ->
                         "ここはこないはず"
 
-        tweetText =
-            if Protagonist.protagonistsHandsPlayedNumber data.protagonists == 0 then
-                "脚本家が" ++ componentText ++ "に手札をセットしました。"
+        roomUrl =
+            if data.isUseTweetRoomName then
+                "https%3A%2F%2Frooper-tool.web.app%2F" ++ data.id ++ "%2F"
 
             else
-                "主人公【" ++ user.twitterScreenName ++ "】が" ++ componentText ++ "に手札をセットしました。"
+                ""
 
-        tweetTextEx =
-            -- if data.isUseTweetRoomName then
-            --     tweetText ++ "#" ++ data.id ++ "https://rooper-tool.web.app/" ++ data.id ++ "/"
-            -- else
-            tweetText
+        urlParameter =
+            if roomUrl == "" then
+                ""
+
+            else
+                "&url=" ++ roomUrl
+
+        hashtag =
+            "&hashtags=惨劇オンライン"
 
         nextUser =
             case Protagonist.turnProtagonist data.protagonists of
@@ -926,12 +930,26 @@ tweetView data user turnNumber closeModelMsg =
                 Nothing ->
                     data.mastermind.twitterScreenName
 
-        url =
-            "https://twitter.com/intent/tweet?screen_name="
+        tweetText =
+            if Protagonist.protagonistsHandsPlayedNumber data.protagonists == 0 then
+                "@" ++ nextUser ++ " " ++ "脚本家が" ++ componentText ++ "に手札をセットしました。"
+
+            else
+                "@" ++ nextUser ++ " " ++ "主人公【" ++ user.twitterScreenName ++ "】が" ++ componentText ++ "に手札をセットしました。"
+
+        mentionParameter =
+            "screen_name="
                 ++ nextUser
-                ++ "&button_hashtag=惨劇オンライン&text="
-                ++ tweetTextEx
-                ++ "&ref_src=twsrc%5Etfw"
+
+        url =
+            "https://twitter.com/intent/tweet?"
+                ++ "ref_src=twsrc%5Etfw"
+                ++ hashtag
+                ++ "&original_referer="
+                ++ roomUrl
+                ++ urlParameter
+                ++ "&text="
+                ++ tweetText
     in
     div []
         [ div [ class "columns is-mobile" ]
@@ -945,7 +963,7 @@ tweetView data user turnNumber closeModelMsg =
                     , href url
                     ]
                     [ span [ class "icon" ] [ i [ class "fab fa-twitter" ] [] ]
-                    , span [] [ text "呟く" ]
+                    , span [] [ text <| "呟く" ]
                     ]
                 ]
             , div [ class "column  is-4 is-offset-2 control" ]
