@@ -26,6 +26,8 @@ type alias Room =
     , protagonist1TwitterScreenName : String
     , protagonist2TwitterScreenName : String
     , protagonist3TwitterScreenName : String
+    , isUseTweet : Bool
+    , isUseTweetRoomName : Bool
     }
 
 
@@ -53,6 +55,8 @@ form =
         |> Decoder.field (Decoder.identity |> Decoder.assert (Decoder.minLength RequiredProtagonist1TwitterScreenName 1) |> Decoder.lift .protagonist1TwitterScreenName)
         |> Decoder.field (Decoder.identity |> Decoder.assert (Decoder.minLength RequiredProtagonist2TwitterScreenName 1) |> Decoder.lift .protagonist2TwitterScreenName)
         |> Decoder.field (Decoder.identity |> Decoder.assert (Decoder.minLength RequiredProtagonist3TwitterScreenName 1) |> Decoder.lift .protagonist3TwitterScreenName)
+        |> Decoder.field (Decoder.identity |> Decoder.lift .isUseTweet)
+        |> Decoder.field (Decoder.identity |> Decoder.lift .isUseTweetRoomName)
 
 
 decoderName : Decoder RegisterForm Error Name
@@ -93,6 +97,8 @@ type alias RegisterForm =
     , protagonist2TwitterScreenName : String
     , protagonist3TwitterScreenName : String
     , script : Maybe Script
+    , isUseTweet : Bool
+    , isUseTweetRoomName : Bool
     }
 
 
@@ -106,6 +112,8 @@ init =
     , protagonist2TwitterScreenName = ""
     , protagonist3TwitterScreenName = ""
     , script = Nothing
+    , isUseTweet = True
+    , isUseTweetRoomName = True
     }
 
 
@@ -196,6 +204,16 @@ setProtagonist3TwitterScreenName s f =
     { f | protagonist3TwitterScreenName = s }
 
 
+setIsUseTweet : Bool -> RegisterForm -> RegisterForm
+setIsUseTweet s f =
+    { f | isUseTweet = s }
+
+
+setIsUseTweetRoomName : Bool -> RegisterForm -> RegisterForm
+setIsUseTweetRoomName s f =
+    { f | isUseTweetRoomName = s }
+
+
 
 -- Decoder Register Form
 
@@ -218,6 +236,8 @@ formDecoder =
         |> Pipeline.optional "protagonist2TwitterScreenName" D.string ""
         |> Pipeline.optional "protagonist3TwitterScreenName" D.string ""
         |> Pipeline.optional "script" Script.scriptDecoder Nothing
+        |> Pipeline.optional "isUseTweet" D.bool False
+        |> Pipeline.optional "isUseTweetRoomName" D.bool False
 
 
 
@@ -279,4 +299,6 @@ encode room =
         , ( "protagonist1TwitterScreenName", E.string room.protagonist1TwitterScreenName )
         , ( "protagonist2TwitterScreenName", E.string room.protagonist2TwitterScreenName )
         , ( "protagonist3TwitterScreenName", E.string room.protagonist3TwitterScreenName )
+        , ( "isUseTweet", E.bool room.isUseTweet )
+        , ( "isUseTweetRoomName", E.bool room.isUseTweetRoomName )
         ]

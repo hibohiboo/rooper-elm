@@ -131,6 +131,8 @@ type Msg
     | ChangedRoomScript Value
     | ChangeRoomTwitterScreenName PlayerType String
     | ChangedRoom
+    | SetIsUseTweet Bool
+    | SetIsUseTweetRoomName Bool
       -- ルーム
     | ReadedRoomData Value
     | ReadedRoomForRoomData Value
@@ -463,6 +465,12 @@ update msg model =
 
                 Protagonist3 ->
                     update ChangedRoom { model | roomForm = Room.setProtagonist3TwitterScreenName s model.roomForm }
+
+        SetIsUseTweet b ->
+            update ChangedRoom { model | roomForm = Room.setIsUseTweet b model.roomForm }
+
+        SetIsUseTweetRoomName b ->
+            update ChangedRoom { model | roomForm = Room.setIsUseTweetRoomName b model.roomForm }
 
         ChangedRoom ->
             ( { model | room = Room.convert model.roomForm }, Cmd.none )
@@ -1267,6 +1275,22 @@ editRoomView { roomForm, scripts, room } =
                 ]
             , Form.errors
                 [ ( "主人公IDを入力してください", List.member Room.RequiredProtagonist3TwitterScreenName (Room.errors roomForm) )
+                ]
+            ]
+        , Form.field
+            [ label [ class "label has-text-white" ]
+                [ text "呟きボタンを表示"
+                ]
+            , Form.control
+                [ input [ class "", type_ "checkbox", checked roomForm.isUseTweet, onClick (SetIsUseTweet <| not roomForm.isUseTweet) ] []
+                ]
+            ]
+        , Form.field
+            [ label [ class "label has-text-white" ]
+                [ text "呟きにルーム名を含める"
+                ]
+            , Form.control
+                [ input [ class "", type_ "checkbox", checked roomForm.isUseTweetRoomName, onClick (SetIsUseTweetRoomName <| not roomForm.isUseTweetRoomName) ] []
                 ]
             ]
         , Form.field
