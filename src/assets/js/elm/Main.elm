@@ -534,7 +534,7 @@ update msg model =
                 modalState =
                     case model.roomData of
                         Just d ->
-                            if RoomData.isOpenTweetModal d then
+                            if RoomData.isOpenTweetModal d && d.isUseTweet then
                                 OpenTwitterModalState
 
                             else
@@ -1285,14 +1285,15 @@ editRoomView { roomForm, scripts, room } =
                 [ input [ class "", type_ "checkbox", checked roomForm.isUseTweet, onClick (SetIsUseTweet <| not roomForm.isUseTweet) ] []
                 ]
             ]
-        , Form.field
-            [ label [ class "label has-text-white" ]
-                [ text "呟きにルーム名を含める"
-                ]
-            , Form.control
-                [ input [ class "", type_ "checkbox", checked roomForm.isUseTweetRoomName, onClick (SetIsUseTweetRoomName <| not roomForm.isUseTweetRoomName) ] []
-                ]
-            ]
+
+        -- , Form.field
+        --     [ label [ class "label has-text-white" ]
+        --         [ text "呟きにルーム名を含める"
+        --         ]
+        --     , Form.control
+        --         [ input [ class "", type_ "checkbox", checked roomForm.isUseTweetRoomName, onClick (SetIsUseTweetRoomName <| not roomForm.isUseTweetRoomName) ] []
+        --         ]
+        --     ]
         , Form.field
             [ div [ class "control" ]
                 [ button [ class "button is-primary", disabled isRoomInvalid, onClick UpdateRoom ] [ text "更新" ]

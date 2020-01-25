@@ -34,6 +34,8 @@ type alias RoomData =
     , state : RoomDataState
     , characters : List Character
     , boards : List Board
+    , isUseTweet : Bool
+    , isUseTweetRoomName : Bool
     }
 
 
@@ -54,7 +56,7 @@ initDefault =
         script =
             Script.initDefault
     in
-    RoomData "roomTest" mastermind protagonists (Script.scriptToOpenSheet script) Nothing 0 0 0 RoomDataState.init (Character.charactersFromCharacterScriptDataList script.characters) Board.init
+    RoomData "roomTest" mastermind protagonists (Script.scriptToOpenSheet script) Nothing 0 0 0 RoomDataState.init (Character.charactersFromCharacterScriptDataList script.characters) Board.init False False
 
 
 initRoomData : Room -> RoomData
@@ -66,7 +68,7 @@ initRoomData room =
         protagonists =
             Protagonist.init room.protagonist1TwitterScreenName room.protagonist2TwitterScreenName room.protagonist3TwitterScreenName
     in
-    RoomData (Room.getId room) mastermind protagonists (Script.scriptToOpenSheet room.script) Nothing 0 0 0 RoomDataState.init (Character.charactersFromCharacterScriptDataList room.script.characters) Board.init
+    RoomData (Room.getId room) mastermind protagonists (Script.scriptToOpenSheet room.script) Nothing 0 0 0 RoomDataState.init (Character.charactersFromCharacterScriptDataList room.script.characters) Board.init room.isUseTweet room.isUseTweetRoomName
 
 
 
@@ -486,6 +488,8 @@ decoder =
         |> Pipeline.optional "state" RoomDataState.decoder RoomDataState.init
         |> Pipeline.optional "characters" (D.list Character.decoder) []
         |> Pipeline.optional "boards" (D.list Board.decoder) []
+        |> Pipeline.optional "isUseTweet" D.bool False
+        |> Pipeline.optional "isUseTweetRoomName" D.bool False
 
 
 
@@ -508,6 +512,8 @@ encode data =
         , ( "state", RoomDataState.encode data.state )
         , ( "characters", E.list Character.encode data.characters )
         , ( "boards", E.list Board.encode data.boards )
+        , ( "isUseTweet", E.bool data.isUseTweet )
+        , ( "isUseTweetRoomName", E.bool data.isUseTweetRoomName )
         ]
 
 
@@ -906,6 +912,12 @@ tweetView data user turnNumber closeModelMsg =
             else
                 "主人公【" ++ user.twitterScreenName ++ "】が" ++ componentText ++ "に手札をセットしました。"
 
+        tweetTextEx =
+            -- if data.isUseTweetRoomName then
+            --     tweetText ++ "#" ++ data.id ++ "https://rooper-tool.web.app/" ++ data.id ++ "/"
+            -- else
+            tweetText
+
         nextUser =
             case Protagonist.turnProtagonist data.protagonists of
                 Just p ->
@@ -918,7 +930,7 @@ tweetView data user turnNumber closeModelMsg =
             "https://twitter.com/intent/tweet?screen_name="
                 ++ nextUser
                 ++ "&button_hashtag=惨劇オンライン&text="
-                ++ tweetText
+                ++ tweetTextEx
                 ++ "&ref_src=twsrc%5Etfw"
     in
     div []
