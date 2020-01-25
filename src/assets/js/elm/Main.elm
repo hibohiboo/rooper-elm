@@ -477,7 +477,7 @@ update msg model =
         ReadedRoomData val ->
             case RoomData.decode val of
                 Just data ->
-                    ( { model | roomData = Just data, roomState = RoomState.updateByRoomDataState (Just data) model.roomState }, Cmd.none )
+                    ( { model | roomData = Just data, roomState = RoomState.updateByRoomDataState (Just data) <| RoomState.updateTweetProtagonistNumber (Just data) model.loginUser <| model.roomState }, Cmd.none )
 
                 Nothing ->
                     ( model, Cmd.none )
@@ -522,8 +522,20 @@ update msg model =
             let
                 roomData =
                     model.roomData |> Maybe.map RoomData.nextRoomDataState
+
+                modalState =
+                    case model.roomData of
+                        Just d ->
+                            if RoomData.isOpenTweetModal d then
+                                OpenTwitterModalState
+
+                            else
+                                model.modalState
+
+                        Nothing ->
+                            model.modalState
             in
-            update UpdateRoomData { model | roomData = roomData, roomState = RoomState.updateByRoomDataState roomData model.roomState }
+            update UpdateRoomData { model | roomData = roomData, roomState = RoomState.updateByRoomDataState roomData <| RoomState.updateTweetProtagonistNumber roomData model.loginUser <| model.roomState, modalState = modalState }
 
         UpdateRoomData ->
             let
@@ -779,16 +791,6 @@ mastermindScriptButtons model data =
                 , span [] [ text "ルーム初期化..." ]
                 ]
             ]
-
-        -- TODO: 消す
-        , Form.field
-            [ button [ class "button is-danger", onClick OpenTwitterModal ]
-                [ span [ class "icon" ]
-                    [ i [ class "fas fa-book" ] []
-                    ]
-                , span [] [ text "呟く..." ]
-                ]
-            ]
         ]
 
 
@@ -898,16 +900,6 @@ protagonistsBottomForm { roomState } user data =
 
           else
             ExHtml.nothing
-
-        -- TODO: 消す
-        , Form.field
-            [ button [ class "button is-danger", onClick OpenTwitterModal ]
-                [ span [ class "icon" ]
-                    [ i [ class "fas fa-book" ] []
-                    ]
-                , span [] [ text "呟く..." ]
-                ]
-            ]
         ]
 
 
@@ -1056,7 +1048,7 @@ modal model =
                         Just d ->
                             case model.loginUser of
                                 Just u ->
-                                    RoomData.tweetView d u model.roomState.turnProtagonistNumber CloseModal
+                                    RoomData.tweetView d u model.roomState.tweetProtagonistNumber CloseModal
 
                                 Nothing ->
                                     ExHtml.nothing

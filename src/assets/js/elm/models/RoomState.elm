@@ -25,6 +25,7 @@ type alias RoomState =
     , bottomNavOpen : Bool
     , turnProtagonistNumber : Int
     , isDisplayCardsAreResolved : Bool
+    , tweetProtagonistNumber : Int
     }
 
 
@@ -36,7 +37,7 @@ type TabsState
 
 init : RoomState
 init =
-    RoomState Action True 0 False
+    RoomState Action True 0 False 0
 
 
 setBottomNav : Bool -> RoomState -> RoomState
@@ -110,6 +111,30 @@ updateIsDisplayCardsAreResolved data state =
 
     else
         { state | isDisplayCardsAreResolved = False }
+
+
+setTweetProtagonistNumber : Int -> RoomState -> RoomState
+setTweetProtagonistNumber i s =
+    { s | tweetProtagonistNumber = i }
+
+
+updateTweetProtagonistNumber : Maybe RoomData -> Maybe User -> RoomState -> RoomState
+updateTweetProtagonistNumber data user state =
+    case user of
+        Just u ->
+            case data of
+                Just d ->
+                    if RoomData.isTurnProtagonist state.turnProtagonistNumber u d then
+                        setTweetProtagonistNumber state.turnProtagonistNumber state
+
+                    else
+                        state
+
+                Nothing ->
+                    state
+
+        Nothing ->
+            state
 
 
 

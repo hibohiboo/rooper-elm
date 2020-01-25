@@ -371,6 +371,19 @@ isDisplayMastermindBottomForm user data =
             user.twitterScreenName == data.mastermind.twitterScreenName
 
 
+isOpenTweetModal : RoomData -> Bool
+isOpenTweetModal data =
+    case data.state of
+        RoomDataState.MastermindPlaysCards ->
+            True
+
+        RoomDataState.ProtagonistsPlaysCard ->
+            True
+
+        _ ->
+            False
+
+
 isMastermindPlaysCards : RoomData -> Bool
 isMastermindPlaysCards d =
     d.state == RoomDataState.MastermindPlaysCards
@@ -878,36 +891,20 @@ tweetView data user turnNumber closeModelMsg =
                         MasterMind.getPlayedHands data.mastermind
 
             else
-                -- 主人公の手番がまだあるかを確認
-                case Protagonist.turnProtagonist data.protagonists of
-                    Just _ ->
-                        -- あれば、選択済のカードの置き場所を取得
-                        case Protagonist.getPlayedProtagonistHand data.protagonists of
-                            Just h ->
-                                "【" ++ Hand.handToComponentName h ++ "】"
-
-                            Nothing ->
-                                "ここはこないはず"
+                -- 選択済のカードの置き場所を取得
+                case Protagonist.getPlayedProtagonistHand data.protagonists of
+                    Just h ->
+                        "【" ++ Hand.handToComponentName h ++ "】"
 
                     Nothing ->
-                        case Protagonist.getPlayedProtagonistHand data.protagonists of
-                            Just h ->
-                                "【" ++ Hand.handToComponentName h ++ "】"
-
-                            Nothing ->
-                                "ここはこないはず"
+                        "ここはこないはず"
 
         tweetText =
             if Protagonist.protagonistsHandsPlayedNumber data.protagonists == 0 then
                 "脚本家が" ++ componentText ++ "に手札をセットしました。"
 
             else
-                case Protagonist.getProtagonistFromNumber turnNumber data.protagonists of
-                    Just p ->
-                        "主人公" ++ String.fromInt p.number ++ "が" ++ componentText ++ "に手札をセットしました。"
-
-                    Nothing ->
-                        "ここにはこない"
+                "主人公【" ++ user.twitterScreenName ++ "】が" ++ componentText ++ "に手札をセットしました。"
 
         nextUser =
             case Protagonist.turnProtagonist data.protagonists of
