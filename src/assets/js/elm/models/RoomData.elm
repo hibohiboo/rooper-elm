@@ -908,7 +908,7 @@ tweetView data user turnNumber closeModelMsg =
 
         roomUrl =
             if data.isUseTweetRoomName then
-                "https%3A%2F%2Frooper-tool.web.app%2F" ++ data.id ++ "%2F"
+                "https%3A%2F%2Frooper-tool.web.app%2F" ++ "rooper%2Froom%2F" ++ data.id ++ "%2F"
 
             else
                 ""
