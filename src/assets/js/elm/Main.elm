@@ -508,7 +508,7 @@ update msg model =
                         roomData =
                             RoomData.initRoomData r
                     in
-                    ( { model | roomData = Just roomData, modalState = CloseModalState }, Cmd.batch [ updateRoomData (RoomData.encode roomData) ] )
+                    ( { model | roomData = Just roomData, modalState = CloseModalState, roomState = RoomState.setParameterTab model.roomState }, Cmd.batch [ updateRoomData (RoomData.encode roomData) ] )
 
                 Nothing ->
                     update (OpenModal "部屋の読み込みに失敗しました。一度トップに戻ります。") { model | mainAreaState = MainTab, modalState = CloseModalState }
