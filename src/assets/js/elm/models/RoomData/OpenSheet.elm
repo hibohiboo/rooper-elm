@@ -6,7 +6,7 @@ import Html.Attributes exposing (class, href, style)
 import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
-import Models.TragedySet as TragedySet exposing (Incident, TragedySet)
+import Models.TragedySet as TragedySet exposing (Effect, Incident, Plot, Role, TragedySet)
 
 
 type alias OpenSheetIncident =
@@ -80,6 +80,14 @@ incidentEncode data =
 
 openSheetView : OpenSheet -> Html msg
 openSheetView s =
+    div []
+        [ openSheetViewDetail s
+        , tragedySetView s.set
+        ]
+
+
+openSheetViewDetail : OpenSheet -> Html msg
+openSheetViewDetail s =
     div [ class "box" ]
         [ div [ class "title is-5" ]
             [ text "公開シート"
@@ -139,3 +147,52 @@ incidentIcon date list =
 
     else
         text ""
+
+
+tragedySetView : TragedySet -> Html msg
+tragedySetView set =
+    div [ class "box" ]
+        [ div [ class "content" ]
+            (h3 [ class "title" ] [ text "ルールY" ]
+                :: (List.map (\p -> plotView p) <| TragedySet.filterMainPlots <| set.plots)
+            )
+        ]
+
+
+plotView : Plot -> Html msg
+plotView plot =
+    div [ class "card" ]
+        [ header [ class "card-header" ]
+            [ p [ class "card-header-title" ]
+                [ text plot.name
+                ]
+            ]
+        , div [ class "card-content" ]
+            [ div [ class "content" ]
+                [ div []
+                    [ div [ class "tag is-info" ]
+                        [ text "役職追加"
+                        ]
+                    ]
+                , ul [] (List.map (\r -> li [] [ text r.name ]) plot.roles)
+                , div
+                    []
+                    [ div [ class "tag is-info" ]
+                        [ text "ルール追加"
+                        ]
+                    ]
+                , div [] (List.map (\e -> effectView e) plot.effects)
+                ]
+            ]
+        ]
+
+
+effectView : Effect -> Html msg
+effectView e =
+    div []
+        [ div [ class "tags has-addons", style "margin" "1.5rem 0 0 0.5rem" ]
+            [ span [ class "tag is-primary" ] [ text <| TragedySet.toEffectTimingName e.timing ]
+            , span [ class "tag", class <| TragedySet.toEffectTypeColorClass e.effectType ] [ text <| TragedySet.toEffectTypeName e.effectType ]
+            ]
+        , div [] [ text e.effect ]
+        ]

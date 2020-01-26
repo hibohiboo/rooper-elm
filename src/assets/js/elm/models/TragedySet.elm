@@ -285,6 +285,54 @@ type Timing
     | WritingScript -- 脚本作成時
 
 
+toEffectTypeName : EffectType -> String
+toEffectTypeName t =
+    case t of
+        Mandatory ->
+            "強制"
+
+        Optional ->
+            "任意"
+
+        LossCondition ->
+            "敗北条件"
+
+
+toEffectTypeColorClass : EffectType -> String
+toEffectTypeColorClass t =
+    case t of
+        Mandatory ->
+            "is-warning"
+
+        Optional ->
+            "is-primary"
+
+        LossCondition ->
+            "is-danger"
+
+
+toEffectTimingName : Timing -> String
+toEffectTimingName t =
+    case t of
+        LoopEnd ->
+            "ループ終了時"
+
+        LoopStart ->
+            "ループ開始時"
+
+        MastermindAbility ->
+            "脚本家能力フェイズ"
+
+        Always ->
+            "常時"
+
+        DayEnd ->
+            "ターン終了フェイズ"
+
+        WritingScript ->
+            "脚本作成時"
+
+
 
 -- ルール > メソッド
 

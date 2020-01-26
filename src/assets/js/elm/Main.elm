@@ -15,6 +15,7 @@ import Models.RoomData as RoomData exposing (RoomData)
 import Models.RoomData.Board as RoomBoard
 import Models.RoomData.Character as RoomCharacter
 import Models.RoomData.Hand as Hand exposing (Hand)
+import Models.RoomData.OpenSheet as OpenSheet
 import Models.RoomName as RoomName exposing (RoomName)
 import Models.RoomState as RoomState exposing (RoomState)
 import Models.Script as Script exposing (Script)
@@ -1431,6 +1432,7 @@ createScriptView { scriptForm, script } =
         , Form.field
             [ a [ href "/rooper/script/" ] [ text "戻る" ]
             ]
+        , OpenSheet.tragedySetView scriptForm.set
         ]
 
 
