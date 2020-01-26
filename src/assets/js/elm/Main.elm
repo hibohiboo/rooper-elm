@@ -757,7 +757,8 @@ ownerRoomView user model =
 
                   else
                     ExHtml.nothing
-                , creativeCommmons
+
+                -- , creativeCommmons
                 ]
 
 
@@ -957,7 +958,8 @@ userRoomView model user data =
 
           else
             ExHtml.nothing
-        , creativeCommmons
+
+        -- , creativeCommmons
         ]
 
 
@@ -971,7 +973,8 @@ notLoginedUserRoomView data =
         , RoomData.openSheetView data
         , RoomData.closeSheetView OpenCharacterCardModal data
         , RoomData.roomDataView OpenCharacterCardModal data
-        , creativeCommmons
+
+        -- , creativeCommmons
         ]
 
 
@@ -992,9 +995,10 @@ mainContentBox model =
             [ mainTabs model
             , mainMessage model
             ]
-        , div [ style "position" "absolute", style "bottom" "0" ]
-            [ creativeCommmons
-            ]
+
+        -- , div [ style "position" "absolute", style "bottom" "0" ]
+        --     [ creativeCommmons
+        --     ]
         ]
 
 
