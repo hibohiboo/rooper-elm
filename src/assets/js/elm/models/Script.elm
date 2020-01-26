@@ -159,9 +159,16 @@ charactersValidator =
 
 characterRolesValidator : Decoder.Validator Script Error
 characterRolesValidator =
+    let
+        unassignedLength script =
+            unassignedRoles script
+                -- 最低の脚本でマイナスが追加される数が0-2なので未割当に含まない。マイナスは最低の脚本にしか登場しない。
+                |> List.filter (\r -> r.roleType /= TragedySet.Curmudgeon)
+                |> List.length
+    in
     Decoder.custom <|
-        \script ->
-            if List.length (unassignedRoles script) == 0 then
+        \s ->
+            if unassignedLength s == 0 then
                 Ok ()
 
             else
