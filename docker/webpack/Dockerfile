@@ -1,8 +1,12 @@
-FROM node:13.2.0
+FROM node:13.7.0
 # FROM node:12.13.1
 
 # コンテナ上の作業ディレクトリ作成
 WORKDIR /app
+
+# https://teppeis.hatenablog.com/entry/2015/12/configure-npm-init
+COPY .npmrc /app/.npmrc
+RUN npm init -y
 
 ## elm
 RUN yarn add --dev elm
