@@ -9,6 +9,7 @@ import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
 import Json.Encode.Extra as ExEncode
+import Models.Character exposing (CharacterType)
 import Models.Room as Room exposing (Room)
 import Models.RoomData.Board as Board exposing (Board)
 import Models.RoomData.Character as Character exposing (Character)
@@ -529,11 +530,11 @@ openSheetView data =
         |> OpenSheet.openSheetView
 
 
-closeSheetView : RoomData -> Html msg
-closeSheetView data =
+closeSheetView : (CharacterType -> msg) -> RoomData -> Html msg
+closeSheetView modalMsg data =
     case data.script of
         Just script ->
-            Script.closeSheet script
+            Script.closeSheet modalMsg script
 
         Nothing ->
             text ""
@@ -860,11 +861,11 @@ usedHands returnMsg d =
     div [ style "display" "flex", style "justify-content" "space-evenly", style "flex-wrap" "wrap" ] <| List.concat [ Protagonist.useCardView returnMsg d.protagonists, [ MasterMind.useCardView d.mastermind ] ]
 
 
-roomDataView : RoomData -> Html msg
-roomDataView data =
+roomDataView : (CharacterType -> msg) -> RoomData -> Html msg
+roomDataView modalMsg data =
     div [ class "box" ]
         [ boardsView data
-        , charactersView data
+        , charactersView modalMsg data
         ]
 
 
@@ -877,13 +878,13 @@ boardsView data =
         )
 
 
-charactersView : RoomData -> Html msg
-charactersView data =
+charactersView : (CharacterType -> msg) -> RoomData -> Html msg
+charactersView modalMsg data =
     div [ class "rooper-characters-form" ]
         (getAppearedCharacters data
             |> List.reverse
             |> List.map
-                (\c -> Character.charactersViewItem c)
+                (\c -> Character.charactersViewItem modalMsg c)
         )
 
 

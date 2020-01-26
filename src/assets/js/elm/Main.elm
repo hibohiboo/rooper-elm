@@ -166,6 +166,7 @@ type Msg
     | HandUnused Int Hand
     | ToggleCharacterIsSetEx RoomCharacter.Character
     | OpenTwitterModal
+    | OpenCharacterCardModal Character.CharacterType
 
 
 type MenuState
@@ -189,6 +190,7 @@ type ModalState
     | CharacterSelectModalState
     | OpenAddIncidentModalState
     | OpenTwitterModalState
+    | OpenCharacterCardModalState Character.CharacterType
 
 
 type PlayerType
@@ -633,6 +635,9 @@ update msg model =
         OpenTwitterModal ->
             ( { model | modalState = OpenTwitterModalState }, Cmd.none )
 
+        OpenCharacterCardModal t ->
+            ( { model | modalState = OpenCharacterCardModalState t }, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -756,12 +761,12 @@ ownerRoomView user model =
                 ]
 
 
-mastermindSheets : Model -> Html msg
+mastermindSheets : Model -> Html Msg
 mastermindSheets model =
     section [ class "section" ]
         [ case model.room of
             Just room ->
-                Script.scriptView room.script
+                Script.scriptView OpenCharacterCardModal room.script
 
             Nothing ->
                 ExHtml.nothing
@@ -945,8 +950,8 @@ userRoomView model user data =
         , RoomData.playedHandsView data
         , RoomData.usedHands ConfirmHandUnused data
         , RoomData.openSheetView data
-        , RoomData.closeSheetView data
-        , RoomData.roomDataView data
+        , RoomData.closeSheetView OpenCharacterCardModal data
+        , RoomData.roomDataView OpenCharacterCardModal data
         , if RoomData.isTurnProtagonist model.roomState.turnProtagonistNumber user data then
             protagonistsBottomForm model user data
 
@@ -964,8 +969,8 @@ notLoginedUserRoomView data =
         , RoomData.roomBoard data
         , RoomData.usedHands ConfirmHandUnused data
         , RoomData.openSheetView data
-        , RoomData.closeSheetView data
-        , RoomData.roomDataView data
+        , RoomData.closeSheetView OpenCharacterCardModal data
+        , RoomData.roomDataView OpenCharacterCardModal data
         , creativeCommmons
         ]
 
@@ -1063,6 +1068,11 @@ modal model =
 
                         Nothing ->
                             ExHtml.nothing
+
+                OpenCharacterCardModalState t ->
+                    div [ style "text-align" "center" ]
+                        [ img [ src <| Character.characterTypeToLargeCardUrl t ] []
+                        ]
             ]
 
 
@@ -1303,7 +1313,7 @@ editRoomView { roomForm, scripts, room } =
             ]
         , case roomForm.script of
             Just s ->
-                Script.scriptView s
+                Script.scriptView OpenCharacterCardModal s
 
             Nothing ->
                 ExHtml.nothing
@@ -1553,7 +1563,8 @@ characterFormCollection scriptForm =
         -- 選んだ順に表示するため並び替え
         |> List.map
             (\c ->
-                Character.characterFormCollectionItem c
+                Character.characterFormCollectionItem OpenCharacterCardModal
+                    c
                     [ Script.characterRoles c (ChangeCharacterRole c) scriptForm
                     , case c.character.characterType of
                         Character.TransferStudent ->

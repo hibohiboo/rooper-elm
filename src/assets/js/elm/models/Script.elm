@@ -14,7 +14,7 @@ import Json.Encode as E
 import Json.Encode.Extra as ExEncode
 import List.Extra as ExList
 import Models.Board as Board
-import Models.Character as Character
+import Models.Character as Character exposing (CharacterType)
 import Models.RoomData.OpenSheet as OpenSheet exposing (OpenSheet)
 import Models.Script.Id as Id exposing (Id)
 import Models.Script.IncidentScriptData as IncidentScriptData exposing (IncidentScriptData)
@@ -785,16 +785,16 @@ selectTragedySet chgMsg scriptForm =
         ]
 
 
-scriptView : Script -> Html msg
-scriptView s =
+scriptView : (CharacterType -> msg) -> Script -> Html msg
+scriptView modalMsg s =
     div []
-        [ closeSheet s
+        [ closeSheet modalMsg s
         , openSheet s
         ]
 
 
-closeSheet : Script -> Html msg
-closeSheet s =
+closeSheet : (CharacterType -> msg) -> Script -> Html msg
+closeSheet modalMsg s =
     div [ class "box" ]
         [ div [ class "title is-5" ]
             [ text "非公開シート"
@@ -846,7 +846,8 @@ closeSheet s =
                     -- 選んだ順に表示するため並び替え
                     |> List.map
                         (\c ->
-                            Character.characterFormCollectionItem c
+                            Character.characterFormCollectionItem modalMsg
+                                c
                                 [ div []
                                     [ -- label [ class "label has-text-white" ] [ text "役職" ]
                                       text <| .name <| Maybe.withDefault TragedySet.person c.role

@@ -648,9 +648,9 @@ charactersFormItem c useEx changeLocationMsg changeGMsg changePMsg changeIMsg to
         ]
 
 
-charactersViewItem : Character -> Html msg
-charactersViewItem c =
-    div []
+charactersViewItem : (CharacterType -> msg) -> Character -> Html msg
+charactersViewItem modalMsg c =
+    div [ onClick (modalMsg c.characterType) ]
         [ div [ class "rooper-character-room-form-item" ]
             [ characterCard c
             , div []

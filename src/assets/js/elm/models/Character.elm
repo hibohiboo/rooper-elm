@@ -631,91 +631,101 @@ characterToCardUrl c =
 characterTypeToCardUrl : CharacterType -> String
 characterTypeToCardUrl t =
     "/assets/images/characters/"
-        ++ (case t of
-                BoyStudent ->
-                    "char0.png"
+        ++ characterTypeToCardFileName t
 
-                GirlStudent ->
-                    "char1.png"
 
-                RichMansDaughter ->
-                    "char2.png"
+characterTypeToLargeCardUrl : CharacterType -> String
+characterTypeToLargeCardUrl t =
+    "/assets/images/characters/large/"
+        ++ characterTypeToCardFileName t
 
-                ShrineMaiden ->
-                    "char3.png"
 
-                PoliceOfficer ->
-                    "char4.png"
+characterTypeToCardFileName : CharacterType -> String
+characterTypeToCardFileName t =
+    case t of
+        BoyStudent ->
+            "boy-student.png"
 
-                OfficeWorker ->
-                    "char5.png"
+        GirlStudent ->
+            "girl-student.png"
 
-                Informer ->
-                    "char6.png"
+        RichMansDaughter ->
+            "rich-mans-daughter.png"
 
-                Doctor ->
-                    "char7.png"
+        ShrineMaiden ->
+            "shrine-maiden.png"
 
-                Patient ->
-                    "char8.png"
+        PoliceOfficer ->
+            "pollice-officer.png"
 
-                ClassRep ->
-                    "char9.png"
+        OfficeWorker ->
+            "office-worker.png"
 
-                MysteryBoy ->
-                    "char10.png"
+        Informer ->
+            "informer.png"
 
-                Alien ->
-                    "char11.png"
+        Doctor ->
+            "doctor.png"
 
-                GodlyBeing ->
-                    "char12.png"
+        Patient ->
+            "patient.png"
 
-                PopIdol ->
-                    "char13.png"
+        ClassRep ->
+            "class-rep.png"
 
-                Journalist ->
-                    "char14.png"
+        MysteryBoy ->
+            "mystery-boy.png"
 
-                Boss ->
-                    "char15.png"
+        Alien ->
+            "alien.png"
 
-                Nurse ->
-                    "char16.png"
+        GodlyBeing ->
+            "godly-being.png"
 
-                Henchman ->
-                    "char17.png"
+        PopIdol ->
+            "pop-idol.png"
 
-                Illusion ->
-                    "char19.png"
+        Journalist ->
+            "journalist.png"
 
-                Scientist ->
-                    "char18.png"
+        Boss ->
+            "boss.png"
 
-                ForensicSpecialist ->
-                    "char20.png"
+        Nurse ->
+            "nurse.png"
 
-                AI ->
-                    "char21.png"
+        Henchman ->
+            "henchman.png"
 
-                Teacher ->
-                    "teacher.png"
+        Illusion ->
+            "illusion.png"
 
-                TransferStudent ->
-                    "transfer-student.png"
+        Scientist ->
+            "scientist.png"
 
-                Soldier ->
-                    "soldier.png"
+        ForensicSpecialist ->
+            "forensic-specialist.png"
 
-                BlackCat ->
-                    "black-cat.png"
+        AI ->
+            "ai.png"
 
-                LittleGirl ->
-                    "little-girl.png"
+        Teacher ->
+            "teacher.png"
 
-                Sister ->
-                    "sister.png"
-           )
+        TransferStudent ->
+            "transfer-student.png"
+
+        Soldier ->
+            "soldier.png"
+
+        BlackCat ->
+            "black-cat.png"
+
+        LittleGirl ->
+            "little-girl.png"
+
+        Sister ->
+            "sister.png"
 
 
 
@@ -740,10 +750,10 @@ characterNameCard clickMsg c isSelected =
         ]
 
 
-characterFormCollectionItem : CharacterScriptData -> List (Html msg) -> Html msg
-characterFormCollectionItem { character } children =
+characterFormCollectionItem : (CharacterType -> msg) -> CharacterScriptData -> List (Html msg) -> Html msg
+characterFormCollectionItem modalMsg { character } children =
     div [ class "media" ]
-        [ div [ class "media-left" ]
+        [ div [ class "media-left", onClick (modalMsg character.characterType) ]
             [ img [ src (characterToCardUrl character) ] []
             , div [ style "min-width" "7rem" ] [ text character.name ]
             ]
