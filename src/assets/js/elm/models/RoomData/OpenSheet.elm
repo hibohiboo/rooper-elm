@@ -156,6 +156,10 @@ tragedySetView set =
             (h3 [ class "title" ] [ text "ルールY" ]
                 :: (List.map (\p -> plotView p) <| TragedySet.filterMainPlots <| set.plots)
             )
+        , div [ class "content" ]
+            (h3 [ class "title" ] [ text "ルールX" ]
+                :: (List.map (\p -> plotView p) <| TragedySet.filterSubPlots <| set.plots)
+            )
         ]
 
 
