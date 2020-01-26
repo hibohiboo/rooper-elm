@@ -920,9 +920,6 @@ tweetView data user turnNumber closeModelMsg =
             else
                 "&url=" ++ roomUrl
 
-        hashtag =
-            "&hashtags=惨劇オンライン"
-
         nextUser =
             case Protagonist.turnProtagonist data.protagonists of
                 Just p ->
@@ -931,21 +928,33 @@ tweetView data user turnNumber closeModelMsg =
                 Nothing ->
                     data.mastermind.twitterScreenName
 
+        -- Android版のツイッターで使えなかったのでtextに直接付与
+        -- mentionParameter =
+        --     "screen_name="
+        --         ++ nextUser
+        mentionText =
+            "@" ++ nextUser ++ " "
+
+        -- Android版のツイッターで使えなかったのでtextに直接付与。。。不要だった。
+        -- hashtag =
+        --     "&button_hashtag=惨劇オンライン"
+        -- -- #惨劇オンラインをURLエンコード
+        -- hashtagText =
+        --     " " ++ "%23%E6%83%A8%E5%8A%87%E3%82%AA%E3%83%B3%E3%83%A9%E3%82%A4%E3%83%B3"
         tweetText =
             if Protagonist.protagonistsHandsPlayedNumber data.protagonists == 0 then
-                "@" ++ nextUser ++ " " ++ "脚本家が" ++ componentText ++ "に手札をセットしました。"
+                mentionText ++ " " ++ "脚本家が" ++ componentText ++ "に手札をセットしました。"
 
             else
-                "@" ++ nextUser ++ " " ++ "主人公【" ++ user.twitterScreenName ++ "】が" ++ componentText ++ "に手札をセットしました。"
+                mentionText ++ " " ++ "主人公【" ++ user.twitterScreenName ++ "】が" ++ componentText ++ "に手札をセットしました。"
 
-        mentionParameter =
-            "screen_name="
-                ++ nextUser
+        hashtags =
+            "&hashtags=惨劇オンライン"
 
         url =
             "https://twitter.com/intent/tweet?"
                 ++ "ref_src=twsrc%5Etfw"
-                ++ hashtag
+                ++ hashtags
                 ++ "&original_referer="
                 ++ roomUrl
                 ++ urlParameter

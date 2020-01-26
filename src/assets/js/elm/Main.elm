@@ -1263,10 +1263,10 @@ editRoomView { roomForm, scripts, room } =
                 [ text "主人公1TwitterID"
                 ]
             , Form.control
-                [ input [ class "input", required True, onInput (ChangeRoomTwitterScreenName Protagonist1), value roomForm.protagonist1TwitterScreenName ] []
+                [ input [ class "input", required True, onInput (ChangeRoomTwitterScreenName Protagonist1), pattern "[^@]*", value roomForm.protagonist1TwitterScreenName ] []
                 ]
             , Form.errors
-                [ ( "主人公IDを入力してください", List.member Room.RequiredProtagonist1TwitterScreenName (Room.errors roomForm) )
+                [ ( "主人公IDを入力してください(IDに@は不要)", List.member Room.RequiredProtagonist1TwitterScreenName (Room.errors roomForm) )
                 ]
             ]
         , Form.field
