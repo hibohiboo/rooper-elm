@@ -1022,7 +1022,7 @@ poisoner =
 poisonerEffects : List Effect
 poisonerEffects =
     [ Effect [ Mandatory ] DayEnd True "Exゲージが2以上の場合、ターン終了フェイズにこのキャラクターと同一のエリアにいるキャラクター1人を死亡させる。(1ループに1回まで)"
-    , Effect [ Mandatory ] DayEnd False "EXゲージが4以上の場合、ターン終了フェイズに主人公を死亡させる。"
+    , Effect [ Mandatory, LossCondition ] DayEnd False "EXゲージが4以上の場合、ターン終了フェイズに主人公を死亡させる。"
     ]
 
 

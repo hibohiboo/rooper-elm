@@ -162,13 +162,13 @@ tragedySetView set =
             )
         , div [ class "content" ]
             (h3 [ class "title" ] [ text "役職" ]
-                :: (List.map (\p -> roleView p) <| set.roles)
+                :: (List.map (\p -> roleView set.plots p) <| set.roles)
             )
         ]
 
 
-roleView : Role -> Html msg
-roleView r =
+roleView : List Plot -> Role -> Html msg
+roleView plots r =
     div [ class "card" ]
         [ header [ class "card-header" ]
             [ p [ class "card-header-title" ]
@@ -182,13 +182,18 @@ roleView r =
 
                   else
                     text ""
-                , div
-                    []
+                , div []
                     [ div [ class "tag is-primary" ]
                         [ text "追加能力"
                         ]
                     ]
                 , div [] (List.map (\e -> effectView e) r.effects)
+                , div []
+                    [ div [ class "tag is-primary" ]
+                        [ text "逆引きルール"
+                        ]
+                    ]
+                , ul [] (List.map (\p -> li [] [ text p.name ]) <| List.filter (\p -> List.member r p.roles) <| plots)
                 ]
             ]
         ]
