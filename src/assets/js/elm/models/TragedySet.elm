@@ -36,7 +36,7 @@ type alias Role =
     { roleType : RoleType
     , name : String
     , limit : Maybe Int
-    , castType : Maybe CastType
+    , castTypes : List CastType
     , effects : List Effect
     }
 
@@ -259,7 +259,7 @@ type PlotType
 
 
 type alias Effect =
-    { effectType : EffectType
+    { effectTypes : List EffectType
     , timing : Timing
     , oncePerLoop : Bool -- ループ1回
     , effect : String
@@ -728,17 +728,17 @@ murderPlan =
 
 lightOfTheAvenger : Plot
 lightOfTheAvenger =
-    Plot "復讐者の灯火" True LightOfTheAvenger [ brain ] [ Effect LossCondition LoopEnd False "クロマクの初期エリアに[暗躍カウンター]が２つ以上ある" ]
+    Plot "復讐者の灯火" True LightOfTheAvenger [ brain ] [ Effect [ LossCondition ] LoopEnd False "ループ終了時にボードXに暗躍カウンターが2つ以上置かれている場合、主人公は敗北する。Xはクロマクの初期エリアに等しい。" ]
 
 
 aPlaceToProtect : Plot
 aPlaceToProtect =
-    Plot "守るべき場所" True APlaceToProtect [ keyPerson, cultist ] [ Effect LossCondition LoopEnd False "学校に[暗躍カウンター]が２つ以上ある。" ]
+    Plot "守るべき場所" True APlaceToProtect [ keyPerson, cultist ] [ Effect [ LossCondition ] LoopEnd False "ループ終了時に学校に暗躍カウンターが2つ以上置かれている場合、主人公は敗北する。" ]
 
 
 theSealedItem : Plot
 theSealedItem =
-    Plot "封印されしモノ" True TheSealedItem [ brain, cultist ] [ Effect LossCondition LoopEnd False "神社に[暗躍カウンター]が２つ以上ある。" ]
+    Plot "封印されしモノ" True TheSealedItem [ brain, cultist ] [ Effect [ LossCondition ] LoopEnd False "ループ終了時に神社に暗躍カウンターが2つ以上置かれている場合、主人公は敗北する。" ]
 
 
 signWithMe : Plot
@@ -747,29 +747,29 @@ signWithMe =
         True
         SignWithMe
         [ keyPerson ]
-        [ Effect LossCondition LoopEnd False "キーパーソンに[暗躍カウンター]が２個以上。"
-        , Effect Mandatory WritingScript False "キーパーソンは少女にしなくてはならない"
+        [ Effect [ LossCondition ] LoopEnd False "ループ終了時にキーパーソンに暗躍カウンターが2つ以上置かれている場合、主人公は敗北する。"
+        , Effect [ Mandatory ] WritingScript False "キーパーソンは少女にしなくてはならない"
         ]
 
 
 changeOfFuture : Plot
 changeOfFuture =
-    Plot "未来改変プラン" True ChangeOfFuture [ timeTraveler, cultist ] [ Effect LossCondition LoopEnd False "このループ中に「事件：蝶の羽ばたき」が発生している。" ]
+    Plot "未来改変プラン" True ChangeOfFuture [ timeTraveler, cultist ] [ Effect [ LossCondition ] LoopEnd False "このループ中に蝶の羽ばたきが発生していた場合、ループ終了時に主人公は敗北する。" ]
 
 
 giantTimeBomb : Plot
 giantTimeBomb =
-    Plot "巨大時限爆弾Xの存在" True GiantTimeBomb [ witch ] [ Effect LossCondition LoopEnd False "ウィッチの初期エリアに[暗躍カウンター]が２つ以上。" ]
+    Plot "巨大時限爆弾Xの存在" True GiantTimeBomb [ witch ] [ Effect [ LossCondition ] LoopEnd False "ループ終了時にボードXに暗躍カウンターが2つ以上置かれている場合、主人公は敗北する。Xはウィッチの初期エリアに等しい。" ]
 
 
 anUnsettlingRumour : Plot
 anUnsettlingRumour =
-    Plot "不穏な噂" False AnUnsettlingRumour [ conspiracyTheorist ] [ Effect Optional MastermindAbility True "【脚本家能力フェイズ】任意のボード１つに[暗躍カウンター]を１つ置く。" ]
+    Plot "不穏な噂" False AnUnsettlingRumour [ conspiracyTheorist ] [ Effect [ Optional ] MastermindAbility True "脚本家能力フェイズに任意のボード1つに暗躍カウンターを1つ置いてもよい。" ]
 
 
 aHideousScript : Plot
 aHideousScript =
-    Plot "最低の却本" False AHideousScript [ friend, curmudgeon, curmudgeon, conspiracyTheorist ] [ Effect Optional WritingScript False "マイナスを２人ではなく、１人や０人追加してもよい。" ]
+    Plot "最低の却本" False AHideousScript [ friend, curmudgeon, curmudgeon, conspiracyTheorist ] [ Effect [ Optional ] WritingScript False "マイナスを２人ではなく、１人や０人追加してもよい。" ]
 
 
 shadowOfTheRipper : Plot
@@ -794,12 +794,12 @@ theHiddenFreak =
 
 paranoiaVirus : Plot
 paranoiaVirus =
-    Plot "妄想拡大ウイルス" False ParanoiaVirus [ conspiracyTheorist ] [ Effect Mandatory Always False "パーソンは[不安カウンター]が３つ以上置かれている限り、役職がシリアルキラーに変更される。" ]
+    Plot "妄想拡大ウイルス" False ParanoiaVirus [ conspiracyTheorist ] [ Effect [ Mandatory ] Always False "パーソンは[不安カウンター]が３つ以上置かれている限り、役職がシリアルキラーに変更される。" ]
 
 
 threadsOfFate : Plot
 threadsOfFate =
-    Plot "因果の糸" False ThreadsOfFate [] [ Effect Mandatory LoopStart False "ひとつ前のループ終了時に[友好カウンター]が置かれていた全キャラクターに[不安カウンター]を２つ置く。" ]
+    Plot "因果の糸" False ThreadsOfFate [] [ Effect [ Mandatory ] LoopStart False "ひとつ前のループ終了時に[友好カウンター]が置かれていた全キャラクターに[不安カウンター]を２つ置く。" ]
 
 
 unknownFactorX : Plot
@@ -813,32 +813,32 @@ unknownFactorX =
 
 aQuiltOfIncidents : Plot
 aQuiltOfIncidents =
-    Plot "組み重なり事件キルト" True AQuiltOfIncidents [ fool, conspiracyTheorist ] []
+    Plot "組み重なり事件キルト" True AQuiltOfIncidents [ fool, conspiracyTheorist ] [ Effect [ LossCondition ] LoopEnd False "ループ終了時にExゲージが3以上の場合、主人公は敗北する。" ]
 
 
 tightropePlan : Plot
 tightropePlan =
-    Plot "タイトロープ上の計画\t" True TightropePlan [ killer, brain ] []
+    Plot "タイトロープ上の計画" True TightropePlan [ killer, brain ] [ Effect [ LossCondition ] LoopEnd False "ループ終了時にExゲージが1以下の場合、主人公は敗北する。" ]
 
 
 theBlackSchool : Plot
 theBlackSchool =
-    Plot "黒の学園" True TheBlackSchool [ brain ] []
+    Plot "黒の学園" True TheBlackSchool [ brain ] [ Effect [ LossCondition ] LoopEnd False "ループ終了時に学校に暗躍カウンターがX個以上置かれている場合、主人公は敗北する。Xは現在のループ回数に等しい。" ]
 
 
 aDropOfStrychnine : Plot
 aDropOfStrychnine =
-    Plot "ストリキニーネの雫" True ADropOfStrychnine [ keyPerson, poisoner, fool ] []
+    Plot "ストリキニーネの雫" True ADropOfStrychnine [ keyPerson, poisoner, fool ] [ Effect [ Mandatory ] IncidentsHappen False "「殺人事件」「自殺」が発生するか判定するとき、暗躍カウンターを不安カウンターとしても扱う。" ]
 
 
 isolatedInstitutionPsycho : Plot
 isolatedInstitutionPsycho =
-    Plot "隔離病棟サイコ" False IsolatedInstitutionPsycho [ conspiracyTheorist, paranoiac, therapist ] []
+    Plot "隔離病棟サイコ" False IsolatedInstitutionPsycho [ conspiracyTheorist, paranoiac, therapist ] [ Effect [ Mandatory ] LoopStart False "各ループの開始時、ひとつ前のループの終了時にExゲージが2以下であった場合、Exゲージを1増加させる。" ]
 
 
 smellOfGunpowder : Plot
 smellOfGunpowder =
-    Plot "火薬の香り" False SmellOfGunpowder [ serialKiller ] []
+    Plot "火薬の香り" False SmellOfGunpowder [ serialKiller ] [ Effect [ LossCondition ] LoopEnd False "ループ終了時に、生存している全キャラクターの上に置かれた不安カウンターの合計が12以上の場合、主人公は敗北する。" ]
 
 
 iAmAMasterDetective : Plot
@@ -912,175 +912,175 @@ initMysteryCirclePlots =
 
 person : Role
 person =
-    Role Person "パーソン" Nothing Nothing []
+    Role Person "パーソン" Nothing [] []
 
 
 killer : Role
 killer =
-    Role Killer "キラー" Nothing (Just GoodwillRefusal) killerEffects
+    Role Killer "キラー" Nothing [ GoodwillRefusal ] killerEffects
 
 
 killerEffects : List Effect
 killerEffects =
-    [ Effect Optional MastermindAbility False "キーパーソンに2つ以上の暗躍カウンターが置かれており、このキャラクターが同一のエリアにいる場合、ターン終了フェイズにキーパーソンを死亡させても良い。"
-    , Effect Optional MastermindAbility False "このキャラクターに4つ以上の暗躍カウンターが置かれている場合、ターン終了フェイズに主人公を死亡させても良い。"
+    [ Effect [ Optional ] MastermindAbility False "キーパーソンに2つ以上の暗躍カウンターが置かれており、このキャラクターが同一のエリアにいる場合、ターン終了フェイズにキーパーソンを死亡させても良い。"
+    , Effect [ Optional, LossCondition ] MastermindAbility False "このキャラクターに4つ以上の暗躍カウンターが置かれている場合、ターン終了フェイズに主人公を死亡させても良い。"
     ]
 
 
 brain : Role
 brain =
-    Role Brain "クロマク" Nothing (Just GoodwillRefusal) [ Effect Optional MastermindAbility False "各ターンの脚本家能力フェイズにこのキャラクターと同一のエリアにいるキャラクター1人か、このキャラクターのいるボードに暗躍カウンターを1つ置いても良い。" ]
+    Role Brain "クロマク" Nothing [ GoodwillRefusal ] [ Effect [ Optional ] MastermindAbility False "各ターンの脚本家能力フェイズにこのキャラクターと同一のエリアにいるキャラクター1人か、このキャラクターのいるボードに暗躍カウンターを1つ置いても良い。" ]
 
 
 keyPerson : Role
 keyPerson =
-    Role KeyPerson "キーパーソン" Nothing Nothing [ Effect Mandatory Always False "このキャラクターが死亡した時、主人公は敗北し、直ちにこのループを終了させる。" ]
+    Role KeyPerson "キーパーソン" Nothing [] [ Effect [ Mandatory, LossCondition ] Always False "このキャラクターが死亡した時、主人公は敗北し、直ちにこのループを終了させる。" ]
 
 
 cultist : Role
 cultist =
-    Role Cultist "カルティスト" Nothing (Just MandatoryGoodwillRefusal) [ Effect Optional CardsAreResolved False "各ターンの行動解決フェイズに、このキャラクターと同一のエリアにいるキャラクター、ならびにこのキャラクターのいるボードにセットされた暗躍禁止は無視しても良い。" ]
+    Role Cultist "カルティスト" Nothing [ MandatoryGoodwillRefusal ] [ Effect [ Optional ] CardsAreResolved False "各ターンの行動解決フェイズに、このキャラクターと同一のエリアにいるキャラクター、ならびにこのキャラクターのいるボードにセットされた暗躍禁止は無視しても良い。" ]
 
 
 timeTraveler : Role
 timeTraveler =
-    Role TimeTraveler "タイムトラベラー" Nothing (Just Unkillable) timeTravelerEffects
+    Role TimeTraveler "タイムトラベラー" Nothing [ Unkillable ] timeTravelerEffects
 
 
 timeTravelerEffects : List Effect
 timeTravelerEffects =
-    [ Effect Mandatory CardsAreResolved False "このキャラクターにセットされた友好禁止は無視される。"
-    , Effect Optional DayEnd False "最終日のターン終了フェイズに、このキャラクターに2つ以下の友好カウンターしか置かれていない場合、主人公を敗北させてもよい。そうした場合、直ちにこのループを終了させる。"
+    [ Effect [ Mandatory ] CardsAreResolved False "このキャラクターにセットされた友好禁止は無視される。"
+    , Effect [ Optional ] DayEnd False "最終日のターン終了フェイズに、このキャラクターに2つ以下の友好カウンターしか置かれていない場合、主人公を敗北させてもよい。そうした場合、直ちにこのループを終了させる。"
     ]
 
 
 witch : Role
 witch =
-    Role Witch "ウィッチ" Nothing (Just MandatoryGoodwillRefusal) []
+    Role Witch "ウィッチ" Nothing [ MandatoryGoodwillRefusal ] []
 
 
 friend : Role
 friend =
-    Role Friend "フレンド" (Just 2) Nothing friendEffects
+    Role Friend "フレンド" (Just 2) [] friendEffects
 
 
 friendEffects =
-    [ Effect Mandatory LoopEnd False "このカードがループ終了時に死亡している場合、このカードの役職を公開し、主人公は敗北する。"
-    , Effect Mandatory LoopStart False "このキャラクターの役職が公開されたことがある場合、ループ開始時にこのキャラクターに有効カウンターを１つ置く"
+    [ Effect [ Mandatory ] LoopEnd False "このカードがループ終了時に死亡している場合、このカードの役職を公開し、主人公は敗北する。"
+    , Effect [ Mandatory ] LoopStart False "このキャラクターの役職が公開されたことがある場合、ループ開始時にこのキャラクターに有効カウンターを１つ置く"
     ]
 
 
 lovedOne : Role
 lovedOne =
-    Role LovedOne "メインラバーズ" Nothing Nothing lovedOneEffects
+    Role LovedOne "メインラバーズ" Nothing [] lovedOneEffects
 
 
 lovedOneEffects : List Effect
 lovedOneEffects =
-    [ Effect Mandatory Always False "ラバーズが死亡した時、このキャラクターに不安カウンターを6つ置く"
-    , Effect Optional DayEnd False "このキャラクターに3つ以上の不安カウンターと1つ以上の暗躍カウンターが置かれている場合、ターン終了フェイズに主人公を死亡させても良い。"
+    [ Effect [ Mandatory ] Always False "ラバーズが死亡した時、このキャラクターに不安カウンターを6つ置く"
+    , Effect [ Optional, LossCondition ] DayEnd False "このキャラクターに3つ以上の不安カウンターと1つ以上の暗躍カウンターが置かれている場合、ターン終了フェイズに主人公を死亡させても良い。"
     ]
 
 
 lover : Role
 lover =
-    Role Lover "ラバーズ" Nothing Nothing [ Effect Mandatory Always False "メインラバーズが死亡した時、このキャラクターに不安カウンターを6つ置く" ]
+    Role Lover "ラバーズ" Nothing [] [ Effect [ Mandatory ] Always False "メインラバーズが死亡した時、このキャラクターに不安カウンターを6つ置く" ]
 
 
 serialKiller : Role
 serialKiller =
-    Role SerialKiller "シリアルキラー" Nothing Nothing [ Effect Mandatory DayEnd False "このキャラクターと同一エリアにいるキャラクターが1人だけの場合、ターン終了フェイズにそのキャラクターを死亡させる。" ]
+    Role SerialKiller "シリアルキラー" Nothing [] [ Effect [ Mandatory ] DayEnd False "このキャラクターと同一エリアにいるキャラクターが1人だけの場合、ターン終了フェイズにそのキャラクターを死亡させる。" ]
 
 
 factor : Role
 factor =
-    Role Factor "ファクター" Nothing (Just GoodwillRefusal) factorEffects
+    Role Factor "ファクター" Nothing [ GoodwillRefusal ] factorEffects
 
 
 factorEffects : List Effect
 factorEffects =
-    [ Effect Mandatory Always False "学校に暗躍カウンターが2つ以上置かれている場合、このキャラクターはミスリーダーに記載された追加能力を得る。"
-    , Effect Mandatory Always False "都市に暗躍カウンターが2つ以上置かれている場合、このキャラクターはキーパーソンに記載された追加能力を得る。"
+    [ Effect [ Mandatory ] Always False "学校に暗躍カウンターが2つ以上置かれている場合、このキャラクターはミスリーダーに記載された追加能力を得る。"
+    , Effect [ Mandatory, LossCondition ] Always False "都市に暗躍カウンターが2つ以上置かれている場合、このキャラクターはキーパーソンに記載された追加能力を得る。"
     ]
 
 
 conspiracyTheorist : Role
 conspiracyTheorist =
-    Role ConspiracyTheorist "ミスリーダー" (Just 1) Nothing [ Effect Optional LoopEnd False "各ターンの脚本家能力フェイズにこのキャラクターと同一エリアにいるキャラクター1人に不安カウンターを1つ置いても良い。" ]
+    Role ConspiracyTheorist "ミスリーダー" (Just 1) [] [ Effect [ Optional ] LoopEnd False "各ターンの脚本家能力フェイズにこのキャラクターと同一エリアにいるキャラクター1人に不安カウンターを1つ置いても良い。" ]
 
 
 curmudgeon : Role
 curmudgeon =
-    Role Curmudgeon "マイナス" Nothing (Just GoodwillRefusal) []
+    Role Curmudgeon "マイナス" Nothing [ GoodwillRefusal ] []
 
 
 poisoner : Role
 poisoner =
-    Role Poisoner "ドリッパー" Nothing (Just GoodwillRefusal) poisonerEffects
+    Role Poisoner "ドリッパー" Nothing [ GoodwillRefusal ] poisonerEffects
 
 
 poisonerEffects : List Effect
 poisonerEffects =
-    [ Effect Mandatory DayEnd True "Exゲージが2以上の場合、ターン終了フェイズにこのキャラクターと同一のエリアにいるキャラクター1人を死亡させる。(1ループに1回まで)"
-    , Effect Mandatory DayEnd False "EXゲージが4以上の場合、ターン終了フェイズに主人公を死亡させる。"
+    [ Effect [ Mandatory ] DayEnd True "Exゲージが2以上の場合、ターン終了フェイズにこのキャラクターと同一のエリアにいるキャラクター1人を死亡させる。(1ループに1回まで)"
+    , Effect [ Mandatory ] DayEnd False "EXゲージが4以上の場合、ターン終了フェイズに主人公を死亡させる。"
     ]
 
 
 fool : Role
 fool =
-    Role Fool "フール" (Just 1) Nothing foolEffects
+    Role Fool "フール" (Just 1) [] foolEffects
 
 
 foolEffects : List Effect
 foolEffects =
-    [ Effect Mandatory WritingScript False "このキャラクターは必ずいずれかの事件の犯人となる。"
-    , Effect Mandatory Always False "このキャラクターが事件を発生させた場合、その事件の解決後にこのカードから全ての不安カウンターを取り除く。"
+    [ Effect [ Mandatory ] WritingScript False "このキャラクターは必ずいずれかの事件の犯人となる。"
+    , Effect [ Mandatory ] Always False "このキャラクターが事件を発生させた場合、その事件の解決後にこのカードから全ての不安カウンターを取り除く。"
     ]
 
 
 paranoiac : Role
 paranoiac =
-    Role Paranoiac "パラノイア" Nothing (Just MandatoryGoodwillRefusal) [ Effect Optional MastermindAbility False "各ターンの脚本家能力フェイズにこのキャラクターに暗躍カウンターか不安カウンターを1つ置いても良い。" ]
+    Role Paranoiac "パラノイア" Nothing [ MandatoryGoodwillRefusal ] [ Effect [ Optional ] MastermindAbility False "各ターンの脚本家能力フェイズにこのキャラクターに暗躍カウンターか不安カウンターを1つ置いても良い。" ]
 
 
 therapist : Role
 therapist =
-    Role Therapist "セラピスト" Nothing Nothing [ Effect Mandatory MastermindAbility False "Exゲージが1以上の場合、脚本家能力フェイズに、このキャラクターと同一エリアにいる自身以外のキャラクター1人の不安カウンターを1つ取り除く。" ]
+    Role Therapist "セラピスト" Nothing [] [ Effect [ Mandatory ] MastermindAbility False "Exゲージが1以上の場合、脚本家能力フェイズに、このキャラクターと同一エリアにいる自身以外のキャラクター1人の不安カウンターを1つ取り除く。" ]
 
 
 privateInvestigator : Role
 privateInvestigator =
-    Role PrivateInvestigator "メイタンテイ" Nothing (Just Unkillable) privateInvestigatorEffects
+    Role PrivateInvestigator "メイタンテイ" Nothing [ Unkillable ] privateInvestigatorEffects
 
 
 privateInvestigatorEffects : List Effect
 privateInvestigatorEffects =
-    [ Effect Mandatory WritingScript False "このキャラクターは犯人にならない"
-    , Effect Mandatory IncidentsHappen False "Exゲージが0である、かつこのキャラクターと、同一エリアにいるキャラクターが犯人である事件の発生を判定する場合、犯人に置かれた不安カウンターの個数によらず、犯人が生存していれば必ず事件が発生する。"
+    [ Effect [ Mandatory ] WritingScript False "このキャラクターは犯人にならない"
+    , Effect [ Mandatory ] IncidentsHappen False "Exゲージが0である、かつこのキャラクターと、同一エリアにいるキャラクターが犯人である事件の発生を判定する場合、犯人に置かれた不安カウンターの個数によらず、犯人が生存していれば必ず事件が発生する。"
     ]
 
 
 twin : Role
 twin =
-    Role Twin "ツイン" Nothing Nothing twinEffects
+    Role Twin "ツイン" Nothing [] twinEffects
 
 
 twinEffects : List Effect
 twinEffects =
-    [ Effect Mandatory WritingScript False "このキャラクターは必ずいずれかの事件の犯人となる。"
-    , Effect Mandatory IncidentsHappen False "このキャラクターが事件を発生させる場合、このキャラクターは本来の位置の代わりに、本来の対角線にあるボード上にいるものとして扱う。"
+    [ Effect [ Mandatory ] WritingScript False "このキャラクターは必ずいずれかの事件の犯人となる。"
+    , Effect [ Mandatory ] IncidentsHappen False "このキャラクターが事件を発生させる場合、このキャラクターは本来の位置の代わりに、本来の対角線にあるボード上にいるものとして扱う。"
     ]
 
 
 obstinate : Role
 obstinate =
-    Role Obstinate "ゼッタイシャ" Nothing (Just MandatoryGoodwillRefusal) obstinateEffects
+    Role Obstinate "ゼッタイシャ" Nothing [ MandatoryGoodwillRefusal ] obstinateEffects
 
 
 obstinateEffects : List Effect
 obstinateEffects =
-    [ Effect Mandatory WritingScript False "このキャラクターは必ずいずれかの事件の犯人となる"
-    , Effect Mandatory IncidentsHappen False "このキャラクターはその上に置かれた不安カウンターの個数によらず、生存していれば必ず事件を発生させる。"
+    [ Effect [ Mandatory ] WritingScript False "このキャラクターは必ずいずれかの事件の犯人となる"
+    , Effect [ Mandatory ] IncidentsHappen False "このキャラクターはその上に置かれた不安カウンターの個数によらず、生存していれば必ず事件を発生させる。"
     ]
 
 

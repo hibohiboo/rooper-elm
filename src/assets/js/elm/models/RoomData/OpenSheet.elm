@@ -229,8 +229,13 @@ effectView : Effect -> Html msg
 effectView e =
     div []
         [ div [ class "tags has-addons", style "margin" "1.5rem 0 0 0.5rem" ]
-            [ span [ class "tag is-info" ] [ text <| TragedySet.toEffectTimingName e.timing ]
-            , span [ class "tag", class <| TragedySet.toEffectTypeColorClass e.effectType ] [ text <| TragedySet.toEffectTypeName e.effectType ]
-            ]
+            (span [ class "tag is-info" ] [ text <| TragedySet.toEffectTimingName e.timing ]
+                :: List.map effectTypeTag e.effectTypes
+            )
         , div [] [ text e.effect ]
         ]
+
+
+effectTypeTag : TragedySet.EffectType -> Html msg
+effectTypeTag t =
+    span [ class "tag", class <| TragedySet.toEffectTypeColorClass t ] [ text <| TragedySet.toEffectTypeName t ]
