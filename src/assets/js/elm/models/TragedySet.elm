@@ -309,7 +309,7 @@ toCastTypeColorClass t =
             "is-warning"
 
         GoodwillRefusal ->
-            "is-dark"
+            "is-info"
 
         MandatoryGoodwillRefusal ->
             "is-info"
@@ -965,7 +965,7 @@ friend =
 
 
 friendEffects =
-    [ Effect [ Mandatory ] LoopEnd False "このカードがループ終了時に死亡している場合、このカードの役職を公開し、主人公は敗北する。"
+    [ Effect [ Mandatory, LossCondition ] LoopEnd False "このカードがループ終了時に死亡している場合、このカードの役職を公開し、主人公は敗北する。"
     , Effect [ Mandatory ] LoopStart False "このキャラクターの役職が公開されたことがある場合、ループ開始時にこのキャラクターに有効カウンターを１つ置く"
     ]
 
@@ -1006,7 +1006,7 @@ factorEffects =
 
 conspiracyTheorist : Role
 conspiracyTheorist =
-    Role ConspiracyTheorist "ミスリーダー" (Just 1) [] [ Effect [ Optional ] LoopEnd False "各ターンの脚本家能力フェイズにこのキャラクターと同一エリアにいるキャラクター1人に不安カウンターを1つ置いても良い。" ]
+    Role ConspiracyTheorist "ミスリーダー" (Just 1) [] [ Effect [ Optional ] MastermindAbility False "各ターンの脚本家能力フェイズにこのキャラクターと同一エリアにいるキャラクター1人に不安カウンターを1つ置いても良い。" ]
 
 
 curmudgeon : Role

@@ -177,14 +177,18 @@ roleView r =
             ]
         , div [ class "card-content" ]
             [ div [ class "content" ]
-                [ div
+                [ if List.length r.castTypes /= 0 then
+                    div [ style "margin-bottom" "1rem" ] (List.map castTypeTag r.castTypes)
+
+                  else
+                    text ""
+                , div
                     []
                     [ div [ class "tag is-primary" ]
                         [ text "追加能力"
                         ]
                     ]
-
-                -- , div [] (List.map (\e -> effectView e) plot.effects)
+                , div [] (List.map (\e -> effectView e) r.effects)
                 ]
             ]
         ]
@@ -239,3 +243,8 @@ effectView e =
 effectTypeTag : TragedySet.EffectType -> Html msg
 effectTypeTag t =
     span [ class "tag", class <| TragedySet.toEffectTypeColorClass t ] [ text <| TragedySet.toEffectTypeName t ]
+
+
+castTypeTag : TragedySet.CastType -> Html msg
+castTypeTag t =
+    span [ class "tag", class <| TragedySet.toCastTypeColorClass t ] [ text <| TragedySet.toCastTypeName t ]
