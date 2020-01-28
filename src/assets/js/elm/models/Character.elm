@@ -753,8 +753,9 @@ characterNameCard clickMsg c isSelected =
 characterFormCollectionItem : (CharacterType -> msg) -> CharacterScriptData -> List (Html msg) -> Html msg
 characterFormCollectionItem modalMsg { character } children =
     div [ class "media" ]
-        [ div [ class "media-left", onClick (modalMsg character.characterType) ]
+        [ div [ class "media-left", onClick (modalMsg character.characterType), class "rooper-character-item-wrapper" ]
             [ img [ src (characterToCardUrl character) ] []
+            , div [ style "position" "absolute", style "top" "35px", style "left" "25px", style "color" "#000", style "background-color" "#fff", style "padding" "1px", style "height" "15px", style "width" "14px", style "font-size" "10px" ] [ i [ class "fas fa-expand-arrows-alt" ] [] ]
             , div [ style "min-width" "7rem" ] [ text character.name ]
             ]
         , div [ class "media-content" ] children
