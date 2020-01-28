@@ -160,6 +160,33 @@ tragedySetView set =
             (h3 [ class "title" ] [ text "ルールX" ]
                 :: (List.map (\p -> plotView p) <| TragedySet.filterSubPlots <| set.plots)
             )
+        , div [ class "content" ]
+            (h3 [ class "title" ] [ text "役職" ]
+                :: (List.map (\p -> roleView p) <| set.roles)
+            )
+        ]
+
+
+roleView : Role -> Html msg
+roleView r =
+    div [ class "card" ]
+        [ header [ class "card-header" ]
+            [ p [ class "card-header-title" ]
+                [ text r.name
+                ]
+            ]
+        , div [ class "card-content" ]
+            [ div [ class "content" ]
+                [ div
+                    []
+                    [ div [ class "tag is-primary" ]
+                        [ text "追加能力"
+                        ]
+                    ]
+
+                -- , div [] (List.map (\e -> effectView e) plot.effects)
+                ]
+            ]
         ]
 
 
@@ -173,18 +200,25 @@ plotView plot =
             ]
         , div [ class "card-content" ]
             [ div [ class "content" ]
-                [ div []
-                    [ div [ class "tag is-info" ]
-                        [ text "役職追加"
+                [ if List.length plot.roles == 0 then
+                    text ""
+
+                  else
+                    div []
+                        [ div [ class "tag is-primary" ]
+                            [ text "役職追加"
+                            ]
                         ]
-                    ]
                 , ul [] (List.map (\r -> li [] [ text r.name ]) plot.roles)
-                , div
-                    []
-                    [ div [ class "tag is-info" ]
-                        [ text "ルール追加"
+                , if List.length plot.effects == 0 then
+                    text ""
+
+                  else
+                    div []
+                        [ div [ class "tag is-primary" ]
+                            [ text "ルール追加"
+                            ]
                         ]
-                    ]
                 , div [] (List.map (\e -> effectView e) plot.effects)
                 ]
             ]
@@ -195,7 +229,7 @@ effectView : Effect -> Html msg
 effectView e =
     div []
         [ div [ class "tags has-addons", style "margin" "1.5rem 0 0 0.5rem" ]
-            [ span [ class "tag is-primary" ] [ text <| TragedySet.toEffectTimingName e.timing ]
+            [ span [ class "tag is-info" ] [ text <| TragedySet.toEffectTimingName e.timing ]
             , span [ class "tag", class <| TragedySet.toEffectTypeColorClass e.effectType ] [ text <| TragedySet.toEffectTypeName e.effectType ]
             ]
         , div [] [ text e.effect ]
