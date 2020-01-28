@@ -951,9 +951,9 @@ userRoomView model user data =
         , RoomData.roomBoard data
         , RoomData.playedHandsView data
         , RoomData.usedHands ConfirmHandUnused data
+        , RoomData.roomDataView OpenCharacterCardModal data
         , RoomData.openSheetView data
         , RoomData.closeSheetView OpenCharacterCardModal data
-        , RoomData.roomDataView OpenCharacterCardModal data
         , if RoomData.isTurnProtagonist model.roomState.turnProtagonistNumber user data then
             protagonistsBottomForm model user data
 
@@ -971,9 +971,9 @@ notLoginedUserRoomView data =
         , RoomData.stateView data
         , RoomData.roomBoard data
         , RoomData.usedHands ConfirmHandUnused data
+        , RoomData.roomDataView OpenCharacterCardModal data
         , RoomData.openSheetView data
         , RoomData.closeSheetView OpenCharacterCardModal data
-        , RoomData.roomDataView OpenCharacterCardModal data
 
         -- , creativeCommmons
         ]
