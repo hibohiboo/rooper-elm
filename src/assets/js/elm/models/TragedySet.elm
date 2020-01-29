@@ -1186,42 +1186,42 @@ butterflyEffect =
 
 serialMurder : Incident
 serialMurder =
-    Incident SerialMurder "連続殺人" ""
+    Incident SerialMurder "連続殺人" "犯人と同一エリアにいる犯人以外の任意のキャラクター1人を死亡させる。脚本に複数の連続殺人がある場合、あるキャラクターが複数の連続殺人の事件の犯人となってもよい。"
 
 
 fakedSuicide : Incident
 fakedSuicide =
-    Incident FakedSuicide "偽装自殺" ""
+    Incident FakedSuicide "偽装自殺" "犯人にExカードをセットする。（このループ中そのキャラクターにはExカードAをつけたままにしておく。別の偽装自殺が起きたら付け替える）ExカードAのセットされたキャラクターに対し、主人公はカードをセットできない。"
 
 
 terrorism : Incident
 terrorism =
-    Incident Terrorism "テロリズム" ""
+    Incident Terrorism "テロリズム" "都市に暗躍カウンターが1つ以上置かれている場合、都市にいるキャラクター全員が死亡する。さらに都市に暗躍カウンターが2つ以上置かれている場合、主人公は死亡する。"
 
 
 portent : Incident
 portent =
-    Incident Portent "前兆" ""
+    Incident Portent "前兆" "犯人と同じエリアにいる任意のキャラクター1人に不安カウンターを1つ乗せる。この事件は犯人の不安臨界を1少ないものとして発生するかを判定する。"
 
 
 bestialMurder : Incident
 bestialMurder =
-    Incident BestialMurder "猟奇殺人" ""
+    Incident BestialMurder "猟奇殺人" "「殺人事件」と「不安拡大」をこの順番で発生させる。この事件の発生によりExゲージは増加しない。（結果としてExゲージは２つ増加する）この事件は犯人の不安臨界を1多いものとして発生するかを判定する。"
 
 
 aSuspiciousLetter : Incident
 aSuspiciousLetter =
-    Incident ASuspiciousLetter "不審な手紙" ""
+    Incident ASuspiciousLetter "不審な手紙" "犯人と同一エリアにいるキャラクター1人を任意のボードに移動させる。次の日の間、そのキャラクターは移動できない。"
 
 
 closedCircle : Incident
 closedCircle =
-    Incident ClosedCircle "クローズドサークル" ""
+    Incident ClosedCircle "クローズドサークル" "犯人のいるボードを指定する。事件が発生した日から発生した日を含む3日間、そのボードへの移動とそのボードからの移動が行われる場合、それは代わりに行われない。"
 
 
 theSilverBullet : Incident
 theSilverBullet =
-    Incident TheSilverBullet "銀の銃弾" ""
+    Incident TheSilverBullet "銀の銃弾" "このフェイズの終了時にループを終了させる。この事件の発生によりExゲージは増加しない。（この事件によりループが終了した時点で、主人公が敗北条件を満たしていない場合は、主人公プレイヤーの勝利としてゲームが終了する。）"
 
 
 initBasicTragedyIncidents : List Incident

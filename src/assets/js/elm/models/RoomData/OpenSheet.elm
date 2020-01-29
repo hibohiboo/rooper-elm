@@ -129,7 +129,8 @@ openSheetViewDetail s =
                                 [ text <| String.fromInt data.day ++ "日目"
                                 ]
                             , div [ class "media-content is-flex" ]
-                                [ div [ style "text-align" "center", style "align-self" "center" ] [ text data.incident.name ] ]
+                                [ div [ style "text-align" "center", style "align-self" "center" ] [ text data.incident.name ]
+                                ]
                             ]
                     )
             )
@@ -163,6 +164,10 @@ tragedySetView set =
         , div [ class "content" ]
             (h3 [ class "title" ] [ text "役職" ]
                 :: (List.map (\p -> roleView set.plots p) <| set.roles)
+            )
+        , div [ class "content" ]
+            (h3 [ class "title" ] [ text "事件" ]
+                :: (List.map (\i -> incidentView i) <| set.incidents)
             )
         ]
 
@@ -230,6 +235,20 @@ plotView plot =
                         ]
                 , div [] (List.map (\e -> effectView e) plot.effects)
                 ]
+            ]
+        ]
+
+
+incidentView : Incident -> Html msg
+incidentView incident =
+    div [ class "card" ]
+        [ header [ class "card-header" ]
+            [ p [ class "card-header-title" ]
+                [ text incident.name
+                ]
+            ]
+        , div [ class "card-content" ]
+            [ div [ class "content" ] [ text incident.effect ]
             ]
         ]
 
