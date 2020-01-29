@@ -369,7 +369,26 @@ update msg model =
             ( { model | scriptForm = Script.setIncidentCulprit val model.scriptForm }, Cmd.none )
 
         ChangeIncidentCreateFormIncident val ->
-            ( { model | scriptForm = Script.setIncident val model.scriptForm }, Cmd.none )
+            ( { model
+                -- 連続殺人→他の事件に変えた時にキャラクターが切り替わらない対策を含める
+                | scriptForm =
+                    model.scriptForm
+                        |> Script.setIncident val
+                        |> (\form ->
+                                if List.member (Character.characterFromString model.scriptForm.incidentCulprit |> Maybe.withDefault Character.boyStudent) (Script.unassignedCulpritCharacters form) then
+                                    form
+
+                                else
+                                    case Script.unassignedCulpritCharacters form of
+                                        [] ->
+                                            form
+
+                                        char :: _ ->
+                                            form |> Script.setIncidentCulprit (Character.characterToString char)
+                           )
+              }
+            , Cmd.none
+            )
 
         AddIncidents ->
             update ChangedScript { model | scriptForm = Script.addIncidents model.scriptForm, modalState = CloseModalState }
