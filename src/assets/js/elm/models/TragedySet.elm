@@ -1258,6 +1258,7 @@ initMysteryCircleIncidents =
     , suicide
     , increasingUnease
     , portent
+    , aSuspiciousLetter
     , bestialMurder
     , fakedSuicide
     , closedCircle
