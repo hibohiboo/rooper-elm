@@ -13,3 +13,7 @@
 ## firebaseで認証
 ### 参考
 [Laravel6.0 の認証を Firebase のTwitter Oauth認証で行ったメモ](https://qiita.com/hibohiboo/items/11768cb10bf1e7025090)
+
+## npm更新
+
+[npm installしたパッケージの更新確認とアップデート(npm-check-updates)](https://dackdive.hateblo.jp/entry/2016/10/10/095800)
