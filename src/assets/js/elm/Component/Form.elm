@@ -1,7 +1,7 @@
 module Component.Form exposing (..)
 
 import Html exposing (..)
-import Html.Attributes as Attributes exposing (..)
+import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Html.Events.Extra exposing (onChange)
 import Html.Keyed as Keyed
