@@ -1,20 +1,14 @@
 {
   "editor.formatOnType": true,
-  "files.eol": "\n",
   "editor.formatOnSave": true,
-  "eslint.enable": true,
-  "eslint.validate": [
-    {
-      "language": "typescript",
-      "autoFix": true
-    },
-  ],
-  "typescript.validate.enable": false,
-  "scss.validate": false,
-  "stylelint.autoFixOnSave": true,
   "editor.tabSize": 2,
   "editor.fontFamily": "UbuntuMonospace",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
-  }
+  },
+  "files.eol": "\n",
+  "eslint.enable": true,
+  "typescript.validate.enable": false,
+  "scss.validate": false,
+  "stylelint.autoFixOnSave": true,
 }

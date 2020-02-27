@@ -1,7 +1,7 @@
 module MastermindTest exposing (unitTest)
 
 import Expect
-import Models.Character as Character
+import Models.Character
 import Models.RoomData.MasterMind as MasterMind
 import Test exposing (..)
 

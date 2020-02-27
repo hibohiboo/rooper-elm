@@ -1,0 +1,17 @@
+{
+  "checks": {
+    "ImportAll ": false,
+    "ExposingAll": false,
+    "UnusedTypeAlias": false,
+    "ExposeAll": false
+  },
+  "TriggerWords": {
+    "words": [
+      "todo",
+      "fix"
+    ]
+  },
+  "excludedPaths": [
+    "src/assets/js/elm/elm-stuff"
+  ]
+}

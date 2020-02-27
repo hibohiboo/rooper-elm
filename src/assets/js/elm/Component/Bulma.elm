@@ -1,7 +1,7 @@
 module Component.Bulma exposing (..)
 
 import Html exposing (..)
-import Html.Attributes as Attributes exposing (..)
+import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 
 

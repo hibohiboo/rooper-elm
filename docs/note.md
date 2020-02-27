@@ -17,3 +17,10 @@
 ## npm更新
 
 [npm installしたパッケージの更新確認とアップデート(npm-check-updates)](https://dackdive.hateblo.jp/entry/2016/10/10/095800)
+
+## elm-analyse
+
+
+[elm-analyse](https://github.com/stil4m/elm-analyse)
+[Elm Analyse でコード品質を担保する](https://qiita.com/jinjor/items/269eaa4195593ff54c15)
+[elm-analyse/Check](https://github.com/stil4m/elm-analyse/tree/master/src/Analyser/Checks)
