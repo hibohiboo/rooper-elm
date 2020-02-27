@@ -810,11 +810,7 @@ handsOnComponentFormProtagonist p data chgMsg =
                     , getAppearedCharacters data
                         |> List.filter
                             (\c ->
-                                if c.isSetEx && data.openSheet.set.setType == TragedySet.MysteryCircle then
-                                    False
-
-                                else
-                                    True
+                                c.isSetEx && data.openSheet.set.setType /= TragedySet.MysteryCircle
                             )
                         |> Character.getFormOptionList (Hand.getSelectedCharacterComponentType p.number hands)
                     ]

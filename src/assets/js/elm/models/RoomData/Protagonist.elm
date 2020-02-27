@@ -2,7 +2,7 @@ module Models.RoomData.Protagonist exposing (..)
 
 import Component.Form as Form
 import Html exposing (..)
-import Html.Attributes exposing (class, href, src, style)
+import Html.Attributes exposing (src, style)
 import Html.Events exposing (onClick)
 import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
@@ -10,7 +10,6 @@ import Json.Encode as E
 import List.Extra as ExList
 import Maybe.Extra as ExMaybe
 import Models.RoomData.Hand as Hand exposing (Hand)
-import Models.TragedySet as TragedySet exposing (Incident, TragedySet)
 
 
 type alias Protagonist =

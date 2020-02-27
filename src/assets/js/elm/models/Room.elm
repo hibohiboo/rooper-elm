@@ -4,14 +4,13 @@ import Component.Form as Form
 import Component.Link
 import Form.Decoder as Decoder exposing (Decoder)
 import Html exposing (..)
-import Html.Attributes as Attributes exposing (class, href, style)
 import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
 import Models.Room.Id as Id exposing (Id)
 import Models.Room.Name as Name exposing (Name)
 import Models.Script as Script exposing (Script)
-import Models.ScriptName as ScriptName exposing (ScriptName)
+import Models.ScriptName exposing (ScriptName)
 
 
 

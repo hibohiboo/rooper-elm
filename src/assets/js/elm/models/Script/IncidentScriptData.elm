@@ -1,6 +1,5 @@
 module Models.Script.IncidentScriptData exposing (..)
 
-import Form.Decoder as Decoder exposing (Decoder, Validator)
 import Html exposing (..)
 import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline

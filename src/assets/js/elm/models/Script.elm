@@ -6,13 +6,10 @@ import Form.Decoder as Decoder exposing (Decoder)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events.Extra exposing (onChange)
-import Html.Keyed as Keyed
-import Html.Lazy as Html
 import Json.Decode as D exposing (Value)
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
 import Json.Encode.Extra as ExEncode
-import List.Extra as ExList
 import Models.Board as Board
 import Models.Character as Character exposing (CharacterType)
 import Models.RoomData.OpenSheet as OpenSheet exposing (OpenSheet)

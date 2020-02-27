@@ -1,10 +1,8 @@
 module Models.TragedySet exposing (..)
 
-import Form.Decoder as Decoder exposing (Decoder, Validator)
+import Form.Decoder as Decoder exposing (Decoder)
 import Html exposing (..)
-import Json.Decode as D exposing (Value)
-import Json.Decode.Pipeline
-import Json.Encode as E
+import Json.Decode as D
 import List.Extra as ExList
 
 

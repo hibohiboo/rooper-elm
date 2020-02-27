@@ -1,7 +1,7 @@
 module Models.RoomName exposing (..)
 
 import Html exposing (..)
-import Html.Attributes as Attributes exposing (class, href)
+import Html.Attributes exposing (class, href)
 import Html.Keyed as Keyed
 import Html.Lazy as Html
 import Json.Decode as D exposing (Decoder, Value)

@@ -1,8 +1,7 @@
 module Models.User exposing (User, decodeUserFromJson)
 
-import Json.Decode as Decode exposing (Decoder, Value, decodeString, field, string, succeed)
-import Json.Decode.Pipeline exposing (hardcoded, optional, required)
-import Json.Encode as E
+import Json.Decode as Decode exposing (Decoder, Value, string, succeed)
+import Json.Decode.Pipeline exposing (required)
 
 
 type alias User =
@@ -12,11 +11,6 @@ type alias User =
     , twitterScreenName : String
     , twitterProfileImageUrl : String
     }
-
-
-decodeUserFromString : String -> Maybe User
-decodeUserFromString json =
-    decodeUserFromJson (E.string json)
 
 
 decodeUserFromJson : Value -> Maybe User

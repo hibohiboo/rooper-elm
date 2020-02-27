@@ -1,20 +1,14 @@
 module Models.RoomData.Hand exposing (..)
 
-import Component.Form as Form
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
-import Html.Events.Extra exposing (onChange)
 import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
 import Json.Encode.Extra as ExEncode
-import List.Extra as ExList
 import Maybe.Extra as ExMaybe
 import Models.Board as Board exposing (BoardType)
 import Models.Character as Character exposing (CharacterType)
-import Models.TragedySet as TragedySet exposing (Role)
-import Models.Utility.List as UtilityList
 
 
 type ComponentType

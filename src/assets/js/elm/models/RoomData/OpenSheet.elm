@@ -2,7 +2,7 @@ module Models.RoomData.OpenSheet exposing (..)
 
 import Component.Form as Form
 import Html exposing (..)
-import Html.Attributes exposing (class, href, style)
+import Html.Attributes exposing (class, style)
 import Json.Decode as D
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E

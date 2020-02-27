@@ -25,7 +25,6 @@ import Models.TragedySet as TragedySet
 import Models.User exposing (User)
 import Ports exposing (..)
 import Route
-import Task exposing (Task)
 
 
 main : Program (Maybe User) Model Msg

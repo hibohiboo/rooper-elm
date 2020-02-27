@@ -255,79 +255,75 @@ resolveMovementCard list c =
 
 moveVertical : Maybe Board -> Maybe Board
 moveVertical mb =
-    case mb of
-        Nothing ->
-            Nothing
+    mb
+        |> Maybe.andThen
+            (\b ->
+                case b.boardType of
+                    City ->
+                        Just Board.hospital
 
-        Just b ->
-            case b.boardType of
-                City ->
-                    Just Board.hospital
+                    Hospital ->
+                        Just Board.city
 
-                Hospital ->
-                    Just Board.city
+                    School ->
+                        Just Board.shrine
 
-                School ->
-                    Just Board.shrine
-
-                Shrine ->
-                    Just Board.school
+                    Shrine ->
+                        Just Board.school
+            )
 
 
 moveHorizontal : Maybe Board -> Maybe Board
 moveHorizontal mb =
-    case mb of
-        Nothing ->
-            Nothing
+    mb
+        |> Maybe.andThen
+            (\b ->
+                case b.boardType of
+                    City ->
+                        Just Board.school
 
-        Just b ->
-            case b.boardType of
-                City ->
-                    Just Board.school
+                    Hospital ->
+                        Just Board.shrine
 
-                Hospital ->
-                    Just Board.shrine
+                    School ->
+                        Just Board.city
 
-                School ->
-                    Just Board.city
-
-                Shrine ->
-                    Just Board.hospital
+                    Shrine ->
+                        Just Board.hospital
+            )
 
 
 validMove : Character -> Maybe Board -> Maybe Board
 validMove c mb =
-    case mb of
-        Nothing ->
-            Nothing
+    mb
+        |> Maybe.andThen
+            (\b ->
+                if List.member b c.forbiddenLocations then
+                    c.location
 
-        Just b ->
-            if List.member b c.forbiddenLocations then
-                c.location
-
-            else
-                mb
+                else
+                    mb
+            )
 
 
 moveDiagonal : Maybe Board -> Maybe Board
 moveDiagonal mb =
-    case mb of
-        Nothing ->
-            Nothing
+    mb
+        |> Maybe.andThen
+            (\b ->
+                case b.boardType of
+                    City ->
+                        Just Board.shrine
 
-        Just b ->
-            case b.boardType of
-                City ->
-                    Just Board.shrine
+                    Hospital ->
+                        Just Board.school
 
-                Hospital ->
-                    Just Board.school
+                    School ->
+                        Just Board.hospital
 
-                School ->
-                    Just Board.hospital
-
-                Shrine ->
-                    Just Board.city
+                    Shrine ->
+                        Just Board.city
+            )
 
 
 resolveGoodwillCard : List HandType -> Character -> Character
@@ -408,11 +404,7 @@ getCharactersOnBoard t list =
             (\c ->
                 case c.location of
                     Just l ->
-                        if l.boardType == t then
-                            True
-
-                        else
-                            False
+                        l.boardType == t
 
                     Nothing ->
                         False
