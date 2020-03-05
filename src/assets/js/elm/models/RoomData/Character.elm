@@ -151,17 +151,29 @@ setLocationBoard b c =
 
 setGoodWill : Int -> Character -> Character
 setGoodWill v c =
-    { c | goodWill = v }
+    if v < 0 then
+        { c | goodWill = 0 }
+
+    else
+        { c | goodWill = v }
 
 
 setParanoia : Int -> Character -> Character
 setParanoia v c =
-    { c | paranoia = v }
+    if v < 0 then
+        { c | paranoia = 0 }
+
+    else
+        { c | paranoia = v }
 
 
 setIntrigue : Int -> Character -> Character
 setIntrigue v c =
-    { c | intrigue = v }
+    if v < 0 then
+        { c | intrigue = 0 }
+
+    else
+        { c | intrigue = v }
 
 
 setIsDead : Bool -> Character -> Character
