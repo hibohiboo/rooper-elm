@@ -46,7 +46,11 @@ shrine =
 
 setIntrigue : Int -> Board -> Board
 setIntrigue v c =
-    { c | intrigue = v }
+    if v < 0 then
+        { c | intrigue = 0 }
+
+    else
+        { c | intrigue = v }
 
 
 resolveCard : List Hand -> Board -> Board

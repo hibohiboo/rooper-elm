@@ -810,7 +810,9 @@ handsOnComponentFormProtagonist p data chgMsg =
                     , getAppearedCharacters data
                         |> List.filter
                             (\c ->
-                                c.isSetEx && data.openSheet.set.setType /= TragedySet.MysteryCircle
+                                -- 仮死の事件が発生した場合に手札セット不可。
+                                -- TODO: 仮死の事件が含まれるのはMSなので一旦この形で。のちに事件で判断したい。
+                                not <| c.isSetEx && data.openSheet.set.setType == TragedySet.MysteryCircle
                             )
                         |> Character.getFormOptionList (Hand.getSelectedCharacterComponentType p.number hands)
                     ]
