@@ -41,6 +41,9 @@ type CharacterType
     | BlackCat -- 黒猫
     | LittleGirl -- 女の子
     | Sister -- 妹
+    | CopyCat -- コピーキャット
+    | Guru -- 教祖
+    | SacredTree -- ご神木
 
 
 type alias Character =
@@ -186,6 +189,15 @@ characterTypeToString t =
         Sister ->
             "Sister"
 
+        CopyCat ->
+            "CopyCat"
+
+        Guru ->
+            "Guru"
+
+        SacredTree ->
+            "SacredTree"
+
 
 characterFromString : String -> Maybe Character
 characterFromString s =
@@ -273,6 +285,15 @@ characterFromString s =
 
         "Sister" ->
             Just sister
+
+        "CopyCat" ->
+            Just copyCat
+
+        "Guru" ->
+            Just guru
+
+        "SacredTree" ->
+            Just sacredTree
 
         _ ->
             Nothing
@@ -375,6 +396,15 @@ characterFromCharacterType t =
         Sister ->
             sister
 
+        CopyCat ->
+            copyCat
+
+        Guru ->
+            guru
+
+        SacredTree ->
+            sacredTree
+
 
 characters : List Character
 characters =
@@ -406,6 +436,9 @@ characters =
     , blackCat
     , littleGirl
     , sister
+    , copyCat
+    , guru
+    , sacredTree
     ]
 
 
@@ -618,6 +651,21 @@ sister =
     Character Sister "妹" 3 Board.shrine []
 
 
+copyCat : Character
+copyCat =
+    Character CopyCat "コピーキャット" 2 Board.city []
+
+
+guru : Character
+guru =
+    Character Guru "教祖" 3 Board.shrine []
+
+
+sacredTree : Character
+sacredTree =
+    Character SacredTree "ご神木" 4 Board.shrine [ Board.school, Board.hospital, Board.city ]
+
+
 
 -- View Method
 
@@ -725,6 +773,15 @@ characterTypeToCardFileName t =
 
         Sister ->
             "sister.png"
+
+        CopyCat ->
+            "copy-cat.png"
+
+        Guru ->
+            "guru.png"
+
+        SacredTree ->
+            "sacred-tree.png"
 
 
 

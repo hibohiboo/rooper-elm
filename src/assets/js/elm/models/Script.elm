@@ -10,6 +10,7 @@ import Json.Decode as D exposing (Value)
 import Json.Decode.Pipeline as Pipeline
 import Json.Encode as E
 import Json.Encode.Extra as ExEncode
+import Maybe.Extra as ExMaybe
 import Models.Board as Board
 import Models.Character as Character exposing (CharacterType)
 import Models.RoomData.OpenSheet as OpenSheet exposing (OpenSheet)
@@ -339,6 +340,13 @@ mysteryBoyRoles scriptForm =
     List.filter (\r -> not <| List.member r list) scriptForm.set.roles
 
 
+copyCatRoles : RegisterForm -> List TragedySet.Role
+copyCatRoles scriptForm =
+    scriptForm.characters
+        |> List.map (\c -> c.role)
+        |> ExMaybe.values
+
+
 unassignedIncidentDays : RegisterForm -> List Int
 unassignedIncidentDays f =
     let
@@ -437,6 +445,9 @@ resetRolesCharacterScriptDataList f =
             case c.character.characterType of
                 Character.MysteryBoy ->
                     { c | role = List.head <| mysteryBoyRoles f }
+
+                Character.CopyCat ->
+                    { c | role = List.head <| copyCatRoles f }
 
                 _ ->
                     { c | role = Nothing }
@@ -709,6 +720,9 @@ characterRoles char chgMsg scriptForm =
         roleList =
             if char.character.characterType == Character.MysteryBoy then
                 mysteryBoyRoles scriptForm
+
+            else if char.character.characterType == Character.CopyCat then
+                copyCatRoles scriptForm
 
             else
                 case char.role of
