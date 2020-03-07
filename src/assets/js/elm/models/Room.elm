@@ -98,6 +98,7 @@ type alias RegisterForm =
     , script : Maybe Script
     , isUseTweet : Bool
     , isUseTweetRoomName : Bool
+    , isResetWithUpdate : Bool
     }
 
 
@@ -113,6 +114,7 @@ init =
     , script = Nothing
     , isUseTweet = True
     , isUseTweetRoomName = True
+    , isResetWithUpdate = False
     }
 
 
@@ -213,6 +215,11 @@ setIsUseTweetRoomName s f =
     { f | isUseTweetRoomName = s }
 
 
+setIsResetWithUpdate : Bool -> RegisterForm -> RegisterForm
+setIsResetWithUpdate s f =
+    { f | isResetWithUpdate = s }
+
+
 
 -- Decoder Register Form
 
@@ -237,6 +244,7 @@ formDecoder =
         |> Pipeline.optional "script" Script.scriptDecoder Nothing
         |> Pipeline.optional "isUseTweet" D.bool False
         |> Pipeline.optional "isUseTweetRoomName" D.bool False
+        |> Pipeline.optional "isResetWithUpdate" D.bool False
 
 
 

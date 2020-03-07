@@ -133,6 +133,7 @@ type Msg
     | ChangedRoom
     | SetIsUseTweet Bool
     | SetIsUseTweetRoomName Bool
+    | SetIsResetWithUpdate Bool
       -- ルーム
     | ReadedRoomData Value
     | ReadedRoomForRoomData Value
@@ -414,7 +415,15 @@ update msg model =
                     update (OpenModal "保存に失敗しました。項目を再確認してください") { model | room = Nothing }
 
                 Just r ->
-                    ( { model | room = Just r }, updateRoom <| Room.encode r )
+                    if model.roomForm.isResetWithUpdate then
+                        let
+                            roomData =
+                                RoomData.initRoomData r
+                        in
+                        ( { model | room = Just r, roomData = Just roomData, roomState = RoomState.setParameterTab model.roomState }, Cmd.batch [ updateRoomData <| RoomData.encode roomData, updateRoom <| Room.encode r ] )
+
+                    else
+                        ( { model | room = Just r }, updateRoom <| Room.encode r )
 
         ReadedRooms val ->
             ( { model | rooms = RoomName.decodeRoomNameListFromJson val }, Cmd.none )
@@ -492,6 +501,9 @@ update msg model =
 
         SetIsUseTweetRoomName b ->
             update ChangedRoom { model | roomForm = Room.setIsUseTweetRoomName b model.roomForm }
+
+        SetIsResetWithUpdate b ->
+            update ChangedRoom { model | roomForm = Room.setIsResetWithUpdate b model.roomForm }
 
         ChangedRoom ->
             ( { model | room = Room.convert model.roomForm }, Cmd.none )
@@ -1314,6 +1326,14 @@ editRoomView { roomForm, scripts, room } =
                 ]
             , Form.control
                 [ input [ class "", type_ "checkbox", checked roomForm.isUseTweetRoomName, onClick (SetIsUseTweetRoomName <| not roomForm.isUseTweetRoomName) ] []
+                ]
+            ]
+        , Form.field
+            [ label [ class "label has-text-white" ]
+                [ text "更新時にルームをリセットする"
+                ]
+            , Form.control
+                [ input [ class "", type_ "checkbox", checked roomForm.isResetWithUpdate, onClick (SetIsResetWithUpdate <| not roomForm.isUseTweetRoomName) ] []
                 ]
             ]
         , Form.field
