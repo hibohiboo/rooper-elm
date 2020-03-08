@@ -1461,8 +1461,8 @@ initMysteryCircleRoles =
     ]
 
 
-initWeirdMythology : List Role
-initWeirdMythology =
+initWeirdMythologyRoles : List Role
+initWeirdMythologyRoles =
     [ keyPerson
     , sacrifice
     , cultist
@@ -1649,8 +1649,8 @@ initMysteryCircleIncidents =
     ]
 
 
-initWeiredMythologyIncidents : List Incident
-initWeiredMythologyIncidents =
+initWeirdMythologyIncidents : List Incident
+initWeirdMythologyIncidents =
     [ insaneMurder
     , massSuicide
     , increasingUnease
@@ -1689,6 +1689,11 @@ initMysteryCircle =
     TragedySet "Mystery Circle X" 2 initMysteryCirclePlots initMysteryCircleRoles initMysteryCircleIncidents MysteryCircle
 
 
+initWeirdMythology : TragedySet
+initWeirdMythology =
+    TragedySet "Weird Mythology" 2 initWeirdMythologyPlots initWeirdMythologyRoles initWeirdMythologyIncidents WeirdMythology
+
+
 type Error
     = NoError
 
@@ -1709,6 +1714,9 @@ tragedySetFromString s =
 
         Just FirstSteps ->
             initFirstSteps
+
+        Just WeirdMythology ->
+            initWeirdMythology
 
         Nothing ->
             initBasicTragedy
@@ -1736,6 +1744,9 @@ typeToName t =
         MysteryCircle ->
             "Mystery Circle"
 
+        WeirdMythology ->
+            "Weird Mythology"
+
 
 toString : TragedySet -> String
 toString set =
@@ -1754,6 +1765,9 @@ typeToString t =
         MysteryCircle ->
             "MysteryCircle"
 
+        WeirdMythology ->
+            "WeirdMythology"
+
 
 typeFromString : String -> Maybe TragedySetType
 typeFromString s =
@@ -1767,6 +1781,9 @@ typeFromString s =
         "MysteryCircle" ->
             Just MysteryCircle
 
+        "WeirdMythology" ->
+            Just WeirdMythology
+
         _ ->
             Nothing
 
@@ -1775,3 +1792,4 @@ type TragedySetType
     = BasicTragedy
     | FirstSteps
     | MysteryCircle
+    | WeirdMythology

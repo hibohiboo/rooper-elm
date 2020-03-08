@@ -437,6 +437,13 @@ setTragedySet s f =
             in
             { new | characters = resetRolesCharacterScriptDataList new }
 
+        TragedySet.WeirdMythology ->
+            let
+                new =
+                    { f | set = set, mainPlot = TragedySet.choirToTheOutsideGod, subPlot1 = TragedySet.anUnsettlingRumour, subPlot2 = Just TragedySet.theResistance, incidents = [] }
+            in
+            { new | characters = resetRolesCharacterScriptDataList new }
+
 
 resetRolesCharacterScriptDataList : RegisterForm -> List Character.CharacterScriptData
 resetRolesCharacterScriptDataList f =
@@ -793,6 +800,7 @@ selectTragedySet chgMsg scriptForm =
         [ option [ value <| TragedySet.typeToString TragedySet.FirstSteps, selected (isSetFirstSteps scriptForm) ] [ text <| TragedySet.typeToName TragedySet.FirstSteps ]
         , option [ value <| TragedySet.typeToString TragedySet.BasicTragedy, selected (isSetBasicTragedy scriptForm) ] [ text <| TragedySet.typeToName TragedySet.BasicTragedy ]
         , option [ value <| TragedySet.typeToString TragedySet.MysteryCircle, selected (scriptForm.set.setType == TragedySet.MysteryCircle) ] [ text <| TragedySet.typeToName TragedySet.MysteryCircle ]
+        , option [ value <| TragedySet.typeToString TragedySet.WeirdMythology, selected (scriptForm.set.setType == TragedySet.WeirdMythology) ] [ text <| TragedySet.typeToName TragedySet.WeirdMythology ]
         ]
 
 

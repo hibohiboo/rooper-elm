@@ -598,6 +598,9 @@ infos data =
 
                         TragedySet.MysteryCircle ->
                             th [] [ text "Ex" ]
+
+                        TragedySet.WeirdMythology ->
+                            th [] [ text "Ex" ]
                     ]
                 ]
             , tbody []
@@ -613,6 +616,9 @@ infos data =
                             ExHtml.nothing
 
                         TragedySet.MysteryCircle ->
+                            td [] [ text <| String.fromInt ex ]
+
+                        TragedySet.WeirdMythology ->
                             td [] [ text <| String.fromInt ex ]
                     ]
                 ]

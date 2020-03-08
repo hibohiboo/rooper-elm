@@ -874,6 +874,11 @@ mastermindBottomForm model data =
                                       -- , td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataDate, value <| String.fromInt data.date ] [] ]
                                       td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataEx, value <| String.fromInt data.ex ] [] ]
                                     ]
+
+                            TragedySet.WeirdMythology ->
+                                RoomState.roomDataFormDataBoard
+                                    [ td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataEx, value <| String.fromInt data.ex ] [] ]
+                                    ]
                         , RoomData.boardsForm data ChangeBoardIntrigue
                         , RoomData.charactersForm data ChangeCharacterLocation ChangeCharacterGoodWill ChangeCharacterParanoia ChangeCharacterIntrigue ToggleCharacterIsDead DeleteCharacterForbiddenLocationMsg ToggleCharacterIsSetEx
                         ]
