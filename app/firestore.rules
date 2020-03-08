@@ -15,10 +15,15 @@ service cloud.firestore {
       allow create: if isSignedIn();
       // resouce 変数には変更前の要求されたドキュメントが格納される https://firebase.google.com/docs/firestore/security/rules-conditions?hl=ja
       allow update: if isOwner(resource);
+
+      match /scripts/{scriptId} {
+        allow create: if isSignedIn();
+        allow read,  update, delete: if isOwner(resource);
+      }
     }
     match /scripts/{scriptId} {
       allow create: if isSignedIn();
-      allow read,  update: if isOwner(resource);
+      allow read,  update, delete: if isOwner(resource);
     }
     match /rooms/{roomId} {
       allow read;
