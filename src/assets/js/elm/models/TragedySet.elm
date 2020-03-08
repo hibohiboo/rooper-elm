@@ -21,6 +21,7 @@ type RoleType
     | Factor
     | ConspiracyTheorist
     | Curmudgeon
+      -- MyseteryCircle
     | Poisoner
     | Fool
     | Paranoiac
@@ -28,6 +29,13 @@ type RoleType
     | PrivateInvestigator
     | Twin
     | Obstinate
+      -- Wired Mythology
+    | Sacrifice
+    | Immortal
+    | DeepOne
+    | Wizard
+    | Witness
+    | Faceless
 
 
 type alias Role =
@@ -115,6 +123,24 @@ roleToString r =
         Obstinate ->
             "Obstinate"
 
+        Sacrifice ->
+            "Sacrifice"
+
+        Immortal ->
+            "Immortal"
+
+        DeepOne ->
+            "DeepOne"
+
+        Wizard ->
+            "Wizard"
+
+        Witness ->
+            "Witness"
+
+        Faceless ->
+            "Faceless"
+
 
 roleFromString : String -> Maybe Role
 roleFromString s =
@@ -181,6 +207,24 @@ roleFromString s =
 
         "Obstinate" ->
             Just obstinate
+
+        "Sacrifice" ->
+            Just sacrifice
+
+        "Immortal" ->
+            Just immortal
+
+        "DeepOne" ->
+            Just deepOne
+
+        "Wizard" ->
+            Just wizard
+
+        "Witness" ->
+            Just witness
+
+        "Faceless" ->
+            Just faceless
 
         _ ->
             Nothing
@@ -905,6 +949,20 @@ initMysteryCirclePlots =
 
 
 
+-- 共通効果
+
+
+intrigueEffect : Effect
+intrigueEffect =
+    Effect [ Optional ] MastermindAbility False "各ターンの脚本家能力フェイズにこのキャラクターと同一のエリアにいるキャラクター1人か、このキャラクターのいるボードに暗躍カウンターを1つ置いても良い。"
+
+
+mandatoryCulpritEffect : Effect
+mandatoryCulpritEffect =
+    Effect [ Mandatory ] WritingScript False "このキャラクターは必ずいずれかの事件の犯人となる。"
+
+
+
 -- 役職 データ
 
 
@@ -927,7 +985,7 @@ killerEffects =
 
 brain : Role
 brain =
-    Role Brain "クロマク" Nothing [ GoodwillRefusal ] [ Effect [ Optional ] MastermindAbility False "各ターンの脚本家能力フェイズにこのキャラクターと同一のエリアにいるキャラクター1人か、このキャラクターのいるボードに暗躍カウンターを1つ置いても良い。" ]
+    Role Brain "クロマク" Nothing [ GoodwillRefusal ] [ intrigueEffect ]
 
 
 keyPerson : Role
@@ -948,7 +1006,7 @@ timeTraveler =
 timeTravelerEffects : List Effect
 timeTravelerEffects =
     [ Effect [ Mandatory ] CardsAreResolved False "このキャラクターにセットされた友好禁止は無視される。"
-    , Effect [ Optional ] DayEnd False "最終日のターン終了フェイズに、このキャラクターに2つ以下の友好カウンターしか置かれていない場合、主人公を敗北させてもよい。そうした場合、直ちにこのループを終了させる。"
+    , Effect [ Optional, LossCondition ] DayEnd False "最終日のターン終了フェイズに、このキャラクターに2つ以下の友好カウンターしか置かれていない場合、主人公を敗北させてもよい。そうした場合、直ちにこのループを終了させる。"
     ]
 
 
@@ -964,7 +1022,7 @@ friend =
 
 friendEffects =
     [ Effect [ Mandatory, LossCondition ] LoopEnd False "このカードがループ終了時に死亡している場合、このカードの役職を公開し、主人公は敗北する。"
-    , Effect [ Mandatory ] LoopStart False "このキャラクターの役職が公開されたことがある場合、ループ開始時にこのキャラクターに有効カウンターを１つ置く"
+    , Effect [ Mandatory ] LoopStart False "このキャラクターの役職が公開されたことがある場合、ループ開始時にこのキャラクターに友好カウンターを１つ置く。"
     ]
 
 
@@ -975,14 +1033,14 @@ lovedOne =
 
 lovedOneEffects : List Effect
 lovedOneEffects =
-    [ Effect [ Mandatory ] Always False "ラバーズが死亡した時、このキャラクターに不安カウンターを6つ置く"
+    [ Effect [ Mandatory ] Always False "ラバーズが死亡した時、このキャラクターに不安カウンターを6つ置く。"
     , Effect [ Optional, LossCondition ] DayEnd False "このキャラクターに3つ以上の不安カウンターと1つ以上の暗躍カウンターが置かれている場合、ターン終了フェイズに主人公を死亡させても良い。"
     ]
 
 
 lover : Role
 lover =
-    Role Lover "ラバーズ" Nothing [] [ Effect [ Mandatory ] Always False "メインラバーズが死亡した時、このキャラクターに不安カウンターを6つ置く" ]
+    Role Lover "ラバーズ" Nothing [] [ Effect [ Mandatory ] Always False "メインラバーズが死亡した時、このキャラクターに不安カウンターを6つ置く。" ]
 
 
 serialKiller : Role
@@ -1012,6 +1070,10 @@ curmudgeon =
     Role Curmudgeon "マイナス" Nothing [ GoodwillRefusal ] []
 
 
+
+-- Mystery Circle
+
+
 poisoner : Role
 poisoner =
     Role Poisoner "ドリッパー" Nothing [ GoodwillRefusal ] poisonerEffects
@@ -1031,7 +1093,7 @@ fool =
 
 foolEffects : List Effect
 foolEffects =
-    [ Effect [ Mandatory ] WritingScript False "このキャラクターは必ずいずれかの事件の犯人となる。"
+    [ mandatoryCulpritEffect
     , Effect [ Mandatory ] Always False "このキャラクターが事件を発生させた場合、その事件の解決後にこのカードから全ての不安カウンターを取り除く。"
     ]
 
@@ -1065,7 +1127,7 @@ twin =
 
 twinEffects : List Effect
 twinEffects =
-    [ Effect [ Mandatory ] WritingScript False "このキャラクターは必ずいずれかの事件の犯人となる。"
+    [ mandatoryCulpritEffect
     , Effect [ Mandatory ] IncidentsHappen False "このキャラクターが事件を発生させる場合、このキャラクターは本来の位置の代わりに、本来の対角線にあるボード上にいるものとして扱う。"
     ]
 
@@ -1077,8 +1139,71 @@ obstinate =
 
 obstinateEffects : List Effect
 obstinateEffects =
-    [ Effect [ Mandatory ] WritingScript False "このキャラクターは必ずいずれかの事件の犯人となる"
+    [ mandatoryCulpritEffect
     , Effect [ Mandatory ] IncidentsHappen False "このキャラクターはその上に置かれた不安カウンターの個数によらず、生存していれば必ず事件を発生させる。"
+    ]
+
+
+
+-- Wired Mythology
+
+
+sacrifice : Role
+sacrifice =
+    Role Sacrifice "ヒトハシラ" Nothing [ Unkillable ] sacrificeEffects
+
+
+sacrificeEffects : List Effect
+sacrificeEffects =
+    [ mandatoryCulpritEffect
+    , Effect [ Mandatory ] IncidentsHappen False "このキャラクターが犯人の事件が発生するか判定するとき、暗躍カウンターを不安カウンターとしても扱う。"
+    , Effect [ Optional, LossCondition ] DayEnd False "このキャラクターに2つ以上の暗躍カウンターと2つ以上の不安カウンターが置かれている場合、ターン終了フェイズに全てのキャラクターと主人公を死亡させてもよい。"
+    ]
+
+
+immortal : Role
+immortal =
+    Role Immortal "イモータル" Nothing [ Unkillable ] []
+
+
+deepOne : Role
+deepOne =
+    Role DeepOne "ディープワン" (Just 1) [ GoodwillRefusal ] deepOneEffects
+
+
+deepOneEffects : List Effect
+deepOneEffects =
+    [ intrigueEffect
+    , Effect [ Mandatory ] Always False "このキャラクターが死亡した時、その役職を公開し、Exゲージを1増加させる。"
+    ]
+
+
+wizard : Role
+wizard =
+    Role Wizard "ウィザード" (Just 1) [] wizardEffects
+
+
+wizardEffects : List Effect
+wizardEffects =
+    [ Effect [ Mandatory, LossCondition ] LoopEnd False "このカードがループ終了時に死亡している場合、主人公は敗北する。"
+    , Effect [ Mandatory ] Always False "このキャラクターの友好能力が使用された時、その役職を公開する。その後、リーダーはExゲージを1増加させてもよい。"
+    ]
+
+
+witness : Role
+witness =
+    Role Witness "モクゲキシャ" Nothing [] [ Effect [ Mandatory ] DayEnd False "ターン終了フェイズにこのキャラクターに4つ以上の不安カウンターが置かれている場合、このキャラクターを死亡させ、Exゲージを1増やす。" ]
+
+
+faceless : Role
+faceless =
+    Role Faceless "フェイスレス" Nothing [ GoodwillRefusal, Unkillable ] facelessEffects
+
+
+facelessEffects : List Effect
+facelessEffects =
+    [ Effect [ Mandatory ] Always False "Exゲージが1以下の場合、このキャラクターはミスリーダーに記載された追加能力を得る。"
+    , Effect [ Mandatory ] Always False "Exゲージが2以上の場合、このキャラクターはディープワンに記載された追加能力を得る。"
     ]
 
 
