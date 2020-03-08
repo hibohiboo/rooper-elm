@@ -712,6 +712,7 @@ type IncidentType
     | Spreading
     | FoulEvil
     | ButterflyEffect
+      -- Mystery Circle
     | SerialMurder
     | FakedSuicide
     | Terrorism
@@ -720,6 +721,14 @@ type IncidentType
     | ASuspiciousLetter
     | ClosedCircle
     | TheSilverBullet
+      -- Weired Mythology
+    | InsaneMurder
+    | MassSuicide
+    | FireOfDemise
+    | HoundDogScent
+    | Discovery
+    | TheExecutioner
+    | Uproar
 
 
 
@@ -780,6 +789,27 @@ incidentToString i =
         TheSilverBullet ->
             "TheSilverBullet"
 
+        InsaneMurder ->
+            "InsaneMurder"
+
+        MassSuicide ->
+            "MassSuicide"
+
+        FireOfDemise ->
+            "FireOfDemise"
+
+        HoundDogScent ->
+            "HoundDogScent"
+
+        Discovery ->
+            "Discovery"
+
+        TheExecutioner ->
+            "TheExecutioner"
+
+        Uproar ->
+            "Uproar"
+
 
 incidentFromString : String -> Maybe Incident
 incidentFromString s =
@@ -834,6 +864,27 @@ incidentFromString s =
 
         "TheSilverBullet" ->
             Just theSilverBullet
+
+        "InsaneMurder" ->
+            Just insaneMurder
+
+        "MassSuicide" ->
+            Just massSuicide
+
+        "FireOfDemise" ->
+            Just fireOfDemise
+
+        "HoundDogScent" ->
+            Just houndDogScent
+
+        "Discovery" ->
+            Just discovery
+
+        "TheExecutioner" ->
+            Just theExecutioner
+
+        "Uproar" ->
+            Just uproar
 
         _ ->
             Nothing
@@ -1011,28 +1062,35 @@ bloodyRites : Plot
 bloodyRites =
     Plot "血塗られた儀式" True BloodyRites [ witch, immortal ] [ Effect [ LossCondition ] LoopEnd False "ループ終了時に、死体がX個以上ある場合、主人公は敗北する。Xは現在のExゲージの値に等しい。(Exゲージが0なら主人公は必ず敗北する)" ]
 
-theResistance: Plot
+
+theResistance : Plot
 theResistance =
     Plot "抗うものたち" False TheResistance [ conspiracyTheorist, wizard, serialKiller ] []
 
-peopleWhoSaw: Plot
+
+peopleWhoSaw : Plot
 peopleWhoSaw =
-  Plot "見てしまった人々" False PeopleWhoSaw [conspiracyTheorist, witness] []
+    Plot "見てしまった人々" False PeopleWhoSaw [ conspiracyTheorist, witness ] []
 
-theProfoundRace: Plot
-theProfoundRace = Plot "偉大なる種族" False TheProfoundRace [serialKiller, timeTraveler] []
 
-whispersFromTheDeep: Plot
+theProfoundRace : Plot
+theProfoundRace =
+    Plot "偉大なる種族" False TheProfoundRace [ serialKiller, timeTraveler ] []
+
+
+whispersFromTheDeep : Plot
 whispersFromTheDeep =
-  Plot "深き都の囁き" False WhispersFromTheDeep [deepOne, paranoiac][ Effect [ Mandatory, LossCondition ] Always False "パラノイアはキーパーソンに記載された追加能力を得る" ]
+    Plot "深き都の囁き" False WhispersFromTheDeep [ deepOne, paranoiac ] [ Effect [ Mandatory, LossCondition ] Always False "パラノイアはキーパーソンに記載された追加能力を得る" ]
 
-theFacelessGod: Plot
+
+theFacelessGod : Plot
 theFacelessGod =
-  Plot "無貌の髪" False TheFacelessGod [faceless, wizard] []
+    Plot "無貌の髪" False TheFacelessGod [ faceless, wizard ] []
 
-twistedTruth: Plot
+
+twistedTruth : Plot
 twistedTruth =
-  Plot "狂った真実" False TwistedTruth [paranoiac] [ Effect [ Mandatory ] WritingScript  False "脚本作成時、情報屋を登場させなくてはならない。さらに、いずれかのルールYを指定しておく。ループ開始時にExゲージが2以上の場合、そのループの間、本来のルールYにより与えられる敗北条件は無効となり、このルールによって指定されたルールYの敗北条件が代わりに有効になる。" ]
+    Plot "狂った真実" False TwistedTruth [ paranoiac ] [ Effect [ Mandatory ] WritingScript False "脚本作成時、情報屋を登場させなくてはならない。さらに、いずれかのルールYを指定しておく。ループ開始時にExゲージが2以上の場合、そのループの間、本来のルールYにより与えられる敗北条件は無効となり、このルールによって指定されたルールYの敗北条件が代わりに有効になる。" ]
 
 
 initBasicPlots : List Plot
@@ -1079,10 +1137,10 @@ initMysteryCirclePlots =
     , trickyTwins
     ]
 
+
 initWeirdMythologyPlots : List Plot
 initWeirdMythologyPlots =
-  [
-    choirToTheOutsideGod
+    [ choirToTheOutsideGod
     , theSacredWordsOfDagon
     , theKingInYellow
     , giantTimeBombY
@@ -1093,8 +1151,9 @@ initWeirdMythologyPlots =
     , theProfoundRace
     , whispersFromTheDeep
     , theFacelessGod
-    ,twistedTruth
-  ]
+    , twistedTruth
+    ]
+
 
 
 -- 共通効果
@@ -1513,6 +1572,41 @@ theSilverBullet =
     Incident TheSilverBullet "銀の銃弾" "このフェイズの終了時にループを終了させる。この事件の発生によりExゲージは増加しない。（この事件によりループが終了した時点で、主人公が敗北条件を満たしていない場合は、主人公プレイヤーの勝利としてゲームが終了する。）"
 
 
+insaneMurder : Incident
+insaneMurder =
+    Incident InsaneMurder "狂気殺人" "犯人と同一エリアにいる任意のキャラクター１人を死亡させる。"
+
+
+massSuicide : Incident
+massSuicide =
+    Incident MassSuicide "集団自殺" "犯人に暗躍カウンターが1つ以上置かれている場合、犯人と同一エリアにいる全てのキャラクターを死亡させる。"
+
+
+fireOfDemise : Incident
+fireOfDemise =
+    Incident FireOfDemise "滅びの火" "このゲームでこの事件が初めて発生する場合、全てのキャラクターと主人公を死亡させる。"
+
+
+houndDogScent : Incident
+houndDogScent =
+    Incident HoundDogScent "猟犬の嗅覚" "以降のこのループ中に他の事件が発生した場合、その事件フェイズの終了時に主人公を死亡させる。この事件が発生するか判定する時、本来のカウンターの代わりに暗躍カウンターの個数を参照する。"
+
+
+discovery : Incident
+discovery =
+    Incident Discovery "発見" "Exゲージを1増加させる。"
+
+
+theExecutioner : Incident
+theExecutioner =
+    Incident TheExecutioner "遂行者" "リーダーはキャラクターを1人選択する。そのキャラクターを死亡させる。この事件は犯人の不安臨界を1少ないものとして発生するかを判定する。"
+
+
+uproar : Incident
+uproar =
+    Incident Uproar "大暴動" "学校に暗躍カウンターが1つ以上置かれている場合、学校にいるキャラクター全員が死亡する。都市に暗躍カウンターが1つ以上置かれている場合、都市にいるキャラクター全員が死亡する。"
+
+
 initBasicTragedyIncidents : List Incident
 initBasicTragedyIncidents =
     [ murder
@@ -1552,6 +1646,21 @@ initMysteryCircleIncidents =
     , fakedSuicide
     , closedCircle
     , theSilverBullet
+    ]
+
+
+initWeiredMythologyIncidents : List Incident
+initWeiredMythologyIncidents =
+    [ insaneMurder
+    , massSuicide
+    , increasingUnease
+    , missingPerson
+    , foulEvil
+    , hospitalIncident
+    , uproar
+    , fireOfDemise
+    , houndDogScent
+    , discovery
     ]
 
 
