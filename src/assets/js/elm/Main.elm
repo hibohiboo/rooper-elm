@@ -561,8 +561,18 @@ update msg model =
 
         NextRoomDataState ->
             let
+                -- 因果の糸を考慮
+                isSelectedThreadsOfFate =
+                    Maybe.withDefault False
+                        (model.room
+                            |> Maybe.map
+                                (\{ script } ->
+                                    script.subPlot1 == TragedySet.threadsOfFate || script.subPlot2 == Just TragedySet.threadsOfFate
+                                )
+                        )
+
                 roomData =
-                    model.roomData |> Maybe.map RoomData.nextRoomDataState
+                    model.roomData |> Maybe.map (\d -> RoomData.nextRoomDataState isSelectedThreadsOfFate d)
 
                 modalState =
                     case model.roomData of
@@ -1333,7 +1343,7 @@ editRoomView { roomForm, scripts, room } =
                 [ text "更新時にルームをリセットする"
                 ]
             , Form.control
-                [ input [ class "", type_ "checkbox", checked roomForm.isResetWithUpdate, onClick (SetIsResetWithUpdate <| not roomForm.isUseTweetRoomName) ] []
+                [ input [ class "", type_ "checkbox", checked roomForm.isResetWithUpdate, onClick (SetIsResetWithUpdate <| not roomForm.isResetWithUpdate) ] []
                 ]
             ]
         , Form.field

@@ -56,19 +56,27 @@ characterFromCharacterScriptData { character, role, optionalNumber, turf } =
     Character characterType name paranoiaLimit firstLocation role optionalNumber turf 0 0 0 (Just firstLocation) forbiddenLocations False False
 
 
-resetCharacter : Character -> Character
-resetCharacter { role, optionalNumber, turf, characterType, name, paranoiaLimit, firstLocation } =
+resetCharacter : Bool -> Character -> Character
+resetCharacter isSelectedThreadsOfFate { role, optionalNumber, turf, characterType, name, paranoiaLimit, firstLocation, goodWill } =
     let
         -- 移動禁止エリアは、医者や女の子の能力で変更されている可能性があるのでリフレッシュする
         { forbiddenLocations } =
             Models.Character.characterFromCharacterType characterType
+
+        -- 因果の糸を考慮
+        paranoia =
+            if isSelectedThreadsOfFate && goodWill > 0 then
+                2
+
+            else
+                0
     in
-    Character characterType name paranoiaLimit firstLocation role optionalNumber turf 0 0 0 (Just firstLocation) forbiddenLocations False False
+    Character characterType name paranoiaLimit firstLocation role optionalNumber turf 0 paranoia 0 (Just firstLocation) forbiddenLocations False False
 
 
-resetCharacters : List Character -> List Character
-resetCharacters list =
-    List.map resetCharacter list
+resetCharacters : Bool -> List Character -> List Character
+resetCharacters isSelectedThreadsOfFate list =
+    List.map (\c -> resetCharacter isSelectedThreadsOfFate c) list
 
 
 

@@ -117,15 +117,15 @@ loopEnd data =
     { data | state = RoomDataState.TimeSpairal }
 
 
-nextRoomDataState : RoomData -> RoomData
-nextRoomDataState data =
+nextRoomDataState : Bool -> RoomData -> RoomData
+nextRoomDataState isSelectedThreadsOfFate data =
     data
         |> updateNextState
         |> updateHandsData
         |> updateProtagonists
         |> updateDate
         |> updateLoop
-        |> updateBoardsCharacters
+        |> (\d -> updateBoardsCharacters isSelectedThreadsOfFate d)
         |> updateHands
 
 
@@ -179,10 +179,10 @@ updateLoop data =
         data
 
 
-updateBoardsCharacters : RoomData -> RoomData
-updateBoardsCharacters data =
+updateBoardsCharacters : Bool -> RoomData -> RoomData
+updateBoardsCharacters isSelectedThreadsOfFate data =
     if data.state == RoomDataState.SetupCounter then
-        { data | characters = Character.resetCharacters data.characters, boards = Board.init }
+        { data | characters = Character.resetCharacters isSelectedThreadsOfFate data.characters, boards = Board.init }
 
     else
         data
