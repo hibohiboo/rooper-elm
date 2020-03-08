@@ -249,3 +249,22 @@
     width: 14px;
   }
 }
+
+@media (min-width: 769px) {
+  .rooper {
+    &-room-wrapper {
+      display: flex;
+      flex-direction: row-reverse;
+    }
+
+    &-bottom-form.navbar {
+      min-height: 100vh;
+      min-width: 360px;
+      position: relative;
+
+      .card-content {
+        min-height: 60vh;
+      }
+    }
+  }
+}

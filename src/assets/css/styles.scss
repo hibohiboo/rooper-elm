@@ -57,20 +57,6 @@ h1 {
   font-size: 2em;
 }
 
-.rooper {
-  &-wrapper {
-    // color: rgb(223, 225, 226);
-    margin: 0 auto;
-    max-width: 640px;
-    min-height: 100vh;
-  }
-
-  &-title {
-    color: #f00;
-    font-size: 1rem;
-  }
-}
-
 @import 'utils/spinner';
 @import 'utils/form';
 @import 'pages/rooper/frame';

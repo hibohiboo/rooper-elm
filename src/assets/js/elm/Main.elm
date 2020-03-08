@@ -783,13 +783,15 @@ ownerRoomView user model =
             Form.createButton InitRoomData "ルーム初期化"
 
         Just data ->
-            div []
-                [ RoomData.infos data
-                , RoomData.stateView data
-                , RoomData.roomBoard data
-                , RoomData.playedHandsView data
-                , RoomData.usedHands ConfirmHandUnused data
-                , mastermindSheets model
+            div [ class "rooper-room-wrapper" ]
+                [ div [ class "rooper-room-wrapper__main" ]
+                    [ RoomData.infos data
+                    , RoomData.stateView data
+                    , RoomData.roomBoard data
+                    , RoomData.playedHandsView data
+                    , RoomData.usedHands ConfirmHandUnused data
+                    , mastermindSheets model
+                    ]
                 , if RoomData.isTurnProtagonist model.roomState.turnProtagonistNumber user data then
                     protagonistsBottomForm model user data
 

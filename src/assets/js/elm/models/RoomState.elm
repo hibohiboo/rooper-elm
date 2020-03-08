@@ -140,10 +140,10 @@ roomDataBottomForm state children =
     let
         c =
             if state.bottomNavOpen then
-                class "navbar is-fixed-bottom rooper-bottom-form is-active"
+                class "navbar is-fixed-bottom rooper-room-wrapper__nav rooper-bottom-form is-active"
 
             else
-                class "navbar is-fixed-bottom rooper-bottom-form"
+                class "navbar is-fixed-bottom rooper-room-wrapper__nav rooper-bottom-form"
     in
     nav [ c ]
         [ div [ class "card" ] children ]

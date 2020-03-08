@@ -1,4 +1,16 @@
 .rooper {
+  &-wrapper {
+    // color: rgb(223, 225, 226);
+    margin: 0 auto;
+    max-width: 640px;
+    min-height: 100vh;
+  }
+
+  &-title {
+    color: #f00;
+    font-size: 1rem;
+  }
+
   &-modal-message {
     white-space: pre-wrap;
   }
@@ -111,6 +123,16 @@
         height: 100%;
         width: 80vw; // % 指定だとswiperがうまく動かない（右にずれる）
       }
+    }
+  }
+}
+
+@media (min-width: 769px) {
+  .rooper {
+    &-wrapper {
+      margin: 0 auto;
+      max-width: 1280px;
+      min-height: 100vh;
     }
   }
 }
