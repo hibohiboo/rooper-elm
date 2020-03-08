@@ -29,7 +29,7 @@ type RoleType
     | PrivateInvestigator
     | Twin
     | Obstinate
-      -- Wired Mythology
+      -- Weird Mythology
     | Sacrifice
     | Immortal
     | DeepOne
@@ -288,6 +288,7 @@ type PlotType
     | ParanoiaVirus
     | ThreadsOfFate
     | UnknownFactorX
+      -- Mystery Circle
     | AQuiltOfIncidents
     | TightropePlan
     | TheBlackSchool
@@ -298,6 +299,18 @@ type PlotType
     | DanceOfFools
     | AnAbsoluteWill
     | TrickyTwins
+      -- Cosmic Mythology
+    | ChoirToTheOutsideGod
+    | TheSacredWordsOfDagon
+    | TheKingInYellow
+    | GiantTimeBombY
+    | BloodyRites
+    | TheResistance
+    | PeopleWhoSaw
+    | TheProfoundRace
+    | WhispersFromTheDeep
+    | TheFacelessGod
+    | TwistedTruth
 
 
 type alias Effect =
@@ -506,6 +519,39 @@ plotToString p =
         TrickyTwins ->
             "TrickyTwins"
 
+        ChoirToTheOutsideGod ->
+            "ChoirToTheOutsideGod"
+
+        TheSacredWordsOfDagon ->
+            "TheSacredWordsOfDagon"
+
+        TheKingInYellow ->
+            "TheKingInYellow"
+
+        BloodyRites ->
+            "BloodyRites"
+
+        GiantTimeBombY ->
+            "GiantTimeBombY"
+
+        TheResistance ->
+            "TheResistance"
+
+        PeopleWhoSaw ->
+            "PeopleWhoSaw"
+
+        TheProfoundRace ->
+            "TheProfoundRace"
+
+        WhispersFromTheDeep ->
+            "WhispersFromTheDeep"
+
+        TheFacelessGod ->
+            "TheFacelessGod"
+
+        TwistedTruth ->
+            "TwistedTruth"
+
 
 plotFromString : String -> Maybe Plot
 plotFromString s =
@@ -587,6 +633,40 @@ plotFromString s =
 
         "TrickyTwins" ->
             Just trickyTwins
+
+        -- Weired Mythology
+        "ChoirToTheOutsideGod" ->
+            Just choirToTheOutsideGod
+
+        "TheSacredWordsOfDagon" ->
+            Just theSacredWordsOfDagon
+
+        "TheKingInYellow" ->
+            Just theKingInYellow
+
+        "GiantTimeBombY" ->
+            Just giantTimeBombY
+
+        "BloodyRites" ->
+            Just bloodyRites
+
+        "TheResistance" ->
+            Just theResistance
+
+        "PeopleWhoSaw" ->
+            Just peopleWhoSaw
+
+        "TheProfoundRace" ->
+            Just theProfoundRace
+
+        "WhispersFromTheDeep" ->
+            Just whispersFromTheDeep
+
+        "TheFacelessGod" ->
+            Just theFacelessGod
+
+        "TwistedTruth" ->
+            Just twistedTruth
 
         _ ->
             Nothing
@@ -903,6 +983,58 @@ trickyTwins =
     Plot "双子のトリック" False TrickyTwins [ paranoiac, twin ] []
 
 
+
+-- Weird Mythology
+
+
+choirToTheOutsideGod : Plot
+choirToTheOutsideGod =
+    Plot "外なる神への合唱曲" True ChoirToTheOutsideGod [ keyPerson, sacrifice, immortal ] [ Effect [ LossCondition ] LoopEnd False "ループ終了時に、生存しているキャラクターのうち5人以上に暗躍カウンターが1つ以上置かれている場合、主人公は敗北する。" ]
+
+
+theSacredWordsOfDagon : Plot
+theSacredWordsOfDagon =
+    Plot "だごん様の御言葉" True TheSacredWordsOfDagon [ keyPerson, cultist, deepOne ] [ Effect [ LossCondition ] LoopEnd False "ループ終了時に、神社に暗躍カウンターがX個以上置かれている場合、主人公は敗北する。Xは現在のExゲージの値に等しい。(Exゲージが0なら主人公は必ず敗北する)" ]
+
+
+theKingInYellow : Plot
+theKingInYellow =
+    Plot "黄衣の王" True TheKingInYellow [ sacrifice, cultist ] [ Effect [ LossCondition ] LoopEnd False "このループ中にExゲージが1以上増加している場合、ループ終了時に主人公は敗北する。" ]
+
+
+giantTimeBombY : Plot
+giantTimeBombY =
+    Plot "巨大時限爆弾Yの存在" True GiantTimeBomb [ witch, deepOne ] [ Effect [ LossCondition ] LoopEnd False "ループ終了時にボードYに暗躍カウンターが2つ以上置かれている場合、主人公は敗北する。Yはウィッチの初期エリアに等しい。" ]
+
+
+bloodyRites : Plot
+bloodyRites =
+    Plot "血塗られた儀式" True BloodyRites [ witch, immortal ] [ Effect [ LossCondition ] LoopEnd False "ループ終了時に、死体がX個以上ある場合、主人公は敗北する。Xは現在のExゲージの値に等しい。(Exゲージが0なら主人公は必ず敗北する)" ]
+
+theResistance: Plot
+theResistance =
+    Plot "抗うものたち" False TheResistance [ conspiracyTheorist, wizard, serialKiller ] []
+
+peopleWhoSaw: Plot
+peopleWhoSaw =
+  Plot "見てしまった人々" False PeopleWhoSaw [conspiracyTheorist, witness] []
+
+theProfoundRace: Plot
+theProfoundRace = Plot "偉大なる種族" False TheProfoundRace [serialKiller, timeTraveler] []
+
+whispersFromTheDeep: Plot
+whispersFromTheDeep =
+  Plot "深き都の囁き" False WhispersFromTheDeep [deepOne, paranoiac][ Effect [ Mandatory, LossCondition ] Always False "パラノイアはキーパーソンに記載された追加能力を得る" ]
+
+theFacelessGod: Plot
+theFacelessGod =
+  Plot "無貌の髪" False TheFacelessGod [faceless, wizard] []
+
+twistedTruth: Plot
+twistedTruth =
+  Plot "狂った真実" False TwistedTruth [paranoiac] [ Effect [ Mandatory ] WritingScript  False "脚本作成時、情報屋を登場させなくてはならない。さらに、いずれかのルールYを指定しておく。ループ開始時にExゲージが2以上の場合、そのループの間、本来のルールYにより与えられる敗北条件は無効となり、このルールによって指定されたルールYの敗北条件が代わりに有効になる。" ]
+
+
 initBasicPlots : List Plot
 initBasicPlots =
     [ murderPlan
@@ -947,6 +1079,22 @@ initMysteryCirclePlots =
     , trickyTwins
     ]
 
+initWeirdMythologyPlots : List Plot
+initWeirdMythologyPlots =
+  [
+    choirToTheOutsideGod
+    , theSacredWordsOfDagon
+    , theKingInYellow
+    , giantTimeBombY
+    , bloodyRites
+    , anUnsettlingRumour
+    , theResistance
+    , peopleWhoSaw
+    , theProfoundRace
+    , whispersFromTheDeep
+    , theFacelessGod
+    ,twistedTruth
+  ]
 
 
 -- 共通効果
@@ -1145,7 +1293,7 @@ obstinateEffects =
 
 
 
--- Wired Mythology
+-- Weird Mythology
 
 
 sacrifice : Role
@@ -1251,6 +1399,24 @@ initMysteryCircleRoles =
     , privateInvestigator
     , obstinate
     , twin
+    ]
+
+
+initWeirdMythology : List Role
+initWeirdMythology =
+    [ keyPerson
+    , sacrifice
+    , cultist
+    , witch
+    , immortal
+    , deepOne
+    , conspiracyTheorist
+    , paranoiac
+    , wizard
+    , serialKiller
+    , timeTraveler
+    , witness
+    , faceless
     ]
 
 
