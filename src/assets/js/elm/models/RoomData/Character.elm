@@ -618,19 +618,19 @@ charactersFormItem c useEx changeLocationMsg changeGMsg changePMsg changeIMsg to
             , div []
                 [ text "友好"
                 , div []
-                    [ input [ value <| String.fromInt c.goodWill, onChange changeGMsg, type_ "number" ] []
+                    [ input [ value <| String.fromInt c.goodWill, onChange changeGMsg, type_ "number", Html.Attributes.min "0" ] []
                     ]
                 ]
             , div []
                 [ text "不安"
                 , div []
-                    [ input [ value <| String.fromInt c.paranoia, onChange changePMsg, type_ "number" ] []
+                    [ input [ value <| String.fromInt c.paranoia, onChange changePMsg, type_ "number", Html.Attributes.min "0" ] []
                     ]
                 ]
             , div []
                 [ text "暗躍"
                 , div []
-                    [ input [ value <| String.fromInt c.intrigue, onChange changeIMsg, type_ "number" ] []
+                    [ input [ value <| String.fromInt c.intrigue, onChange changeIMsg, type_ "number", Html.Attributes.min "0" ] []
                     ]
                 ]
             , div []

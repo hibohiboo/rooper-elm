@@ -193,7 +193,7 @@ boardsFormItem b changeIMsg =
             , div []
                 [ text "暗躍"
                 , div []
-                    [ input [ value <| String.fromInt b.intrigue, onChange changeIMsg, type_ "number" ] []
+                    [ input [ value <| String.fromInt b.intrigue, onChange changeIMsg, type_ "number", Html.Attributes.min "0" ] []
                     ]
                 ]
             ]

@@ -874,7 +874,7 @@ mastermindBottomForm model data =
                                 RoomState.roomDataFormDataBoard
                                     [ --  td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataLoop, value <| String.fromInt data.loop ] [] ]
                                       -- , td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataDate, value <| String.fromInt data.date ] [] ]
-                                      td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataEx, value <| String.fromInt data.ex ] [] ]
+                                      td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataEx, value <| String.fromInt data.ex, Html.Attributes.min "0" ] [] ]
                                     ]
 
                             TragedySet.WeirdMythology ->
