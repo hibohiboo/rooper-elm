@@ -760,10 +760,6 @@ incidentsSelect chgMsg scriptForm =
     Form.select "-incidents" chgMsg roleKey optionList
 
 
-
--- TODO: 選択した日付は選べないように
-
-
 incidentDays : (String -> msg) -> RegisterForm -> Html msg
 incidentDays chgMsg scriptForm =
     let

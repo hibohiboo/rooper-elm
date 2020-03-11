@@ -906,17 +906,17 @@ mastermindBottomForm model data =
         , RoomState.roomDataFormFooter
             [ span [ class "card-footer-item" ]
                 [ if RoomData.isMastermindPlaysCards data || RoomData.isProtagonistsPlaysCard data then
-                    span [ class "card-footer-item", onClick HandRoomDataState ]
+                    span [ class "card-footer-item  rooper-footer-tab-button", onClick HandRoomDataState ]
                         [ span [] [ text "手札" ]
                         ]
 
                   else
                     nextStateButton
                 ]
-            , span [ class "card-footer-item", onClick CharacterRoomDataState ]
+            , span [ class "card-footer-item rooper-footer-tab-button", onClick CharacterRoomDataState ]
                 [ span [] [ text "パラメータ" ]
                 ]
-            , span [ class "card-footer-item", onClick DataRoomDataState ]
+            , span [ class "card-footer-item rooper-footer-tab-button", onClick DataRoomDataState ]
                 [ span [] [ text "アクション" ]
                 ]
             ]

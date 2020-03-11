@@ -109,7 +109,15 @@ setLoop s f =
 
 setEx : String -> RoomData -> RoomData
 setEx s f =
-    { f | ex = Maybe.withDefault 0 <| String.toInt s }
+    let
+        ex =
+            Maybe.withDefault 0 <| String.toInt s
+    in
+    if ex < 0 then
+        { f | ex = 0 }
+
+    else
+        { f | ex = ex }
 
 
 loopEnd : RoomData -> RoomData

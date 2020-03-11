@@ -248,6 +248,15 @@
     top: 34px;
     width: 14px;
   }
+
+  &-footer-tab-button {
+    cursor: pointer;
+  }
+
+  &-footer-tab-button:hover {
+    background-color: #232929;
+    filter: brightness(1.75); // 明るくする
+  }
 }
 
 @media (min-width: 769px) {
