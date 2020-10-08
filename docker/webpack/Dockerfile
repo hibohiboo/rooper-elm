@@ -1,4 +1,4 @@
-FROM node:13.10.1
+FROM node:14.11.0
 # FROM node:12.13.1
 
 # コンテナ上の作業ディレクトリ作成
@@ -104,17 +104,16 @@ RUN yarn add --dev @babel/core \
 
 RUN yarn add --dev @babel/cli
 
-
-# console.logを削除
-RUN yarn add --dev terser-webpack-plugin
-
-
 # 型定義をインストール
 RUN yarn add --dev firebase
 
 # import * as vfileMessage from 'vfile-message'; 対策
 # https://github.com/vmware/clarity/issues/4012
-RUN sed -i -e "s/'vfile-message'/'vfile-message\/node_modules\/vfile-message'/" /app/node_modules/@types/vfile/index.d.ts
+# RUN sed -i -e "s/'vfile-message'/'vfile-message\/node_modules\/vfile-message'/" /app/node_modules/@types/vfile/index.d.ts
 
 # elm-test --watchしたときのpolling設定
 RUN sed -i -e "s/\(cwd: projectRootDir,\)/\1\n    usePolling: true, /g" /app/node_modules/elm-test/lib/elm-test.js
+
+RUN  yarn add file-saver jszip
+# console.logを削除
+RUN yarn add --dev terser-webpack-plugin

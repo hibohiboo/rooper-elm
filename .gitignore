@@ -6,3 +6,4 @@ ubuntu-*
 dist
 node_modules
 separate
+*.log

@@ -1,22 +1,17 @@
 {
-  "compilerOptions": {
-    "target": "es6",
-    "outDir": "./dist/assets/js",
-    "strictNullChecks": true,
-    "sourceMap": false,
-    "allowJs": true,
-    "declaration": false,
-    "composite": false
-  },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "elm-stuff"
-  ],
-  "typeRoots": [
-    "node_modules",
-    "types"
-  ]
+    "compilerOptions": {
+        "target": "es6",
+        "outDir": "./dist/assets/js",
+        "strictNullChecks": true,
+        "sourceMap": false,
+        "allowJs": true,
+        "declaration": false,
+        "composite": false,
+
+        "moduleResolution": "node",
+        "esModuleInterop": true // jszipを読み込むために必要
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "elm-stuff"],
+    "typeRoots": ["node_modules", "types"]
 }
