@@ -5,26 +5,117 @@ import {
   createElement
 } from './fileArchiver';
 
-export const createZip = () => {
+type Character =
+  | 'BoyStudent' //  男子学生
+  | 'GirlStudent' //  女子学生
+  | 'RichMansDaughter' //  お嬢様
+  | 'ShrineMaiden' //  巫女
+  | 'PoliceOfficer' //  刑事
+  | 'OfficeWorker' //  サラリーマン
+  | 'Informer' //  情報屋
+  | 'Doctor' //  医者
+  | 'Patient' //  患者
+  | 'ClassRep' //  委員長
+  | 'MysteryBoy' //  イレギュラー
+  | 'Alien' //  異世界人
+  | 'GodlyBeing' //  神格
+  | 'PopIdol' //  アイドル
+  | 'Journalist' //  マスコミ
+  | 'Boss' //  大物
+  | 'Nurse' //  ナース
+  | 'Henchman' //  手先
+  | 'Scientist' //  学者
+  | 'Illusion' //  幻想
+  | 'ForensicSpecialist' //  鑑識官
+  | 'AI' //  A.I.
+  | 'Teacher' //  教師
+  | 'TransferStudent' //  転校生
+  | 'Soldier' //  軍人
+  | 'BlackCat' //  黒猫
+  | 'LittleGirl' //  女の子
+  | 'Sister' //  妹
+  | 'CopyCat' //  コピーキャット
+  | 'Guru' //  教祖
+  | 'SacredTree'; //  ご神木
+
+export const createZip = (
+  characters: {
+    character: Character;
+  }[]
+) => {
   const files: File[] = [];
-  const doc = createDoc();
-  const card = createCharacter(doc, '男子学生', '学校', '01');
-  doc.appendChild(card);
-  const sXML = convertDocToXML(doc);
-  files.push(new File([sXML], '男子学生.xml', { type: 'text/plain' }));
-  // doc.appendChild(card2);
+  characters.forEach(c => {
+    const file = characterFactory(c.character);
+    if (file) {
+      files.push(file);
+    }
+  });
 
-  const doc2 = createDoc();
-  const card2 = createCharacter(doc2, '女子学生', '学校', '02');
-  doc2.appendChild(card2);
-  files.push(
-    new File([convertDocToXML(doc2)], '女子学生.xml', { type: 'text/plain' })
-  );
-
-  // files.push(new File([sXML], 'data.xml', { type: 'text/plain' }));
   FileArchiver.instance.save(files, 'scenario');
 };
-const createCharacter = (doc, charName, firstPosition, cardNumber) => {
+
+const characterFactory = (c: Character) => {
+  switch (c) {
+    case 'BoyStudent':
+      return createCharacter('男子学生', '学校', '01');
+    case 'GirlStudent':
+      return createCharacter('女子学生', '学校', '02');
+    case 'RichMansDaughter':
+      return createCharacter('お嬢様', '学校', '03');
+    case 'ShrineMaiden':
+      return createCharacter('巫女', '神社', '04');
+    case 'PoliceOfficer':
+      return createCharacter('刑事', '都市', '05');
+    case 'OfficeWorker':
+      return createCharacter('サラリーマン', '都市', '06');
+    case 'Informer':
+      return createCharacter('情報屋', '都市', '07');
+    case 'Doctor':
+      return createCharacter('医者', '病院', '08');
+    case 'Patient':
+      return createCharacter('患者', '病院', '09');
+    case 'ClassRep':
+      return createCharacter('委員長', '学校', '10');
+    case 'MysteryBoy':
+      return createCharacter('イレギュラー', '学校', '11');
+    case 'Alien':
+      return createCharacter('異世界人', '神社', '12');
+    case 'GodlyBeing':
+      return createCharacter('神格', '神社', '13');
+    case 'PopIdol':
+      return createCharacter('アイドル', '都市', '14');
+    case 'Journalist':
+      return createCharacter('マスコミ', '都市', '15');
+    case 'Boss':
+      return createCharacter('大物', '都市', '16');
+    case 'Nurse':
+      return createCharacter('ナース', '病院', '17');
+    case 'Henchman':
+      return createCharacter('手先', '神社', '18');
+    case 'Scientist':
+      return createCharacter('学者', '病院', '19');
+    case 'Illusion':
+      return createCharacter('幻想', '神社', '20');
+    case 'ForensicSpecialist':
+      return createCharacter('鑑識官', '都市', '21');
+    case 'AI':
+      return createCharacter('A.I.', '都市', '22');
+    case 'Teacher':
+      return createCharacter('教師', '学校', '23');
+    case 'TransferStudent':
+      return createCharacter('転校生', '学校', '24');
+    case 'Soldier':
+      return createCharacter('軍人', '病院', '25');
+    case 'BlackCat':
+      return createCharacter('黒猫', '神社', '26');
+    case 'LittleGirl':
+      return createCharacter('女の子', '学校', '27');
+    // 未実装キャラはとりあえず男子学生にする
+  }
+};
+
+const createCharacter = (charName, firstPosition, cardNumber) => {
+  const doc = createDoc();
   const rooperCard = createElement(doc, 'rooper-card', [
     ['location.name', 'table'],
     ['location.x', '600'],
@@ -120,5 +211,7 @@ const createCharacter = (doc, charName, firstPosition, cardNumber) => {
   rooperCard.appendChild(char);
   // const cp = createElement(doc, 'chat-palette', [['dicebot', '']]);
   // rooperCard.appendChild(cp);
-  return rooperCard;
+  doc.appendChild(rooperCard);
+  const sXML = convertDocToXML(doc);
+  return new File([sXML], `${charName}.xml`, { type: 'text/plain' });
 };
