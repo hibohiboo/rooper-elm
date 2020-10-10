@@ -690,7 +690,7 @@ update msg model =
                     update (OpenModal "出力に失敗しました。項目を再確認してください") { model | script = script }
 
                 Just s ->
-                    ( model, exportUdonariumData <| Script.encode s )
+                    ( model, exportUdonariumData <| Script.encodeToUdonarium s )
 
 
 subscriptions : Model -> Sub Msg

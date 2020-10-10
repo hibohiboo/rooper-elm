@@ -33,6 +33,15 @@ encode data =
         ]
 
 
+encodeToUdon : IncidentScriptData -> E.Value
+encodeToUdon data =
+    E.object
+        [ ( "incident", E.string <| TragedySet.incidentToUdonString data.incident )
+        , ( "day", E.int data.day )
+        , ( "culprit", Character.encodeCharacter data.culprit )
+        ]
+
+
 assignedIncidentDays : List IncidentScriptData -> List Int
 assignedIncidentDays list =
     List.map (\d -> d.day) list

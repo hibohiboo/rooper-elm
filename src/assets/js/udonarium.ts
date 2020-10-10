@@ -38,18 +38,24 @@ type Character =
   | 'Guru' //  教祖
   | 'SacredTree'; //  ご神木
 
-export const createZip = (
+export const createZip = (scenario: {
   characters: {
     character: Character;
-  }[]
-) => {
+  }[];
+  set: string;
+  numberOfLoops: number;
+  daysInOneLoop: number;
+  extra: string;
+  incidents: Incident[];
+}) => {
   const files: File[] = [];
-  characters.forEach(c => {
+  scenario.characters.forEach(c => {
     const file = characterFactory(c.character);
     if (file) {
       files.push(file);
     }
   });
+  files.push(createNote(scenario));
 
   FileArchiver.instance.save(files, 'scenario');
 };
@@ -214,4 +220,139 @@ const createCharacter = (charName, firstPosition, cardNumber) => {
   doc.appendChild(rooperCard);
   const sXML = convertDocToXML(doc);
   return new File([sXML], `${charName}.xml`, { type: 'text/plain' });
+};
+type Incident = { day: number; incident: string };
+const createNote = ({
+  set,
+  numberOfLoops,
+  daysInOneLoop,
+  extra,
+  incidents
+}: {
+  set: string;
+  numberOfLoops: number;
+  daysInOneLoop: number;
+  extra: string;
+  incidents: Incident[];
+}) => {
+  const doc = createDoc();
+  const textNote = createElement(doc, 'text-note', [
+    ['password', ''],
+    ['location.x', '210'],
+    ['location.y', '150'],
+    ['posZ', '0'],
+    ['rotate', '0'],
+    ['roll', '0'],
+    ['zindex', '0'],
+    ['location.name', 'table']
+  ]);
+  const note = createElement(doc, 'data', [['name', 'text-note']]);
+  const image = createElement(doc, 'data', [['name', 'image']]);
+  const imageIdentifier = createElement(doc, 'data', [
+    ['name', 'imageIdentifier'],
+    ['type', 'image']
+  ]);
+  image.appendChild(imageIdentifier);
+  note.appendChild(image);
+
+  const common = createElement(doc, 'data', [['name', 'common']]);
+  const name = createElement(doc, 'data', [['name', 'title']], '公開シート');
+  const height = createElement(doc, 'data', [['name', 'height']], '3');
+  const width = createElement(doc, 'data', [['name', 'width']], '6');
+  const fontsize = createElement(doc, 'data', [['name', 'fontsize']], '5');
+  const text = createElement(
+    doc,
+    'data',
+    [['name', 'text']],
+    `${set}
+ループ回数: ${numberOfLoops} / 1ループ日数: ${daysInOneLoop}日
+
+${extra}
+
+[事件予定]
+
+${incidents
+  .reverse()
+  .map(incidentToString)
+  .join('\n')}
+  `
+  );
+  common.appendChild(name);
+  common.appendChild(height);
+  common.appendChild(width);
+  common.appendChild(fontsize);
+  common.appendChild(text);
+  note.appendChild(common);
+  const detail = createElement(doc, 'data', [['name', 'detail']]);
+  note.appendChild(detail);
+
+  textNote.appendChild(note);
+  doc.appendChild(textNote);
+  const sXML = convertDocToXML(doc);
+  return new File([sXML], `公開シート.xml`, { type: 'text/plain' });
+};
+
+const incidentToString = ({ day, incident }: Incident) =>
+  `${day}日目：${incident}`;
+
+const incidentFactory = (incident: string) => {
+  switch (incident) {
+    case 'MurderPlan':
+      return '殺人計画';
+    case 'LightOfTheAvenger':
+      return '復讐者の灯火';
+    case 'APlaceToProtect':
+      return '守るべき場所';
+    case 'TheSealedItem':
+      return '封印されしモノ';
+    case 'SignWithMe':
+      return '僕と契約しようよ！';
+    case 'ChangeOfFuture':
+      return '未来改変プラン';
+    case 'GiantTimeBomb':
+      return '巨大時限爆弾Xの存在';
+    case 'AnUnsettlingRumour':
+      return '不穏な噂';
+    case 'AHideousScript':
+      return '最低の却本';
+    case 'ShadowOfTheRipper':
+      return '切り裂き魔の影';
+    case 'CircleOfFriends':
+      return '友情サークル';
+    case 'ALoveAffair':
+      return '恋愛風景';
+
+    case '':
+      return '';
+
+    case '':
+      return '';
+
+    case '':
+      return '';
+
+    case '':
+      return '';
+
+    case '':
+      return '';
+
+    case '':
+      return '';
+
+    case '':
+      return '';
+
+    case '':
+      return '';
+
+    case '':
+      return '';
+
+    case '':
+      return '';
+
+    case '':
+      return '';
+  }
 };

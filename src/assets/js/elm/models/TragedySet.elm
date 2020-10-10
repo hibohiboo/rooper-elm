@@ -890,6 +890,82 @@ incidentFromString s =
             Nothing
 
 
+incidentToUdonString : Incident -> String
+incidentToUdonString i =
+    case i.incidentType of
+        Murder ->
+            murderPlan.name
+
+        IncreasingUnease ->
+            increasingUnease.name
+
+        Suicide ->
+            suicide.name
+
+        HospitalIncident ->
+            hospitalIncident.name
+
+        FarawayMurder ->
+            farawayMurder.name
+
+        MissingPerson ->
+            missingPerson.name
+
+        Spreading ->
+            spreading.name
+
+        FoulEvil ->
+            foulEvil.name
+
+        ButterflyEffect ->
+            butterflyEffect.name
+
+        SerialMurder ->
+            serialMurder.name
+
+        FakedSuicide ->
+            fakedSuicide.name
+
+        Terrorism ->
+            terrorism.name
+
+        Portent ->
+            portent.name
+
+        BestialMurder ->
+            bestialMurder.name
+
+        ASuspiciousLetter ->
+            aSuspiciousLetter.name
+
+        ClosedCircle ->
+            closedCircle.name
+
+        TheSilverBullet ->
+            theSilverBullet.name
+
+        InsaneMurder ->
+            insaneMurder.name
+
+        MassSuicide ->
+            massSuicide.name
+
+        FireOfDemise ->
+            fireOfDemise.name
+
+        HoundDogScent ->
+            houndDogScent.name
+
+        Discovery ->
+            discovery.name
+
+        TheExecutioner ->
+            theExecutioner.name
+
+        Uproar ->
+            uproar.name
+
+
 
 -- ルール ＞ データ
 

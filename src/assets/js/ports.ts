@@ -198,7 +198,7 @@ export async function logginedPorts(ports, firebaseBackEnd, user) {
   });
 
   ports.exportUdonariumData.subscribe(async script => {
-    console.log(script);
-    createZip(script.characters);
+    // console.log(script);
+    createZip(script);
   });
 }

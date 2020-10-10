@@ -950,3 +950,22 @@ encode script =
         , ( "extra", E.string script.extra )
         , ( "memo", E.string script.memo )
         ]
+
+
+encodeToUdonarium : Script -> E.Value
+encodeToUdonarium script =
+    E.object
+        [ ( "id", E.string <| Id.toString script.id )
+        , ( "name", E.string <| Name.toString script.name )
+        , ( "set", E.string <| TragedySet.typeToName script.set.setType )
+
+        -- , ( "mainPlot", E.string <| TragedySet.plotToString script.mainPlot )
+        -- , ( "subPlot1", E.string <| TragedySet.plotToString script.subPlot1 )
+        -- , ( "subPlot2", ExEncode.maybe E.string <| Maybe.map TragedySet.plotToString script.subPlot2 )
+        , ( "characters", E.list Character.encodeCharacterScriptData script.characters )
+        , ( "numberOfLoops", E.int script.numberOfLoops )
+        , ( "daysInOneLoop", E.int script.daysInOneLoop )
+        , ( "incidents", E.list IncidentScriptData.encodeToUdon script.incidents )
+        , ( "extra", E.string script.extra )
+        , ( "memo", E.string script.memo )
+        ]
