@@ -168,6 +168,7 @@ type Msg
     | ToggleCharacterIsSetEx RoomCharacter.Character
     | OpenTwitterModal
     | OpenCharacterCardModal Character.CharacterType
+    | ExportUdonariumData
 
 
 type MenuState
@@ -678,6 +679,18 @@ update msg model =
 
         OpenCharacterCardModal t ->
             ( { model | modalState = OpenCharacterCardModalState t }, Cmd.none )
+
+        ExportUdonariumData ->
+            let
+                script =
+                    Script.convert model.scriptForm
+            in
+            case script of
+                Nothing ->
+                    update (OpenModal "出力に失敗しました。項目を再確認してください") { model | script = script }
+
+                Just s ->
+                    ( model, exportUdonariumData <| Script.encode s )
 
 
 subscriptions : Model -> Sub Msg
@@ -1472,6 +1485,11 @@ createScriptView { scriptForm, script } =
                 [ div [ class "column  is-4 is-offset-8 control" ]
                     [ button [ class "button is-danger", onClick OpenModalConfirmScriptDelete ] [ text "削除" ]
                     ]
+                ]
+            ]
+        , Form.field
+            [ div [ class "control" ]
+                [ button [ class "button is-primary", disabled isScriptInvalid, onClick ExportUdonariumData ] [ text "Udonariumデータダウンロード" ]
                 ]
             ]
         , Form.field
