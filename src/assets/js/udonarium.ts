@@ -50,6 +50,9 @@ export const createZip = (scenario: {
 }) => {
   const files: File[] = [];
   scenario.characters.forEach(c => {
+    // 神格・転校生は初日は登場しないのでzipに含めない
+    if (['TransferStudent', 'GodlyBeing'].includes(c.character)) return;
+
     const file = characterFactory(c.character);
     if (file) {
       files.push(file);
@@ -209,6 +212,11 @@ const createCharacter = (charName, firstPosition, cardNumber) => {
   common.appendChild(yuko);
   common.appendChild(huan);
   common.appendChild(anyaku);
+  common.appendChild(createElement(doc, 'data', [['name', '希望'], ['type', 'numberResource'], ['currentValue', '0']], '0'));
+  common.appendChild(createElement(doc, 'data', [['name', '絶望'], ['type', 'numberResource'], ['currentValue', '0']], '0'));
+  common.appendChild(createElement(doc, 'data', [['name', '死亡済'], ['type', 'numberResource'], ['currentValue', '0']], '0'));
+  common.appendChild(createElement(doc, 'data', [['name', '交友済'], ['type', 'numberResource'], ['currentValue', '0']], '0'));
+  common.appendChild(createElement(doc, 'data', [['name', '交友済(拒否)'], ['type', 'numberResource'], ['currentValue', '0']], '0'));
 
   char.appendChild(common);
   const detail = createElement(doc, 'data', [['name', 'detail']]);
@@ -272,9 +280,9 @@ ${extra}
 [事件予定]
 
 ${incidents
-  .reverse()
-  .map(incidentToString)
-  .join('\n')}
+      .reverse()
+      .map(incidentToString)
+      .join('\n')}
   `
   );
   common.appendChild(name);
