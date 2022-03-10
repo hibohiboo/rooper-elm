@@ -65,12 +65,21 @@ const common = {
             {
                 test: /\.scss$/,
                 exclude: [/elm-stuff/, /node_modules/],
-                loaders: ["style-loader", "css-loader?url=false", "sass-loader"]
+              use: [
+                "style-loader",
+                {
+                  loader: "css-loader",
+                  options: { url: false }
+                },"sass-loader"]
             },
             {
                 test: /\.css$/,
                 exclude: [/elm-stuff/, /node_modules/],
-                loaders: ["style-loader", "css-loader?url=false"]
+              use: ["style-loader",
+                {
+                  loader: "css-loader",
+                  options: { url: false }
+                }]
             },
             {
                 test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
@@ -107,9 +116,11 @@ const common = {
 
 if (MODE === "development") {
     console.log("Building for dev...");
-    module.exports = merge(common, {
+  module.exports = merge(common, {
+    optimization: {
+      moduleIds: 'named',
+      },
         plugins: [
-            new webpack.NamedModulesPlugin(),
             new webpack.NoEmitOnErrorsPlugin(),
             new webpack.DefinePlugin({
                 REPRACE_TEST: JSON.stringify(process.env.REPRACE_TEST)
@@ -133,12 +144,16 @@ if (MODE === "development") {
                 }
             ]
         },
-        devServer: {
-            hot: true,
-            progress: true,
-            inline: true,
-            stats: "errors-only",
-            contentBase: path.join(__dirname, "src"),
+    devServer: {
+      // hot: true,
+      // progress: true,
+      // inline: true,
+      // stats: "errors-only",
+      // https://qiita.com/chocomint_t/items/4bc57945bce081922582
+      static: {
+        directory: path.join(__dirname, "src"),
+      },
+            // contentBase: path.join(__dirname, "src"),
             // publicPath: '/assets/',
             historyApiFallback: {
                 rewrites: [
@@ -146,25 +161,25 @@ if (MODE === "development") {
                     { from: /^\/rooper/, to: "/rooper/index.html" }
                 ]
             },
-            before(app) {
-                app.get("/test", (req, res) => {
-                    res.json({ result: "OK" });
-                });
-                // app.get('/scenario', (req, res) => {
-                //   let teset = fs.readFileSync('index.html', 'utf-8');
-                //   const data = fs.readFileSync('/scenario/index.html', 'utf-8');
+            // before(app) {
+            //     app.get("/test", (req, res) => {
+            //         res.json({ result: "OK" });
+            //     });
+            //     // app.get('/scenario', (req, res) => {
+            //     //   let teset = fs.readFileSync('index.html', 'utf-8');
+            //     //   const data = fs.readFileSync('/scenario/index.html', 'utf-8');
 
-                //   res.writeHead(200, {
-                //     'content-Type': 'text/html'
-                //   });
+            //     //   res.writeHead(200, {
+            //     //     'content-Type': 'text/html'
+            //     //   });
 
-                //   // HTTPレスポンスボディを出力する
-                //   res.write(data);
-                //   res.end("HTML file has already sent to browser");
-                // })
-            }
+            //     //   // HTTPレスポンスボディを出力する
+            //     //   res.write(data);
+            //     //   res.end("HTML file has already sent to browser");
+            //     // })
+            // }
         },
-        watch: true,
+        // watch: true,
         watchOptions: {
             aggregateTimeout: 300,
             poll: 1000

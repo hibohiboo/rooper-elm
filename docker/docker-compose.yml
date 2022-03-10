@@ -33,7 +33,6 @@ services:
         yarn,
         webpack-dev-server,
         --hot,
-        --colors,
         --port,
         "3000",
         --host,
