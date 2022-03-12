@@ -36,6 +36,10 @@ type RoleType
     | Wizard
     | Witness
     | Faceless
+      -- MidnightZone
+    | Ninja
+    | Magician
+    | Prophet
 
 
 type alias Role =
@@ -141,6 +145,15 @@ roleToString r =
         Faceless ->
             "Faceless"
 
+        Ninja ->
+            "Ninja"
+
+        Magician ->
+            "Magician"
+
+        Prophet ->
+            "Prophet"
+
 
 roleFromString : String -> Maybe Role
 roleFromString s =
@@ -225,6 +238,15 @@ roleFromString s =
 
         "Faceless" ->
             Just faceless
+
+        "Ninja" ->
+            Just ninja
+
+        "Magician" ->
+            Just magician
+
+        "Prophet" ->
+            Just prophet
 
         _ ->
             Nothing
@@ -311,6 +333,18 @@ type PlotType
     | WhispersFromTheDeep
     | TheFacelessGod
     | TwistedTruth
+      -- Midnight Zone
+    | SecretRecord
+    | MaleConfrontation
+    | TheDevilsHand
+    | FatedConnections
+    | LoveHateSpiral
+    | WitchesTeaTime
+    | DiceOfTheGods
+    | UnsafeTrigger
+    | ShowtimeOfDeath
+    | UnansweredHeart
+    | WorshippersOfTheApocalypse
 
 
 type alias Effect =
@@ -552,6 +586,39 @@ plotToString p =
         TwistedTruth ->
             "TwistedTruth"
 
+        SecretRecord ->
+            "SecretRecord"
+
+        MaleConfrontation ->
+            "MaleConfrontation"
+
+        TheDevilsHand ->
+            "TheDevilsHand"
+
+        FatedConnections ->
+            "FatedConnections"
+
+        LoveHateSpiral ->
+            "LoveHateSpiral"
+
+        WitchesTeaTime ->
+            "WitchesTeaTime"
+
+        DiceOfTheGods ->
+            "DiceOfTheGods"
+
+        UnsafeTrigger ->
+            "UnsafeTrigger"
+
+        ShowtimeOfDeath ->
+            "ShowtimeOfDeath"
+
+        UnansweredHeart ->
+            "UnansweredHeart"
+
+        WorshippersOfTheApocalypse ->
+            "WorshippersOfTheApocalypse"
+
 
 plotFromString : String -> Maybe Plot
 plotFromString s =
@@ -668,6 +735,40 @@ plotFromString s =
         "TwistedTruth" ->
             Just twistedTruth
 
+        -- MidnightZone
+        "SecretRecord" ->
+            Just secretRecord
+
+        "MaleConfrontation" ->
+            Just maleConfrontation
+
+        "TheDevilsHand" ->
+            Just theDevilsHand
+
+        "FatedConnections" ->
+            Just fatedConnections
+
+        "LoveHateSpiral" ->
+            Just loveHateSpiral
+
+        "WitchesTeaTime" ->
+            Just witchesTeaTime
+
+        "DiceOfTheGods" ->
+            Just diceOfTheGods
+
+        "UnsafeTrigger" ->
+            Just unsafeTrigger
+
+        "ShowtimeOfDeath" ->
+            Just showtimeOfDeath
+
+        "UnansweredHeart" ->
+            Just unansweredHeart
+
+        "WorshippersOfTheApocalypse" ->
+            Just worshippersOfTheApocalypse
+
         _ ->
             Nothing
 
@@ -729,6 +830,11 @@ type IncidentType
     | Discovery
     | TheExecutioner
     | Uproar
+      -- Midnight Zone
+    | Conspiracies
+    | Confession
+    | Breakthrough
+    | FakeIncident
 
 
 
@@ -810,6 +916,18 @@ incidentToString i =
         Uproar ->
             "Uproar"
 
+        Conspiracies ->
+            "Conspiracies"
+
+        Confession ->
+            "Confession"
+
+        Breakthrough ->
+            "Breakthrough"
+
+        FakeIncident ->
+            "FakeIncident"
+
 
 incidentFromString : String -> Maybe Incident
 incidentFromString s =
@@ -885,6 +1003,18 @@ incidentFromString s =
 
         "Uproar" ->
             Just uproar
+
+        "Conspiracies" ->
+            Just conspiracies
+
+        "Confession" ->
+            Just confession
+
+        "Breakthrough" ->
+            Just breakthrough
+
+        "FakeIncident" ->
+            Just fakeIncident
 
         _ ->
             Nothing
@@ -964,6 +1094,18 @@ incidentToUdonString i =
 
         Uproar ->
             uproar.name
+
+        Conspiracies ->
+            conspiracies.name
+
+        Confession ->
+            confession.name
+
+        Breakthrough ->
+            breakthrough.name
+
+        FakeIncident ->
+            fakeIncident.name
 
 
 
@@ -1169,6 +1311,79 @@ twistedTruth =
     Plot "狂った真実" False TwistedTruth [ paranoiac ] [ Effect [ Mandatory ] WritingScript False "脚本作成時、情報屋を登場させなくてはならない。さらに、いずれかのルールYを指定しておく。ループ開始時にExゲージが2以上の場合、そのループの間、本来のルールYにより与えられる敗北条件は無効となり、このルールによって指定されたルールYの敗北条件が代わりに有効になる。" ]
 
 
+secretRecord : Plot
+secretRecord =
+    Plot "シークレットレコード" True SecretRecord [ keyPerson, brain, conspiracyTheorist ] [ Effect [ LossCondition ] LoopEnd False "このループでクロマク、ファクター、マジシャンのうちのいずれかの役職が公開されている" ]
+
+
+maleConfrontation : Plot
+maleConfrontation =
+    Plot "漢の戦い"
+        True
+        MaleConfrontation
+        [ ninja ]
+        [ Effect [ Mandatory ] WritingScript False "必ず男性がニンジャとなる（少年は不可）"
+        , Effect [ LossCondition ] LoopEnd False "ニンジャまたはその死体に[暗躍カウンター]が2つ以上ある"
+        ]
+
+
+theDevilsHand : Plot
+theDevilsHand =
+    Plot "忍び寄る魔手" True TheDevilsHand [ keyPerson, cultist, ninja ] []
+
+
+fatedConnections : Plot
+fatedConnections =
+    Plot "因果の絆"
+        True
+        FatedConnections
+        [ friend, serialKiller, conspiracyTheorist ]
+        [ Effect [ Mandatory ] LoopStart False "ひとつ前のループ終了時に死亡していたキャラクター1人にEXカードをセットする（「神のサイコロ」と重複しない）"
+        , Effect [ Mandatory ] Always False "EXカードのセットされたキャラクターの役職はキーパーソンに変更される（本来の役職は失われる）"
+        ]
+
+
+loveHateSpiral : Plot
+loveHateSpiral =
+    Plot "憎愛スパイラル" False LoveHateSpiral [ friend, obstinate ] []
+
+
+witchesTeaTime : Plot
+witchesTeaTime =
+    Plot "魔女のお茶会" False WitchesTeaTime [ friend, conspiracyTheorist, witch, witch ] []
+
+
+diceOfTheGods : Plot
+diceOfTheGods =
+    Plot "神のサイコロ" False DiceOfTheGods [ serialKiller, obstinate ] [ Effect [ Mandatory ] LoopStart False "ひとつ前のループ終了時に死亡していたキャラクター1人にEXカードをセットする（「因果の絆」と重複しない）" ]
+
+
+unsafeTrigger : Plot
+unsafeTrigger =
+    Plot "不定因子χ怪" False UnsafeTrigger [ factor ] [ Effect [ Optional ] MastermindAbility True "ファクターのいるボードに[暗躍カウンター]を1つ置く。" ]
+
+
+showtimeOfDeath : Plot
+showtimeOfDeath =
+    Plot "死のショウタイム" False ShowtimeOfDeath [ magician, immortal ] [ Effect [ LossCondition ] LoopEnd False "生存するキャラクターが6人以下である" ]
+
+
+unansweredHeart : Plot
+unansweredHeart =
+    Plot "通わぬ心" False UnansweredHeart [ conspiracyTheorist, magician ] [ Effect [ Mandatory ] CardsAreResolved False "有効禁止は移動禁止の効果も持つ" ]
+
+
+worshippersOfTheApocalypse : Plot
+worshippersOfTheApocalypse =
+    Plot "滅亡を謳うもの"
+        False
+        WorshippersOfTheApocalypse
+        [ prophet ]
+        [ Effect [ Mandatory ] WritingScript False "事件に1つ以上の自殺を入れる"
+        , Effect [ Mandatory ] IncidentsHappen False "プロフェシーが生存している→パーソンが犯人の事件発生判定時、不安臨界を-1して判定する"
+        ]
+
+
 initBasicPlots : List Plot
 initBasicPlots =
     [ murderPlan
@@ -1228,6 +1443,23 @@ initWeirdMythologyPlots =
     , whispersFromTheDeep
     , theFacelessGod
     , twistedTruth
+    ]
+
+
+initMidnightZonePlots : List Plot
+initMidnightZonePlots =
+    [ theSealedItem
+    , secretRecord
+    , maleConfrontation
+    , theDevilsHand
+    , fatedConnections
+    , loveHateSpiral
+    , witchesTeaTime
+    , diceOfTheGods
+    , unsafeTrigger
+    , showtimeOfDeath
+    , unansweredHeart
+    , worshippersOfTheApocalypse
     ]
 
 
@@ -1303,6 +1535,7 @@ friend =
     Role Friend "フレンド" (Just 2) [] friendEffects
 
 
+friendEffects : List Effect
 friendEffects =
     [ Effect [ Mandatory, LossCondition ] LoopEnd False "このカードがループ終了時に死亡している場合、このカードの役職を公開し、主人公は敗北する。"
     , Effect [ Mandatory ] LoopStart False "このキャラクターの役職が公開されたことがある場合、ループ開始時にこのキャラクターに友好カウンターを１つ置く。"
@@ -1490,6 +1723,46 @@ facelessEffects =
     ]
 
 
+ninja : Role
+ninja =
+    Role Ninja "ニンジャ" Nothing [ GoodwillRefusal ] ninjaEffects
+
+
+ninjaEffects : List Effect
+ninjaEffects =
+    [ Effect [ Optional ] DayEnd False "同一エリアのキャラクターに暗躍カウンターが2つ以上 → そのキャラクターを死亡させる"
+    , Effect [ Optional ] Always False "このキャラクターの役職を公開する場合、忍者でなく配役されているパーソン以外の他の役職と伝えてもよい"
+    ]
+
+
+magician : Role
+magician =
+    Role Magician "マジシャン" Nothing [] magicianEffects
+
+
+magicianEffects : List Effect
+magicianEffects =
+    [ Effect [ Optional ] MastermindAbility True "同一エリアの[不安カウンター]が1つ以上のキャラクター1人を隣り合うボードに移動させる。（全てのマジシャンを合わせて1ループ1回制限）"
+    , Effect [ Mandatory ] Always False "このキャラクターの死亡時、このキャラクターの[不安カウンター]を全て取り除く"
+    ]
+
+
+prophet : Role
+prophet =
+    Role Prophet "プロフェシー" Nothing [] prophetEffects
+
+
+prophetEffects : List Effect
+prophetEffects =
+    [ Effect [ Mandatory ] Always False "脚本家はこのキャラクターに行動カードをセットできない"
+    , Effect [ Mandatory ] IncidentsHappen False "このキャラクターと同一エリアかつ自身以外のキャラクターが犯人である事件は発生しない"
+    ]
+
+
+
+-- "Prophet" -> Just prophet
+
+
 initFirstStepsRoles : List Role
 initFirstStepsRoles =
     [ killer
@@ -1552,6 +1825,24 @@ initWeirdMythologyRoles =
     , timeTraveler
     , witness
     , faceless
+    ]
+
+
+initMidnightZoneRoles : List Role
+initMidnightZoneRoles =
+    [ keyPerson
+    , brain
+    , cultist
+    , ninja
+    , friend
+    , serialKiller
+    , conspiracyTheorist
+    , obstinate
+    , magician
+    , factor
+    , witch
+    , immortal
+    , prophet
     ]
 
 
@@ -1683,6 +1974,26 @@ uproar =
     Incident Uproar "大暴動" "学校に暗躍カウンターが1つ以上置かれている場合、学校にいるキャラクター全員が死亡する。都市に暗躍カウンターが1つ以上置かれている場合、都市にいるキャラクター全員が死亡する。"
 
 
+conspiracies : Incident
+conspiracies =
+    Incident Conspiracies "陰謀工作" "<暗躍カウンターで発生判定>連続殺人か行方不明のどちらかの効果を解決する"
+
+
+confession : Incident
+confession =
+    Incident Confession "告白" "犯人の役職を知る"
+
+
+breakthrough : Incident
+breakthrough =
+    Incident Breakthrough "打開" "リーダーが選んだキャラクター1人またはボード1つから[暗躍カウンター]を2つ取り除く"
+
+
+fakeIncident : Incident
+fakeIncident =
+    Incident FakeIncident "偽装事件" "犯人の初期エリアに[暗躍カウンター]が2つ以上 → 主人公を死亡させる。この事件を公開シートに書く際、異なる名前の事件として記載してもよい。（非公開シートやゲーム上ではこの事件となる）"
+
+
 initBasicTragedyIncidents : List Incident
 initBasicTragedyIncidents =
     [ murder
@@ -1740,6 +2051,22 @@ initWeirdMythologyIncidents =
     ]
 
 
+initMidnightZoneIncidents : List Incident
+initMidnightZoneIncidents =
+    [ serialMurder
+    , suicide
+    , increasingUnease
+    , missingPerson
+    , hospitalIncident
+    , conspiracies
+    , uproar
+    , confession
+    , breakthrough
+    , fakedSuicide
+    , fakeIncident
+    ]
+
+
 type alias TragedySet =
     { name : String
     , subPlotNumber : Int
@@ -1770,6 +2097,11 @@ initWeirdMythology =
     TragedySet "Weird Mythology" 2 initWeirdMythologyPlots initWeirdMythologyRoles initWeirdMythologyIncidents WeirdMythology
 
 
+initMidnightZone : TragedySet
+initMidnightZone =
+    TragedySet "Midnight Zone" 2 initMidnightZonePlots initMidnightZoneRoles initMidnightZoneIncidents MidnightZone
+
+
 type Error
     = NoError
 
@@ -1793,6 +2125,9 @@ tragedySetFromString s =
 
         Just WeirdMythology ->
             initWeirdMythology
+
+        Just MidnightZone ->
+            initMidnightZone
 
         Nothing ->
             initBasicTragedy
@@ -1823,6 +2158,9 @@ typeToName t =
         WeirdMythology ->
             "Weird Mythology"
 
+        MidnightZone ->
+            "Midnight Zone"
+
 
 toString : TragedySet -> String
 toString set =
@@ -1844,6 +2182,9 @@ typeToString t =
         WeirdMythology ->
             "WeirdMythology"
 
+        MidnightZone ->
+            "MidnightZone"
+
 
 typeFromString : String -> Maybe TragedySetType
 typeFromString s =
@@ -1860,6 +2201,9 @@ typeFromString s =
         "WeirdMythology" ->
             Just WeirdMythology
 
+        "MidnightZone" ->
+            Just MidnightZone
+
         _ ->
             Nothing
 
@@ -1869,3 +2213,4 @@ type TragedySetType
     | FirstSteps
     | MysteryCircle
     | WeirdMythology
+    | MidnightZone

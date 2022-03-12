@@ -609,6 +609,9 @@ infos data =
 
                         TragedySet.WeirdMythology ->
                             th [] [ text "Ex" ]
+
+                        TragedySet.MidnightZone ->
+                            th [] [ text "Ex" ]
                     ]
                 ]
             , tbody []
@@ -627,6 +630,9 @@ infos data =
                             td [] [ text <| String.fromInt ex ]
 
                         TragedySet.WeirdMythology ->
+                            td [] [ text <| String.fromInt ex ]
+
+                        TragedySet.MidnightZone ->
                             td [] [ text <| String.fromInt ex ]
                     ]
                 ]

@@ -9,8 +9,8 @@
         "composite": false,
 
         "moduleResolution": "node",
-        "esModuleInterop": true, // jszipを読み込むために必要
-        "skipLibCheck":  true, // TS2707: Generic type 'SyncHook<T, R, AdditionalOptions>' requires between 1 and 3 type arguments.
+        "esModuleInterop": true,
+        "skipLibCheck":  true
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules", "elm-stuff"],

@@ -365,12 +365,7 @@ componentTypeFromString s =
             Just (CharacterComponentType ct)
 
         Nothing ->
-            case Board.boardTypeFromString s of
-                Just bt ->
-                    Just (BoardComponentType bt)
-
-                Nothing ->
-                    Nothing
+            Board.boardTypeFromString s |> Maybe.map (\bt -> BoardComponentType bt)
 
 
 componentTypeToString : ComponentType -> String

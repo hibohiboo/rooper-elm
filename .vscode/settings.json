@@ -6,9 +6,11 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
+  "[elm]": {
+    "editor.formatOnSave": true
+  },
   "files.eol": "\n",
   "eslint.enable": true,
   "typescript.validate.enable": false,
   "scss.validate": false,
-  "stylelint.autoFixOnSave": true,
 }

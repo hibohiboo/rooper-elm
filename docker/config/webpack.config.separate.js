@@ -65,7 +65,7 @@ module.exports = {
             {
                 test: /\.css$/,
                 exclude: [/elm-stuff/, /node_modules/],
-                loaders: [
+                use: [
                     MiniCssExtractPlugin.loader,
                     {
                         loader: "css-loader",
@@ -113,7 +113,8 @@ module.exports = {
         minimizer: [
             new TerserPlugin({
                 // https://www.monotalk.xyz/blog/Remove-all-JavaScript-comments-when-compressing-Webpack-4/
-                sourceMap: true,
+                // sourceMap: true,
+                // https://webpack.js.org/plugins/terser-webpack-plugin/
                 extractComments: "all",
                 terserOptions: {
                     compress: { drop_console: true }

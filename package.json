@@ -38,6 +38,7 @@
     "typescript": "^4.6.2"
   },
   "dependencies": {
+    "elm-format": "^0.8.5",
     "firebase": "^9.6.8",
     "firebaseui": "^6.0.1"
   }

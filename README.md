@@ -20,3 +20,10 @@
 
 開発環境へのアクセス
 http://localhost:3000/rooper/
+
+tsconfig.json
+
+```js
+        "esModuleInterop": true, // jszipを読み込むために必要
+        "skipLibCheck":  true, // TS2707: Generic type 'SyncHook<T, R, AdditionalOptions>' requires between 1 and 3 type arguments.
+```

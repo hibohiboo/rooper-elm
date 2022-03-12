@@ -444,6 +444,13 @@ setTragedySet s f =
             in
             { new | characters = resetRolesCharacterScriptDataList new }
 
+        TragedySet.MidnightZone ->
+            let
+                new =
+                    { f | set = set, mainPlot = TragedySet.theSealedItem, subPlot1 = TragedySet.loveHateSpiral, subPlot2 = Just TragedySet.witchesTeaTime, incidents = [] }
+            in
+            { new | characters = resetRolesCharacterScriptDataList new }
+
 
 resetRolesCharacterScriptDataList : RegisterForm -> List Character.CharacterScriptData
 resetRolesCharacterScriptDataList f =
@@ -797,6 +804,7 @@ selectTragedySet chgMsg scriptForm =
         , option [ value <| TragedySet.typeToString TragedySet.BasicTragedy, selected (isSetBasicTragedy scriptForm) ] [ text <| TragedySet.typeToName TragedySet.BasicTragedy ]
         , option [ value <| TragedySet.typeToString TragedySet.MysteryCircle, selected (scriptForm.set.setType == TragedySet.MysteryCircle) ] [ text <| TragedySet.typeToName TragedySet.MysteryCircle ]
         , option [ value <| TragedySet.typeToString TragedySet.WeirdMythology, selected (scriptForm.set.setType == TragedySet.WeirdMythology) ] [ text <| TragedySet.typeToName TragedySet.WeirdMythology ]
+        , option [ value <| TragedySet.typeToString TragedySet.MidnightZone, selected (scriptForm.set.setType == TragedySet.MidnightZone) ] [ text <| TragedySet.typeToName TragedySet.MidnightZone ]
         ]
 
 

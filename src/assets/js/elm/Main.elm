@@ -894,6 +894,9 @@ mastermindBottomForm model data =
                                 RoomState.roomDataFormDataBoard
                                     [ td [] [ input [ class "input", type_ "number", onChange ChangeRoomDataEx, value <| String.fromInt data.ex ] [] ]
                                     ]
+
+                            TragedySet.MidnightZone ->
+                                ExHtml.nothing
                         , RoomData.boardsForm data ChangeBoardIntrigue
                         , RoomData.charactersForm data ChangeCharacterLocation ChangeCharacterGoodWill ChangeCharacterParanoia ChangeCharacterIntrigue ToggleCharacterIsDead DeleteCharacterForbiddenLocationMsg ToggleCharacterIsSetEx
                         ]
